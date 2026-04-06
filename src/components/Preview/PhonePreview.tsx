@@ -7,6 +7,8 @@ import { ChatHeader } from './ChatHeader';
 import { MessageBubble } from './MessageBubble';
 import { ChatFooter } from './ChatFooter';
 import { NavigationBar } from './NavigationBar';
+import bgDark from '../../assets/image/whatsapp-bg-dark.png';
+import bgLight from '../../assets/image/whatsapp-bg-light.png';
 
 interface PhonePreviewProps {
   settings: ChatSettings;
@@ -26,12 +28,12 @@ export const PhonePreview: React.FC<PhonePreviewProps> = ({ settings, messages, 
       <div className="relative">
         {/* Device Frame */}
         <div className={cn(
-          "relative w-[320px] h-[650px] bg-black rounded-[3rem] p-3 shadow-2xl border-[8px] border-gray-800 overflow-hidden",
+          "relative w-[320px] h-[650px] bg-black rounded-[3rem] p-3 shadow-2xl border-8 border-gray-800 overflow-hidden",
           settings.layout === 'desktop' && "w-[600px] h-[400px] rounded-xl border-4"
         )}>
           {/* Screen Content */}
           <div className={cn(
-            "w-full h-full rounded-[2rem] overflow-hidden flex flex-col relative",
+            "w-full h-full rounded-4xl overflow-hidden flex flex-col relative",
             settings.isDarkMode ? "bg-[#0b141a] text-[#e9edef]" : "bg-[#efeae2] text-[#111b21]"
           )} style={{ backgroundColor: settings.chatBackgroundColor }}>
             
@@ -41,7 +43,10 @@ export const PhonePreview: React.FC<PhonePreviewProps> = ({ settings, messages, 
             {/* Chat Content */}
             <main className="flex-1 overflow-y-auto p-3 space-y-2 relative custom-scrollbar">
               {/* Background Pattern */}
-              <div className="absolute inset-0 opacity-[0.06] pointer-events-none bg-[url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png')] bg-repeat" />
+              <div 
+                className="absolute h-full w-full inset-0 pointer-events-none bg-repeat opacity-[0.4] bg-size-[400px_auto]"
+                style={{ backgroundImage: `url(${settings.isDarkMode ? bgDark : bgLight})` }}
+              />
               
               <div className="flex flex-col gap-1 relative z-10">
                 {messages.map((msg) => (
