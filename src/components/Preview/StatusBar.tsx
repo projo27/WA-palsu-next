@@ -1,7 +1,7 @@
+import { BatteryCharging, MapPin, Signal, VolumeX, Wifi } from "lucide-react";
 import React from "react";
-import { MapPin, VolumeX, Signal, Wifi, BatteryCharging } from "lucide-react";
-import { ChatSettings } from "../../types";
 import { cn } from "../../lib/utils";
+import { ChatSettings } from "../../types";
 
 interface StatusBarProps {
   settings: ChatSettings;
@@ -13,12 +13,12 @@ export const StatusBar: React.FC<StatusBarProps> = ({ settings }) => {
   return (
     <div
       className={cn(
-        "px-6 py-2 flex justify-between items-center text-xs font-bold z-30",
-        settings.isDarkMode ? "bg-[#202c33]" : "bg-[#f0f2f5]",
+        "px-4 py-2 flex justify-between items-center text-xs font-bold z-30",
+        settings.isDarkMode ? "bg-[#202c33]" : "bg-[#f5f5f5]",
       )}
     >
       <span>{settings.clockTime}</span>
-      <div className="flex items-center gap-1.5">
+      <div className="flex items-center gap-1">
         {settings.headerIcon === "location" && <MapPin size={10} />}
         {settings.headerIcon === "silent" && <VolumeX size={10} />}
         <Signal size={10} />
