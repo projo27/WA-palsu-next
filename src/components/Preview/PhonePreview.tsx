@@ -35,7 +35,10 @@ export const PhonePreview: React.FC<PhonePreviewProps> = ({ settings, messages, 
           <div className={cn(
             "w-full h-full rounded-4xl overflow-hidden flex flex-col relative",
             settings.isDarkMode ? "bg-[#0b141a] text-[#e9edef]" : "bg-[#efeae2] text-[#111b21]"
-          )} style={{ backgroundColor: settings.chatBackgroundColor }}>
+          )} style={{ 
+            backgroundColor: settings.chatBackgroundColor,
+            fontFamily: settings.layout === 'android' ? '"Roboto", sans-serif' : '-apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif'
+          }}>
             
             <StatusBar settings={settings} />
             <ChatHeader settings={settings} />

@@ -1,49 +1,70 @@
-import React from 'react';
-import { 
-  Smartphone, 
-  Monitor, 
-  Moon, 
-  Sun, 
-  BatteryCharging, 
-  Battery, 
-  X, 
-  MapPin, 
-  VolumeX 
-} from 'lucide-react';
-import { ChatSettings, DeviceLayout } from '../../types';
-import { cn } from '../../lib/utils';
+import {
+  Battery,
+  BatteryCharging,
+  MapPin,
+  Moon,
+  Sun,
+  VolumeX,
+  X,
+} from "lucide-react";
+import React from "react";
+import { cn } from "../../lib/utils";
+import { ChatSettings, DeviceLayout } from "../../types";
+
+import androidIcon from "../../assets/icon/android.svg";
+import iosIcon from "../../assets/icon/ios.svg";
+import desktopIcon from "../../assets/icon/desktop.svg";
 
 interface DisplaySettingsProps {
   settings: ChatSettings;
   setSettings: (settings: ChatSettings) => void;
 }
 
-export const DisplaySettings: React.FC<DisplaySettingsProps> = ({ settings, setSettings }) => {
+export const DisplaySettings: React.FC<DisplaySettingsProps> = ({
+  settings,
+  setSettings,
+}) => {
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-left-4 duration-300">
       {/* Layout Selector */}
       <div className="space-y-2">
         <label className="text-sm font-medium text-gray-600">Layout</label>
         <div className="flex gap-2">
-          {(['android', 'ios', 'desktop'] as DeviceLayout[]).map((l) => (
+          {(["android", "ios", "desktop"] as DeviceLayout[]).map((l) => (
             <button
               key={l}
               onClick={() => setSettings({ ...settings, layout: l })}
               className={cn(
                 "p-2 rounded border transition-all",
-                settings.layout === l ? "border-[#539ba0] bg-[#539ba0]/10 text-[#539ba0]" : "border-gray-200 hover:border-gray-300"
+                settings.layout === l
+                  ? "border-[#539ba0] bg-[#539ba0]/10 text-[#539ba0]"
+                  : "border-gray-200 hover:border-gray-300",
               )}
             >
-              {l === 'android' && <Smartphone size={20} />}
-              {l === 'ios' && <Smartphone size={20} className="rotate-90" />}
-              {l === 'desktop' && <Monitor size={20} />}
+              {l === "android" && (
+                <img src={androidIcon} alt="Android" className="w-5 h-5" />
+              )}
+              {l === "ios" && (
+                <img
+                  src={iosIcon}
+                  alt="iOS"
+                  className="w-5 h-5"
+                />
+              )}
+              {l === "desktop" && (
+                <img src={desktopIcon} alt="Desktop" className="w-5 h-5" />
+              )}
             </button>
           ))}
           <button
-            onClick={() => setSettings({ ...settings, isDarkMode: !settings.isDarkMode })}
+            onClick={() =>
+              setSettings({ ...settings, isDarkMode: !settings.isDarkMode })
+            }
             className={cn(
               "ml-auto px-4 py-2 rounded-full border flex items-center gap-2 text-sm font-medium transition-all",
-              settings.isDarkMode ? "bg-[#202c33] text-white border-[#202c33]" : "bg-white text-gray-700 border-gray-200"
+              settings.isDarkMode
+                ? "bg-[#202c33] text-white border-[#202c33]"
+                : "bg-white text-gray-700 border-gray-200",
             )}
           >
             {settings.isDarkMode ? <Moon size={16} /> : <Sun size={16} />}
@@ -56,9 +77,11 @@ export const DisplaySettings: React.FC<DisplaySettingsProps> = ({ settings, setS
       <div className="grid grid-cols-2 gap-4">
         <div className="space-y-2">
           <label className="text-sm font-medium text-gray-600">Network</label>
-          <select 
+          <select
             value={settings.networkType}
-            onChange={(e) => setSettings({ ...settings, networkType: e.target.value })}
+            onChange={(e) =>
+              setSettings({ ...settings, networkType: e.target.value })
+            }
             className="w-full p-2 rounded border border-gray-200 text-sm"
           >
             <option>4G</option>
@@ -70,20 +93,26 @@ export const DisplaySettings: React.FC<DisplaySettingsProps> = ({ settings, setS
         <div className="space-y-2">
           <label className="text-sm font-medium text-gray-600">Clock</label>
           <div className="flex items-center gap-2">
-            <input 
-              type="text" 
+            <input
+              type="text"
               value={settings.clockTime}
-              onChange={(e) => setSettings({ ...settings, clockTime: e.target.value })}
+              onChange={(e) =>
+                setSettings({ ...settings, clockTime: e.target.value })
+              }
               className="w-full p-2 rounded border border-gray-200 text-sm"
             />
-            <button 
-              onClick={() => setSettings({ ...settings, is24Hour: !settings.is24Hour })}
+            <button
+              onClick={() =>
+                setSettings({ ...settings, is24Hour: !settings.is24Hour })
+              }
               className={cn(
                 "px-2 py-1 rounded text-[10px] font-bold border",
-                settings.is24Hour ? "bg-[#539ba0] text-white border-[#539ba0]" : "bg-white text-gray-500 border-gray-200"
+                settings.is24Hour
+                  ? "bg-[#539ba0] text-white border-[#539ba0]"
+                  : "bg-white text-gray-500 border-gray-200",
               )}
             >
-              {settings.is24Hour ? '24h' : '12h'}
+              {settings.is24Hour ? "24h" : "12h"}
             </button>
           </div>
         </div>
@@ -93,28 +122,48 @@ export const DisplaySettings: React.FC<DisplaySettingsProps> = ({ settings, setS
       <div className="space-y-3">
         <label className="text-sm font-medium text-gray-600">Battery</label>
         <div className="flex items-center gap-4">
-          <input 
-            type="number" 
+          <input
+            type="number"
             value={settings.batteryLevel}
-            onChange={(e) => setSettings({ ...settings, batteryLevel: parseInt(e.target.value) })}
+            onChange={(e) =>
+              setSettings({
+                ...settings,
+                batteryLevel: parseInt(e.target.value),
+              })
+            }
             className="w-16 p-2 rounded border border-gray-200 text-sm"
           />
           <span className="text-sm text-gray-500">%</span>
-          <button 
-            onClick={() => setSettings({ ...settings, isCharging: !settings.isCharging })}
+          <button
+            onClick={() =>
+              setSettings({ ...settings, isCharging: !settings.isCharging })
+            }
             className={cn(
               "px-4 py-2 rounded border flex items-center gap-2 text-sm transition-all",
-              settings.isCharging ? "bg-green-500 text-white border-green-500" : "bg-white text-gray-600 border-gray-200"
+              settings.isCharging
+                ? "bg-green-500 text-white border-green-500"
+                : "bg-white text-gray-600 border-gray-200",
             )}
           >
-            {settings.isCharging ? <BatteryCharging size={16} /> : <Battery size={16} />}
+            {settings.isCharging ? (
+              <BatteryCharging size={16} />
+            ) : (
+              <Battery size={16} />
+            )}
             Charging
           </button>
-          <button 
-            onClick={() => setSettings({ ...settings, showBatteryPercentage: !settings.showBatteryPercentage })}
+          <button
+            onClick={() =>
+              setSettings({
+                ...settings,
+                showBatteryPercentage: !settings.showBatteryPercentage,
+              })
+            }
             className={cn(
               "px-4 py-2 rounded border text-sm transition-all",
-              settings.showBatteryPercentage ? "bg-[#539ba0] text-white border-[#539ba0]" : "bg-white text-gray-600 border-gray-200"
+              settings.showBatteryPercentage
+                ? "bg-[#539ba0] text-white border-[#539ba0]"
+                : "bg-white text-gray-600 border-gray-200",
             )}
           >
             Show Battery %
@@ -124,20 +173,24 @@ export const DisplaySettings: React.FC<DisplaySettingsProps> = ({ settings, setS
 
       {/* Header Icons */}
       <div className="space-y-2">
-        <label className="text-sm font-medium text-gray-600">Header Icons</label>
+        <label className="text-sm font-medium text-gray-600">
+          Header Icons
+        </label>
         <div className="flex gap-2">
-          {(['none', 'location', 'silent'] as const).map((icon) => (
+          {(["none", "location", "silent"] as const).map((icon) => (
             <button
               key={icon}
               onClick={() => setSettings({ ...settings, headerIcon: icon })}
               className={cn(
                 "flex-1 py-2 px-3 rounded border flex items-center justify-center gap-2 text-sm font-medium transition-all",
-                settings.headerIcon === icon ? "bg-[#539ba0] text-white border-[#539ba0]" : "bg-white text-gray-600 border-gray-200"
+                settings.headerIcon === icon
+                  ? "bg-[#539ba0] text-white border-[#539ba0]"
+                  : "bg-white text-gray-600 border-gray-200",
               )}
             >
-              {icon === 'none' && <X size={16} />}
-              {icon === 'location' && <MapPin size={16} />}
-              {icon === 'silent' && <VolumeX size={16} />}
+              {icon === "none" && <X size={16} />}
+              {icon === "location" && <MapPin size={16} />}
+              {icon === "silent" && <VolumeX size={16} />}
               {icon.charAt(0).toUpperCase() + icon.slice(1)}
             </button>
           ))}
@@ -147,19 +200,25 @@ export const DisplaySettings: React.FC<DisplaySettingsProps> = ({ settings, setS
       {/* Background Options */}
       <div className="grid grid-cols-2 gap-4">
         <div className="space-y-2">
-          <label className="text-sm font-medium text-gray-600">Chat Color</label>
-          <input 
-            type="color" 
+          <label className="text-sm font-medium text-gray-600">
+            Chat Color
+          </label>
+          <input
+            type="color"
             value={settings.chatBackgroundColor}
-            onChange={(e) => setSettings({ ...settings, chatBackgroundColor: e.target.value })}
+            onChange={(e) =>
+              setSettings({ ...settings, chatBackgroundColor: e.target.value })
+            }
             className="w-full h-10 p-1 rounded border border-gray-200 cursor-pointer"
           />
         </div>
         <div className="space-y-2">
           <label className="text-sm font-medium text-gray-600">Text Size</label>
-          <select 
+          <select
             value={settings.textSize}
-            onChange={(e) => setSettings({ ...settings, textSize: e.target.value as any })}
+            onChange={(e) =>
+              setSettings({ ...settings, textSize: e.target.value as any })
+            }
             className="w-full p-2 rounded border border-gray-200 text-sm"
           >
             <option value="small">Small</option>
@@ -171,29 +230,54 @@ export const DisplaySettings: React.FC<DisplaySettingsProps> = ({ settings, setS
 
       {/* More Options */}
       <div className="space-y-2">
-        <label className="text-sm font-medium text-gray-600">More Options</label>
+        <label className="text-sm font-medium text-gray-600">
+          More Options
+        </label>
         <div className="grid grid-cols-2 gap-2">
-          <button 
-            onClick={() => setSettings({ ...settings, hideHeader: !settings.hideHeader })}
-            className={cn("p-2 rounded border text-xs transition-all flex items-center justify-center gap-2", settings.hideHeader ? "bg-[#539ba0] text-white" : "bg-white")}
+          <button
+            onClick={() =>
+              setSettings({ ...settings, hideHeader: !settings.hideHeader })
+            }
+            className={cn(
+              "p-2 rounded border text-xs transition-all flex items-center justify-center gap-2",
+              settings.hideHeader ? "bg-[#539ba0] text-white" : "bg-white",
+            )}
           >
             <X size={14} /> Hide Header
           </button>
-          <button 
-            onClick={() => setSettings({ ...settings, hideFooter: !settings.hideFooter })}
-            className={cn("p-2 rounded border text-xs transition-all flex items-center justify-center gap-2", settings.hideFooter ? "bg-[#539ba0] text-white" : "bg-white")}
+          <button
+            onClick={() =>
+              setSettings({ ...settings, hideFooter: !settings.hideFooter })
+            }
+            className={cn(
+              "p-2 rounded border text-xs transition-all flex items-center justify-center gap-2",
+              settings.hideFooter ? "bg-[#539ba0] text-white" : "bg-white",
+            )}
           >
             <X size={14} /> Hide Footer
           </button>
-          <button 
-            onClick={() => setSettings({ ...settings, showPayment: !settings.showPayment })}
-            className={cn("p-2 rounded border text-xs transition-all flex items-center justify-center gap-2", settings.showPayment ? "bg-[#539ba0] text-white" : "bg-white")}
+          <button
+            onClick={() =>
+              setSettings({ ...settings, showPayment: !settings.showPayment })
+            }
+            className={cn(
+              "p-2 rounded border text-xs transition-all flex items-center justify-center gap-2",
+              settings.showPayment ? "bg-[#539ba0] text-white" : "bg-white",
+            )}
           >
             $ Show Payment
           </button>
-          <button 
-            onClick={() => setSettings({ ...settings, showChatArrow: !settings.showChatArrow })}
-            className={cn("p-2 rounded border text-xs transition-all flex items-center justify-center gap-2", settings.showChatArrow ? "bg-[#539ba0] text-white" : "bg-white")}
+          <button
+            onClick={() =>
+              setSettings({
+                ...settings,
+                showChatArrow: !settings.showChatArrow,
+              })
+            }
+            className={cn(
+              "p-2 rounded border text-xs transition-all flex items-center justify-center gap-2",
+              settings.showChatArrow ? "bg-[#539ba0] text-white" : "bg-white",
+            )}
           >
             Chat Arrow
           </button>
@@ -202,10 +286,14 @@ export const DisplaySettings: React.FC<DisplaySettingsProps> = ({ settings, setS
 
       {/* Screen Navigation Bar */}
       <div className="space-y-2">
-        <label className="text-sm font-medium text-gray-600">Screen Navigation Bar</label>
-        <select 
+        <label className="text-sm font-medium text-gray-600">
+          Screen Navigation Bar
+        </label>
+        <select
           value={settings.navigationBar}
-          onChange={(e) => setSettings({ ...settings, navigationBar: e.target.value as any })}
+          onChange={(e) =>
+            setSettings({ ...settings, navigationBar: e.target.value as any })
+          }
           className="w-full p-2 rounded border border-gray-200 text-sm"
         >
           <option value="none">None</option>
