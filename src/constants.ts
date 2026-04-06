@@ -11,6 +11,8 @@ export const DEFAULT_SETTINGS: ChatSettings = {
   headerIcon: 'none',
   backgroundImage: '',
   chatBackgroundColor: '#efeae2',
+  userBubbleColor: '#d9fdd3',
+  receiverBubbleColor: '#ffffff',
   textSize: 'default',
   hideHeader: false,
   hideFooter: false,

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Check, CheckCheck } from 'lucide-react';
 import { Message, ChatSettings } from '../../types';
-import { cn } from '../../lib/utils';
+import { cn, getContrastColor } from '../../lib/utils';
 
 interface MessageBubbleProps {
   msg: Message;
@@ -17,18 +17,22 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({ msg, settings }) =
     );
   }
 
+  const userColor = settings.userBubbleColor || (settings.isDarkMode ? "#005c4b" : "#d9fdd3");
+  const receiverColor = settings.receiverBubbleColor || (settings.isDarkMode ? "#202c33" : "#ffffff");
+  const backgroundColor = msg.sender === 'user' ? userColor : receiverColor;
+  const textColor = getContrastColor(backgroundColor);
+
   return (
-    <div className={cn(
-      "max-w-[85%] rounded-lg px-2 py-1 relative shadow-sm mb-1",
-      msg.sender === 'user' 
-        ? (settings.isDarkMode ? "self-end bg-[#005c4b]" : "self-end bg-[#d9fdd3]")
-        : (settings.isDarkMode ? "self-start bg-[#202c33]" : "self-start bg-white"),
+    <div 
+      className={cn(
+        "max-w-[85%] rounded-lg px-2 py-1 relative shadow-sm mb-1",
+        msg.sender === 'user' ? "self-end" : "self-start",
       settings.showChatArrow && msg.sender === 'user' && "rounded-tr-none",
       settings.showChatArrow && msg.sender !== 'user' && "rounded-tl-none",
       settings.textSize === 'small' && "text-[11px]",
       settings.textSize === 'default' && "text-xs",
       settings.textSize === 'large' && "text-sm"
-    )}>
+    )} style={{ backgroundColor, color: textColor }}>
       {msg.fileUrl && (
         <div className="mb-1">
           <img src={msg.fileUrl} alt="Sent" className="rounded-md max-w-full max-h-64 object-contain" />

@@ -26,6 +26,8 @@ export interface ChatSettings {
   headerIcon: 'none' | 'location' | 'silent';
   backgroundImage: string;
   chatBackgroundColor: string;
+  userBubbleColor: string;
+  receiverBubbleColor: string;
   textSize: 'small' | 'default' | 'large';
   hideHeader: boolean;
   hideFooter: boolean;

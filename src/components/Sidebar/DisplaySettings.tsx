@@ -197,22 +197,47 @@ export const DisplaySettings: React.FC<DisplaySettingsProps> = ({
         </div>
       </div>
 
-      {/* Background Options */}
-      <div className="grid grid-cols-2 gap-4">
-        <div className="space-y-2">
-          <label className="text-sm font-medium text-gray-600">
-            Chat Color
-          </label>
-          <input
-            type="color"
-            value={settings.chatBackgroundColor}
-            onChange={(e) =>
-              setSettings({ ...settings, chatBackgroundColor: e.target.value })
-            }
-            className="w-full h-10 p-1 rounded border border-gray-200 cursor-pointer"
-          />
+      {/* Visual Options */}
+      <div className="space-y-3">
+        <label className="text-sm font-medium text-gray-600">
+          Chat & Bubble Colors
+        </label>
+        <div className="grid grid-cols-3 gap-2">
+          <div className="space-y-1">
+            <label className="text-xs text-gray-500">Background</label>
+            <input
+              type="color"
+              value={settings.chatBackgroundColor}
+              onChange={(e) =>
+                setSettings({ ...settings, chatBackgroundColor: e.target.value })
+              }
+              className="w-full h-8 p-0 border-0 rounded cursor-pointer"
+            />
+          </div>
+          <div className="space-y-1">
+            <label className="text-xs text-gray-500">My Bubble</label>
+            <input
+              type="color"
+              value={settings.userBubbleColor || (settings.isDarkMode ? '#005c4b' : '#d9fdd3')}
+              onChange={(e) =>
+                setSettings({ ...settings, userBubbleColor: e.target.value })
+              }
+              className="w-full h-8 p-0 border-0 rounded cursor-pointer"
+            />
+          </div>
+          <div className="space-y-1">
+            <label className="text-xs text-gray-500">Their Bubble</label>
+            <input
+              type="color"
+              value={settings.receiverBubbleColor || (settings.isDarkMode ? '#202c33' : '#ffffff')}
+              onChange={(e) =>
+                setSettings({ ...settings, receiverBubbleColor: e.target.value })
+              }
+              className="w-full h-8 p-0 border-0 rounded cursor-pointer"
+            />
+          </div>
         </div>
-        <div className="space-y-2">
+        <div className="space-y-2 mt-2">
           <label className="text-sm font-medium text-gray-600">Text Size</label>
           <select
             value={settings.textSize}
