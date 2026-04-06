@@ -1,0 +1,8 @@
+{
+  "name": "WhatsApp Fake Chat Clone",
+  "description": "A high-fidelity WhatsApp mobile clone with auto-response bot, local storage persistence, and file upload support.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ]
+}
