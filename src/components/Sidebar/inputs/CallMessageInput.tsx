@@ -96,27 +96,6 @@ export const CallMessageInput: React.FC<MessageInputProps> = ({
         </div>
       </div>
       
-      <div className="grid grid-cols-2 gap-4 w-2/3">
-        <div className="space-y-1">
-          <label className="text-[10px] font-bold text-gray-400 uppercase">Message Time</label>
-          <input 
-            type="text" 
-            value={msgTime}
-            onChange={(e) => setMsgTime(e.target.value)}
-            className="w-full p-2 rounded border border-gray-200 text-sm"
-          />
-        </div>
-        <div className="space-y-1">
-          <label className="text-[10px] font-bold text-gray-400 uppercase">Reaction (👍)</label>
-          <input 
-            type="text" 
-            placeholder="👍"
-            value={msgReaction}
-            onChange={(e) => setMsgReaction(e.target.value)}
-            className="w-full p-2 rounded border border-gray-200 text-sm"
-          />
-        </div>
-      </div>
     </div>
   );
 };

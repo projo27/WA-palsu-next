@@ -16,6 +16,8 @@ import { DateMessageInput } from './inputs/DateMessageInput';
 import { DocsMessageInput } from './inputs/DocsMessageInput';
 import { CallMessageInput } from './inputs/CallMessageInput';
 import { TextMessageInput } from './inputs/TextMessageInput';
+import { ContactMessageInput } from './inputs/ContactMessageInput';
+import { SharedMessageOptions } from './inputs/SharedMessageOptions';
 
 interface AddChatProps {
   activeTab: 'chat' | 'group';
@@ -71,7 +73,7 @@ export const AddChat: React.FC<AddChatProps> = ({
       const reader = new FileReader();
       reader.onload = (ev) => {
         setMsgFile(ev.target?.result as string);
-        if (msgType !== 'file') {
+        if (msgType !== 'file' && msgType !== 'contact') {
           setMsgType('image');
         }
       };
@@ -176,7 +178,16 @@ export const AddChat: React.FC<AddChatProps> = ({
         {msgType === 'date' && <DateMessageInput {...inputProps} />}
         {msgType === 'file' && <DocsMessageInput {...inputProps} />}
         {msgType === 'call' && <CallMessageInput {...inputProps} />}
-        {['text', 'contact', 'image'].includes(msgType) && <TextMessageInput {...inputProps} />}
+        {msgType === 'contact' && <ContactMessageInput {...inputProps} />}
+        {['text', 'image'].includes(msgType) && <TextMessageInput {...inputProps} />}
+
+        {msgType !== 'date' && (
+          <SharedMessageOptions
+            msgTime={msgTime} setMsgTime={setMsgTime}
+            msgStatus={msgStatus} setMsgStatus={setMsgStatus}
+            msgReaction={msgReaction} setMsgReaction={setMsgReaction}
+          />
+        )}
 
         <div className="flex gap-3 pt-2">
           <button 

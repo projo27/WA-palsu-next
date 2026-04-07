@@ -46,40 +46,6 @@ export const TextMessageInput: React.FC<MessageInputProps> = ({
         {handleMsgFileUpload && fileInputRef && <input type="file" ref={fileInputRef} className="hidden" onChange={handleMsgFileUpload} />}
       </div>
 
-      <div className="grid grid-cols-3 gap-4">
-        <div className="space-y-1">
-          <label className="text-[10px] font-bold text-gray-400 uppercase">Message Time</label>
-          <input 
-            type="text" 
-            value={msgTime}
-            onChange={(e) => setMsgTime(e.target.value)}
-            className="w-full p-2 rounded border border-gray-200 text-sm"
-          />
-        </div>
-        <div className="space-y-1">
-          <label className="text-[10px] font-bold text-gray-400 uppercase">Status</label>
-          <select 
-            value={msgStatus}
-            onChange={(e) => setMsgStatus(e.target.value as any)}
-            className="w-full p-2 rounded border border-gray-200 text-sm"
-          >
-            <option value="none">None</option>
-            <option value="sent">Sent</option>
-            <option value="delivered">Delivered</option>
-            <option value="seen">Seen</option>
-          </select>
-        </div>
-        <div className="space-y-1">
-          <label className="text-[10px] font-bold text-gray-400 uppercase">Reaction</label>
-          <input 
-            type="text" 
-            placeholder="👍"
-            value={msgReaction}
-            onChange={(e) => setMsgReaction(e.target.value)}
-            className="w-full p-2 rounded border border-gray-200 text-sm"
-          />
-        </div>
-      </div>
     </div>
   );
 };

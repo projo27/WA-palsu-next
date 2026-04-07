@@ -109,6 +109,39 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({ msg, settings }) =
             </div>
           </div>
         );
+      })() : msg.type === 'contact' ? (() => {
+        let isMultiple = false, contactName = '', contactCount = '1';
+        try {
+          if (msg.text && msg.text.startsWith('{')) {
+            const parsed = JSON.parse(msg.text);
+            isMultiple = parsed.isMultiple;
+            contactName = parsed.contactName;
+            contactCount = parsed.contactCount || '1';
+          } else { contactName = msg.text || ''; }
+        } catch(e) { contactName = msg.text || ''; }
+        
+        return (
+          <div className="flex flex-col min-w-[200px] -mx-2 -mt-1 -mb-1 pt-1 pb-1">
+            <div className="flex items-center gap-3 px-3 py-2">
+              {msg.fileUrl ? (
+                <img src={msg.fileUrl} alt="Contact" className="w-10 h-10 rounded-full object-cover shrink-0" />
+              ) : (
+                <div className="w-10 h-10 bg-gray-300 rounded-full flex items-center justify-center shrink-0">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" className="text-white opacity-80">
+                    <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                  </svg>
+                </div>
+              )}
+              <span className="font-semibold text-[15px]">
+                {contactName}{isMultiple ? ` and ${contactCount} other contact${parseInt(contactCount) > 1 ? 's' : ''}` : ''}
+              </span>
+            </div>
+            <div className="h-px bg-black/10 w-full" />
+            <div className="py-2 text-center text-[#027eb5] font-medium text-sm">
+              {isMultiple ? 'View all' : 'Message'}
+            </div>
+          </div>
+        );
       })() : (
         msg.text && <p className="pr-10 whitespace-pre-wrap">{msg.text}</p>
       )}
