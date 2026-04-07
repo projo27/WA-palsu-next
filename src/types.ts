@@ -11,6 +11,7 @@ export interface Message {
   status: MessageStatus;
   fileUrl?: string;
   fileName?: string;
+  fileSize?: string;
   reaction?: string;
 }
 

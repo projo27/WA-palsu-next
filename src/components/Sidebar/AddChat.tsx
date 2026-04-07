@@ -7,14 +7,15 @@ import {
   File as FileIcon, 
   PhoneCall, 
   Contact, 
-  Trash2, 
   Plus, 
-  RotateCcw,
-  Image as ImageIcon,
-  X
+  RotateCcw
 } from 'lucide-react';
 import { ChatSettings, MessageStatus, MessageType } from '../../types';
 import { cn } from '../../lib/utils';
+import { DateMessageInput } from './inputs/DateMessageInput';
+import { DocsMessageInput } from './inputs/DocsMessageInput';
+import { CallMessageInput } from './inputs/CallMessageInput';
+import { TextMessageInput } from './inputs/TextMessageInput';
 
 interface AddChatProps {
   activeTab: 'chat' | 'group';
@@ -70,7 +71,9 @@ export const AddChat: React.FC<AddChatProps> = ({
       const reader = new FileReader();
       reader.onload = (ev) => {
         setMsgFile(ev.target?.result as string);
-        setMsgType('image');
+        if (msgType !== 'file') {
+          setMsgType('image');
+        }
       };
       reader.readAsDataURL(file);
     }
@@ -85,6 +88,10 @@ export const AddChat: React.FC<AddChatProps> = ({
       };
       reader.readAsDataURL(file);
     }
+  };
+
+  const inputProps = {
+    msgText, setMsgText, msgTime, setMsgTime, msgStatus, setMsgStatus, msgReaction, setMsgReaction, msgFile, setMsgFile, fileInputRef, handleMsgFileUpload
   };
 
   return (
@@ -159,86 +166,17 @@ export const AddChat: React.FC<AddChatProps> = ({
             {t === 'file' && <FileIcon size={14} className="inline mr-1" />}
             {t === 'call' && <PhoneCall size={14} className="inline mr-1" />}
             {t === 'contact' && <Contact size={14} className="inline mr-1" />}
-            {t.charAt(0).toUpperCase() + t.slice(1)}
+            {t === 'file' ? 'Docs' : t.charAt(0).toUpperCase() + t.slice(1)}
           </button>
         ))}
       </div>
 
       {/* Message Input */}
       <div className="space-y-4">
-        <div className="relative">
-          <textarea 
-            placeholder="Type message here..."
-            value={msgText}
-            onChange={(e) => setMsgText(e.target.value)}
-            className="w-full p-3 rounded-lg border border-gray-200 text-sm min-h-[100px] focus:ring-2 focus:ring-[#539ba0]/20 focus:border-[#539ba0] outline-none transition-all"
-          />
-          <button 
-            onClick={() => setMsgText('')}
-            className="absolute top-2 right-2 p-1 text-gray-400 hover:text-red-500 transition-colors"
-          >
-            <Trash2 size={16} />
-          </button>
-        </div>
-
-        {/* Add Image Section */}
-        <div 
-          onClick={() => fileInputRef.current?.click()}
-          className="border-2 border-dashed border-gray-200 rounded-lg p-4 flex flex-col items-center justify-center gap-2 cursor-pointer hover:bg-gray-50 transition-all"
-        >
-          {msgFile ? (
-            <div className="relative">
-              <img src={msgFile} alt="Preview" className="h-20 rounded shadow-sm" />
-              <button 
-                onClick={(e) => { e.stopPropagation(); setMsgFile(null); }}
-                className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1"
-              >
-                <X size={12} />
-              </button>
-            </div>
-          ) : (
-            <>
-              <ImageIcon size={24} className="text-gray-400" />
-              <span className="text-xs text-gray-500">Add Image / Video Thumbnails</span>
-            </>
-          )}
-          <input type="file" ref={fileInputRef} className="hidden" onChange={handleMsgFileUpload} />
-        </div>
-
-        <div className="grid grid-cols-3 gap-4">
-          <div className="space-y-1">
-            <label className="text-[10px] font-bold text-gray-400 uppercase">Message Time</label>
-            <input 
-              type="text" 
-              value={msgTime}
-              onChange={(e) => setMsgTime(e.target.value)}
-              className="w-full p-2 rounded border border-gray-200 text-sm"
-            />
-          </div>
-          <div className="space-y-1">
-            <label className="text-[10px] font-bold text-gray-400 uppercase">Status</label>
-            <select 
-              value={msgStatus}
-              onChange={(e) => setMsgStatus(e.target.value as any)}
-              className="w-full p-2 rounded border border-gray-200 text-sm"
-            >
-              <option value="none">None</option>
-              <option value="sent">Sent</option>
-              <option value="delivered">Delivered</option>
-              <option value="seen">Seen</option>
-            </select>
-          </div>
-          <div className="space-y-1">
-            <label className="text-[10px] font-bold text-gray-400 uppercase">Reaction</label>
-            <input 
-              type="text" 
-              placeholder="👍"
-              value={msgReaction}
-              onChange={(e) => setMsgReaction(e.target.value)}
-              className="w-full p-2 rounded border border-gray-200 text-sm"
-            />
-          </div>
-        </div>
+        {msgType === 'date' && <DateMessageInput {...inputProps} />}
+        {msgType === 'file' && <DocsMessageInput {...inputProps} />}
+        {msgType === 'call' && <CallMessageInput {...inputProps} />}
+        {['text', 'contact', 'image'].includes(msgType) && <TextMessageInput {...inputProps} />}
 
         <div className="flex gap-3 pt-2">
           <button 
@@ -266,3 +204,4 @@ export const AddChat: React.FC<AddChatProps> = ({
     </div>
   );
 };
+

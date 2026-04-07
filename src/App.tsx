@@ -41,7 +41,7 @@ export default function App() {
     
     const newMessage: Message = {
       id: Date.now().toString(),
-      text: msgText,
+      text: (msgType === 'date' && !msgText) ? 'Today' : msgText,
       type: msgType,
       sender: msgSender,
       timestamp: msgTime,
