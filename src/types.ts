@@ -1,4 +1,4 @@
-export type MessageType = 'text' | 'image' | 'file' | 'date' | 'call' | 'contact';
+export type MessageType = 'text' | 'image' | 'file' | 'date' | 'call' | 'contact' | 'location';
 export type MessageStatus = 'sent' | 'delivered' | 'seen' | 'none';
 export type DeviceLayout = 'android' | 'ios' | 'desktop';
 

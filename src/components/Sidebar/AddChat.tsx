@@ -17,7 +17,9 @@ import { DocsMessageInput } from './inputs/DocsMessageInput';
 import { CallMessageInput } from './inputs/CallMessageInput';
 import { TextMessageInput } from './inputs/TextMessageInput';
 import { ContactMessageInput } from './inputs/ContactMessageInput';
+import { LocationMessageInput } from './inputs/LocationMessageInput';
 import { SharedMessageOptions } from './inputs/SharedMessageOptions';
+import { MapPin } from 'lucide-react';
 
 interface AddChatProps {
   activeTab: 'chat' | 'group';
@@ -73,7 +75,7 @@ export const AddChat: React.FC<AddChatProps> = ({
       const reader = new FileReader();
       reader.onload = (ev) => {
         setMsgFile(ev.target?.result as string);
-        if (msgType !== 'file' && msgType !== 'contact') {
+        if (msgType !== 'file' && msgType !== 'contact' && msgType !== 'location') {
           setMsgType('image');
         }
       };
@@ -154,7 +156,7 @@ export const AddChat: React.FC<AddChatProps> = ({
 
       {/* Message Type Tabs */}
       <div className="flex border-b border-gray-200 overflow-x-auto scrollbar-hide">
-        {(['text', 'date', 'file', 'call', 'contact'] as const).map((t) => (
+        {(['text', 'date', 'file', 'call', 'contact', 'location'] as const).map((t) => (
           <button
             key={t}
             onClick={() => setMsgType(t)}
@@ -168,6 +170,7 @@ export const AddChat: React.FC<AddChatProps> = ({
             {t === 'file' && <FileIcon size={14} className="inline mr-1" />}
             {t === 'call' && <PhoneCall size={14} className="inline mr-1" />}
             {t === 'contact' && <Contact size={14} className="inline mr-1" />}
+            {t === 'location' && <MapPin size={14} className="inline mr-1" />}
             {t === 'file' ? 'Docs' : t.charAt(0).toUpperCase() + t.slice(1)}
           </button>
         ))}
@@ -179,6 +182,7 @@ export const AddChat: React.FC<AddChatProps> = ({
         {msgType === 'file' && <DocsMessageInput {...inputProps} />}
         {msgType === 'call' && <CallMessageInput {...inputProps} />}
         {msgType === 'contact' && <ContactMessageInput {...inputProps} />}
+        {msgType === 'location' && <LocationMessageInput {...inputProps} />}
         {['text', 'image'].includes(msgType) && <TextMessageInput {...inputProps} />}
 
         {msgType !== 'date' && (

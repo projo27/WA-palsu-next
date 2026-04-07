@@ -142,6 +142,73 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({ msg, settings }) =
             </div>
           </div>
         );
+      })() : msg.type === 'location' ? (() => {
+        let locType = 'current', notes = '', liveTime = '', pinName = '', pinAvatar = '';
+        try {
+          if (msg.text && msg.text.startsWith('{')) {
+            const parsed = JSON.parse(msg.text);
+            locType = parsed.locType || 'current';
+            notes = parsed.notes || '';
+            liveTime = parsed.liveTime || '';
+            pinName = parsed.pinName || '';
+            pinAvatar = parsed.pinAvatar || '';
+          }
+        } catch(e) {}
+        
+        return (
+          <div className="flex flex-col min-w-[200px] -mx-2 -mt-1 -mb-1 pt-1 pb-1">
+            <div className="relative">
+              {msg.fileUrl ? (
+                <img src={msg.fileUrl} alt="Map" className={cn("w-full h-32 object-cover rounded-t-lg", locType === 'stop_live' ? "grayscale opacity-80" : "")} />
+              ) : (
+                <div className={cn("w-full h-32 bg-[#e5e5dc] rounded-t-lg flex items-center justify-center relative overflow-hidden", locType === 'stop_live' ? "grayscale opacity-80" : "")}>
+                  <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'radial-gradient(circle, #000 1px, transparent 1px)', backgroundSize: '10px 10px' }}></div>
+                </div>
+              )}
+              
+              {/* Pin Avatar / Info */}
+              <div className="absolute inset-0 flex flex-col items-center justify-center">
+                {pinAvatar ? (
+                  <img src={pinAvatar} alt="Pin" className="w-12 h-12 rounded-full border-2 border-white shadow-md object-cover" />
+                ) : (
+                  <div className="w-12 h-12 bg-gray-300 rounded-full border-2 border-white shadow-md flex items-center justify-center">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" className="text-white">
+                      <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                    </svg>
+                  </div>
+                )}
+              </div>
+
+              {locType === 'share_live' && (
+                <div className="absolute bottom-0 left-0 right-0 bg-black/50 backdrop-blur-sm px-2 py-1 flex items-center gap-1.5 object-bottom">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" className="text-white"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                  <span className="text-white text-[10px] font-medium">Live until {liveTime || '8:33 AM'}</span>
+                </div>
+              )}
+            </div>
+            
+            {locType === 'stop_live' && (
+              <div className="bg-black/5 px-2 py-1.5 text-center shadow-sm">
+                <span className="text-gray-500 text-[11px] font-medium">Live location ended</span>
+              </div>
+            )}
+            
+            {(notes || pinName) && (
+              <div className="px-2 py-1.5">
+                {notes && <div className="text-sm pb-1 whitespace-pre-wrap">{notes}</div>}
+              </div>
+            )}
+
+            {locType === 'share_live' && (
+              <>
+                <div className="h-px bg-black/10 w-full mt-1" />
+                <div className="py-2 text-center text-red-500 font-medium text-[13px]">
+                  Stop sharing
+                </div>
+              </>
+            )}
+          </div>
+        );
       })() : (
         msg.text && <p className="pr-10 whitespace-pre-wrap">{msg.text}</p>
       )}
