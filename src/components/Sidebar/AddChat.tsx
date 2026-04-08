@@ -1,34 +1,34 @@
-import React, { useRef } from 'react';
-import { 
-  Upload, 
-  ArrowLeft, 
-  MessageSquare, 
-  Calendar, 
-  File as FileIcon, 
-  PhoneCall, 
-  Contact, 
-  Plus, 
-  RotateCcw
-} from 'lucide-react';
-import { ChatSettings, MessageStatus, MessageType } from '../../types';
-import { cn } from '../../lib/utils';
-import { DateMessageInput } from './inputs/DateMessageInput';
-import { DocsMessageInput } from './inputs/DocsMessageInput';
-import { CallMessageInput } from './inputs/CallMessageInput';
-import { TextMessageInput } from './inputs/TextMessageInput';
-import { ContactMessageInput } from './inputs/ContactMessageInput';
-import { LocationMessageInput } from './inputs/LocationMessageInput';
-import { SharedMessageOptions } from './inputs/SharedMessageOptions';
-import { MapPin } from 'lucide-react';
+import {
+  ArrowLeft,
+  Calendar,
+  Contact,
+  File as FileIcon,
+  MapPin,
+  MessageSquare,
+  PhoneCall,
+  Plus,
+  RotateCcw,
+  Upload,
+} from "lucide-react";
+import React, { useRef } from "react";
+import { cn } from "../../lib/utils";
+import { ChatSettings, MessageStatus, MessageType } from "../../types";
+import { CallMessageInput } from "./inputs/CallMessageInput";
+import { ContactMessageInput } from "./inputs/ContactMessageInput";
+import { DateMessageInput } from "./inputs/DateMessageInput";
+import { DocsMessageInput } from "./inputs/DocsMessageInput";
+import { LocationMessageInput } from "./inputs/LocationMessageInput";
+import { SharedMessageOptions } from "./inputs/SharedMessageOptions";
+import { TextMessageInput } from "./inputs/TextMessageInput";
 
 interface AddChatProps {
-  activeTab: 'chat' | 'group';
+  activeTab: "chat" | "group";
   settings: ChatSettings;
   setSettings: (settings: ChatSettings) => void;
   msgText: string;
   setMsgText: (text: string) => void;
-  msgSender: 'user' | 'bot';
-  setMsgSender: (sender: 'user' | 'bot') => void;
+  msgSender: "user" | "bot";
+  setMsgSender: (sender: "user" | "bot") => void;
   msgTime: string;
   setMsgTime: (time: string) => void;
   msgStatus: MessageStatus;
@@ -64,7 +64,7 @@ export const AddChat: React.FC<AddChatProps> = ({
   setMsgFile,
   addMessage,
   resetForm,
-  resetGroup
+  resetGroup,
 }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const profileInputRef = useRef<HTMLInputElement>(null);
@@ -75,8 +75,12 @@ export const AddChat: React.FC<AddChatProps> = ({
       const reader = new FileReader();
       reader.onload = (ev) => {
         setMsgFile(ev.target?.result as string);
-        if (msgType !== 'file' && msgType !== 'contact' && msgType !== 'location') {
-          setMsgType('image');
+        if (
+          msgType !== "file" &&
+          msgType !== "contact" &&
+          msgType !== "location"
+        ) {
+          setMsgType("image");
         }
       };
       reader.readAsDataURL(file);
@@ -88,14 +92,28 @@ export const AddChat: React.FC<AddChatProps> = ({
     if (file) {
       const reader = new FileReader();
       reader.onload = (ev) => {
-        setSettings({ ...settings, receiverAvatar: ev.target?.result as string });
+        setSettings({
+          ...settings,
+          receiverAvatar: ev.target?.result as string,
+        });
       };
       reader.readAsDataURL(file);
     }
   };
 
   const inputProps = {
-    msgText, setMsgText, msgTime, setMsgTime, msgStatus, setMsgStatus, msgReaction, setMsgReaction, msgFile, setMsgFile, fileInputRef, handleMsgFileUpload
+    msgText,
+    setMsgText,
+    msgTime,
+    setMsgTime,
+    msgStatus,
+    setMsgStatus,
+    msgReaction,
+    setMsgReaction,
+    msgFile,
+    setMsgFile,
+    fileInputRef,
+    handleMsgFileUpload,
   };
 
   return (
@@ -103,28 +121,53 @@ export const AddChat: React.FC<AddChatProps> = ({
       {/* Profile Section */}
       <div className="p-4 rounded-lg bg-gray-50 border border-gray-100 space-y-4">
         <div className="flex items-center gap-4">
-          <div className="relative group cursor-pointer" onClick={() => profileInputRef.current?.click()}>
-            <img src={settings.receiverAvatar} alt="Profile" className="w-16 h-16 rounded-full object-cover border-2 border-white shadow-sm" />
+          <div
+            className="relative group cursor-pointer"
+            onClick={() => profileInputRef.current?.click()}
+          >
+            <img
+              src={settings.receiverAvatar}
+              alt="Profile"
+              className="w-16 h-16 rounded-full object-cover border-2 border-white shadow-sm"
+            />
             <div className="absolute inset-0 bg-black/40 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
               <Upload size={16} className="text-white" />
             </div>
-            <input type="file" ref={profileInputRef} className="hidden" onChange={handleProfileUpload} />
+            <input
+              type="file"
+              ref={profileInputRef}
+              className="hidden"
+              onChange={handleProfileUpload}
+            />
           </div>
           <div className="flex-1 space-y-2">
-            <input 
-              type="text" 
-              placeholder={activeTab === 'chat' ? "Receiver's Name" : "Group Name"}
+            <input
+              type="text"
+              placeholder={
+                activeTab === "chat" ? "Receiver's Name" : "Group Name"
+              }
               value={settings.receiverName}
-              onChange={(e) => setSettings({ ...settings, receiverName: e.target.value })}
+              onChange={(e) =>
+                setSettings({ ...settings, receiverName: e.target.value })
+              }
               className="w-full p-2 rounded border border-gray-200 text-sm"
             />
-            <input 
-              type="text" 
-              placeholder={activeTab === 'chat' ? "Status (Online/Offline)" : "Members (Member1, Member2...)"}
-              value={activeTab === 'chat' ? settings.receiverStatus : settings.groupMembers}
-              onChange={(e) => activeTab === 'chat' 
-                ? setSettings({ ...settings, receiverStatus: e.target.value })
-                : setSettings({ ...settings, groupMembers: e.target.value })
+            <input
+              type="text"
+              placeholder={
+                activeTab === "chat"
+                  ? "Status (Online/Offline)"
+                  : "Members (Member1, Member2...)"
+              }
+              value={
+                activeTab === "chat"
+                  ? settings.receiverStatus
+                  : settings.groupMembers
+              }
+              onChange={(e) =>
+                activeTab === "chat"
+                  ? setSettings({ ...settings, receiverStatus: e.target.value })
+                  : setSettings({ ...settings, groupMembers: e.target.value })
               }
               className="w-full p-2 rounded border border-gray-200 text-sm"
             />
@@ -134,20 +177,24 @@ export const AddChat: React.FC<AddChatProps> = ({
 
       {/* Sender/Receiver Toggle */}
       <div className="flex bg-gray-100 rounded-full p-1">
-        <button 
-          onClick={() => setMsgSender('bot')}
+        <button
+          onClick={() => setMsgSender("bot")}
           className={cn(
             "flex-1 py-2 rounded-full text-sm font-medium transition-all flex items-center justify-center gap-2",
-            msgSender === 'bot' ? "bg-white shadow-sm text-gray-800" : "text-gray-500"
+            msgSender === "bot"
+              ? "bg-white shadow-sm text-gray-800"
+              : "text-gray-500",
           )}
         >
           <ArrowLeft size={14} className="rotate-180" /> Receiver
         </button>
-        <button 
-          onClick={() => setMsgSender('user')}
+        <button
+          onClick={() => setMsgSender("user")}
           className={cn(
             "flex-1 py-2 rounded-full text-sm font-medium transition-all flex items-center justify-center gap-2",
-            msgSender === 'user' ? "bg-[#539ba0] shadow-sm text-white" : "text-gray-500"
+            msgSender === "user"
+              ? "bg-[#539ba0] shadow-sm text-white"
+              : "text-gray-500",
           )}
         >
           <ArrowLeft size={14} /> Sender (You)
@@ -155,66 +202,77 @@ export const AddChat: React.FC<AddChatProps> = ({
       </div>
 
       {/* Message Type Tabs */}
-      <div className="flex border-b border-gray-200 overflow-x-auto scrollbar-hide">
-        {(['text', 'date', 'file', 'call', 'contact', 'location'] as const).map((t) => (
-          <button
-            key={t}
-            onClick={() => {
-              if (msgType !== t) {
-                if (msgText.startsWith('{') || msgType === 'date') {
-                  setMsgText('');
+      <div className="flex shrink-0 border-b border-gray-200 overflow-x-auto scrollbar">
+        {(["text", "date", "file", "call", "contact", "location"] as const).map(
+          (t) => (
+            <button
+              key={t}
+              onClick={() => {
+                if (msgType !== t) {
+                  if (msgText.startsWith("{") || msgType === "date") {
+                    setMsgText("");
+                  }
+                  setMsgType(t);
                 }
-                setMsgType(t);
-              }
-            }}
-            className={cn(
-              "px-4 py-2 text-sm font-medium whitespace-nowrap transition-all border-b-2",
-              msgType === t ? "border-[#539ba0] text-[#539ba0]" : "border-transparent text-gray-500 hover:text-gray-700"
-            )}
-          >
-            {t === 'text' && <MessageSquare size={14} className="inline mr-1" />}
-            {t === 'date' && <Calendar size={14} className="inline mr-1" />}
-            {t === 'file' && <FileIcon size={14} className="inline mr-1" />}
-            {t === 'call' && <PhoneCall size={14} className="inline mr-1" />}
-            {t === 'contact' && <Contact size={14} className="inline mr-1" />}
-            {t === 'location' && <MapPin size={14} className="inline mr-1" />}
-            {t === 'file' ? 'Docs' : t.charAt(0).toUpperCase() + t.slice(1)}
-          </button>
-        ))}
+              }}
+              className={cn(
+                "px-4 py-2 text-sm font-medium whitespace-nowrap transition-all border-b-2 flex items-center",
+                msgType === t
+                  ? "border-[#539ba0] text-[#539ba0]"
+                  : "border-transparent text-gray-500 hover:text-gray-700",
+              )}
+            >
+              {t === "text" && (
+                <MessageSquare size={14} className="inline mr-1" />
+              )}
+              {t === "date" && <Calendar size={14} className="inline mr-1" />}
+              {t === "file" && <FileIcon size={14} className="inline mr-1" />}
+              {t === "call" && <PhoneCall size={14} className="inline mr-1" />}
+              {t === "contact" && <Contact size={14} className="inline mr-1" />}
+              {t === "location" && <MapPin size={14} className="inline mr-1" />}
+              {t === "file" ? "Docs" : t.charAt(0).toUpperCase() + t.slice(1)}
+            </button>
+          ),
+        )}
       </div>
 
       {/* Message Input */}
       <div className="space-y-4">
-        {msgType === 'date' && <DateMessageInput {...inputProps} />}
-        {msgType === 'file' && <DocsMessageInput {...inputProps} />}
-        {msgType === 'call' && <CallMessageInput {...inputProps} />}
-        {msgType === 'contact' && <ContactMessageInput {...inputProps} />}
-        {msgType === 'location' && <LocationMessageInput {...inputProps} />}
-        {['text', 'image'].includes(msgType) && <TextMessageInput {...inputProps} />}
+        {msgType === "date" && <DateMessageInput {...inputProps} />}
+        {msgType === "file" && <DocsMessageInput {...inputProps} />}
+        {msgType === "call" && <CallMessageInput {...inputProps} />}
+        {msgType === "contact" && <ContactMessageInput {...inputProps} />}
+        {msgType === "location" && <LocationMessageInput {...inputProps} />}
+        {["text", "image"].includes(msgType) && (
+          <TextMessageInput {...inputProps} />
+        )}
 
-        {msgType !== 'date' && (
+        {msgType !== "date" && (
           <SharedMessageOptions
-            msgTime={msgTime} setMsgTime={setMsgTime}
-            msgStatus={msgStatus} setMsgStatus={setMsgStatus}
-            msgReaction={msgReaction} setMsgReaction={setMsgReaction}
+            msgTime={msgTime}
+            setMsgTime={setMsgTime}
+            msgStatus={msgStatus}
+            setMsgStatus={setMsgStatus}
+            msgReaction={msgReaction}
+            setMsgReaction={setMsgReaction}
           />
         )}
 
         <div className="flex gap-3 pt-2">
-          <button 
+          <button
             onClick={addMessage}
             className="flex-1 py-3 bg-[#539ba0] text-white rounded-lg font-bold shadow-md hover:bg-[#458287] active:scale-95 transition-all flex items-center justify-center gap-2"
           >
             <Plus size={18} /> Add Message
           </button>
-          <button 
+          <button
             onClick={resetForm}
             className="px-6 py-3 border border-red-200 text-red-500 rounded-lg font-bold hover:bg-red-50 transition-all flex items-center gap-2"
           >
             <RotateCcw size={18} /> Reset Form
           </button>
-          {activeTab === 'group' && resetGroup && (
-            <button 
+          {activeTab === "group" && resetGroup && (
+            <button
               onClick={resetGroup}
               className="px-6 py-3 border border-red-200 text-red-500 rounded-lg font-bold hover:bg-red-50 transition-all flex items-center gap-2"
             >
@@ -226,4 +284,3 @@ export const AddChat: React.FC<AddChatProps> = ({
     </div>
   );
 };
-
