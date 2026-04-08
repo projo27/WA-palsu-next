@@ -94,6 +94,16 @@ export default function App() {
     localStorage.removeItem('wa_fake_gen_v2');
   };
 
+  const handleImport = (data: { settings: ChatSettings; messages: Message[] }) => {
+    const importedSettings = {
+      ...DEFAULT_SETTINGS,
+      ...data.settings,
+      groupParticipants: data.settings.groupParticipants || DEFAULT_SETTINGS.groupParticipants,
+    };
+    setSettings(importedSettings);
+    setMessages(data.messages);
+  };
+
   return (
     <div className="h-screen bg-[#f8f9fa] flex flex-col md:flex-row p-4 md:p-8 gap-8 overflow-x-hidden">
       <Sidebar 
@@ -126,6 +136,7 @@ export default function App() {
         settings={settings}
         messages={messages}
         clearAll={clearAll}
+        onImport={handleImport}
       />
     </div>
   );

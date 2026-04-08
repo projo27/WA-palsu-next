@@ -1,5 +1,5 @@
 import React, { useRef, useEffect } from 'react';
-import { Trash2, File as FileIcon } from 'lucide-react';
+import { Trash2, Download, Upload } from 'lucide-react';
 import { Message, ChatSettings } from '../../types';
 import { cn } from '../../lib/utils';
 import { StatusBar } from './StatusBar';
@@ -14,14 +14,59 @@ interface PhonePreviewProps {
   settings: ChatSettings;
   messages: Message[];
   clearAll: () => void;
+  onImport: (data: { settings: ChatSettings; messages: Message[] }) => void;
 }
 
-export const PhonePreview: React.FC<PhonePreviewProps> = ({ settings, messages, clearAll }) => {
+export const PhonePreview: React.FC<PhonePreviewProps> = ({ settings, messages, clearAll, onImport }) => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const importInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
+
+  const handleExport = () => {
+    const exportData = { settings, messages };
+    const json = JSON.stringify(exportData, null, 2);
+    const blob = new Blob([json], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `wa-chat-${timestamp}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const handleImportClick = () => {
+    importInputRef.current?.click();
+  };
+
+  const handleImportFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      try {
+        const parsed = JSON.parse(ev.target?.result as string);
+        if (
+          typeof parsed === 'object' &&
+          parsed !== null &&
+          Array.isArray(parsed.messages) &&
+          typeof parsed.settings === 'object'
+        ) {
+          onImport(parsed);
+        } else {
+          alert('Format JSON tidak valid. Pastikan file memiliki properti "messages" (array) dan "settings" (object).');
+        }
+      } catch {
+        alert('File tidak dapat dibaca. Pastikan file adalah JSON yang valid.');
+      }
+    };
+    reader.readAsText(file);
+    // Reset input so the same file can be re-imported
+    e.target.value = '';
+  };
 
   return (
     <div className="flex-1 flex items-center justify-center sticky top-8 h-full p-4 my-auto">
@@ -68,20 +113,41 @@ export const PhonePreview: React.FC<PhonePreviewProps> = ({ settings, messages, 
 
         {/* Floating Action Buttons for Preview */}
         <div className="absolute -right-16 top-0 flex flex-col gap-2">
+          {/* Clear All */}
           <button 
             onClick={clearAll}
-            className="w-12 h-12 bg-red-500 text-white rounded-full shadow-lg flex items-center justify-center hover:bg-red-600 transition-all"
-            title="Clear All"
+            className="w-12 h-12 bg-red-500 text-white rounded-full shadow-lg flex items-center justify-center hover:bg-red-600 active:scale-95 transition-all"
+            title="Hapus semua pesan"
           >
             <Trash2 size={20} />
           </button>
+
+          {/* Export Chat */}
           <button 
-            onClick={() => window.print()}
-            className="w-12 h-12 bg-blue-500 text-white rounded-full shadow-lg flex items-center justify-center hover:bg-blue-600 transition-all"
-            title="Download/Print"
+            onClick={handleExport}
+            className="w-12 h-12 bg-emerald-500 text-white rounded-full shadow-lg flex items-center justify-center hover:bg-emerald-600 active:scale-95 transition-all"
+            title="Export chat ke JSON"
           >
-            <FileIcon size={20} />
+            <Download size={20} />
           </button>
+
+          {/* Import Chat */}
+          <button 
+            onClick={handleImportClick}
+            className="w-12 h-12 bg-blue-500 text-white rounded-full shadow-lg flex items-center justify-center hover:bg-blue-600 active:scale-95 transition-all"
+            title="Import chat dari JSON"
+          >
+            <Upload size={20} />
+          </button>
+
+          {/* Hidden file input for import */}
+          <input
+            ref={importInputRef}
+            type="file"
+            accept=".json,application/json"
+            onChange={handleImportFile}
+            className="hidden"
+          />
         </div>
       </div>
     </div>
