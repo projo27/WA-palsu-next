@@ -193,7 +193,7 @@ export const AddChat: React.FC<AddChatProps> = ({
           className={cn(
             "flex-1 py-2 rounded-full text-sm font-medium transition-all flex items-center justify-center gap-2",
             msgSender === "user"
-              ? "bg-[#539ba0] shadow-sm text-white"
+              ? "bg-primary shadow-sm text-white"
               : "text-gray-500",
           )}
         >
@@ -218,7 +218,7 @@ export const AddChat: React.FC<AddChatProps> = ({
               className={cn(
                 "px-4 py-2 text-sm font-medium whitespace-nowrap transition-all border-b-2 flex items-center",
                 msgType === t
-                  ? "border-[#539ba0] text-[#539ba0]"
+                  ? "border-primary text-primary"
                   : "border-transparent text-gray-500 hover:text-gray-700",
               )}
             >
@@ -261,7 +261,7 @@ export const AddChat: React.FC<AddChatProps> = ({
         <div className="flex gap-3 pt-2">
           <button
             onClick={addMessage}
-            className="flex-1 py-3 bg-[#539ba0] text-white rounded-lg font-bold shadow-md hover:bg-[#458287] active:scale-95 transition-all flex items-center justify-center gap-2"
+            className="flex-1 py-3 bg-primary text-white rounded-lg font-bold shadow-md hover:bg-primary-hover active:scale-95 transition-all flex items-center justify-center gap-2"
           >
             <Plus size={18} /> Add Message
           </button>

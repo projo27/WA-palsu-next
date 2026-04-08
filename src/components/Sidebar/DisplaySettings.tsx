@@ -12,8 +12,8 @@ import { cn } from "../../lib/utils";
 import { ChatSettings, DeviceLayout } from "../../types";
 
 import androidIcon from "../../assets/icon/android.svg";
-import iosIcon from "../../assets/icon/ios.svg";
 import desktopIcon from "../../assets/icon/desktop.svg";
+import iosIcon from "../../assets/icon/ios.svg";
 
 interface DisplaySettingsProps {
   settings: ChatSettings;
@@ -37,7 +37,7 @@ export const DisplaySettings: React.FC<DisplaySettingsProps> = ({
               className={cn(
                 "p-2 rounded border transition-all",
                 settings.layout === l
-                  ? "border-[#539ba0] bg-[#539ba0]/10 text-[#539ba0]"
+                  ? "border-primary bg-primary/10 text-primary"
                   : "border-gray-200 hover:border-gray-300",
               )}
             >
@@ -45,11 +45,7 @@ export const DisplaySettings: React.FC<DisplaySettingsProps> = ({
                 <img src={androidIcon} alt="Android" className="w-5 h-5" />
               )}
               {l === "ios" && (
-                <img
-                  src={iosIcon}
-                  alt="iOS"
-                  className="w-5 h-5"
-                />
+                <img src={iosIcon} alt="iOS" className="w-5 h-5" />
               )}
               {l === "desktop" && (
                 <img src={desktopIcon} alt="Desktop" className="w-5 h-5" />
@@ -63,7 +59,7 @@ export const DisplaySettings: React.FC<DisplaySettingsProps> = ({
             className={cn(
               "ml-auto px-4 py-2 rounded-full border flex items-center gap-2 text-sm font-medium transition-all",
               settings.isDarkMode
-                ? "bg-[#202c33] text-white border-[#202c33]"
+                ? "bg-bubble-receiver-dark text-white border-bubble-receiver-dark"
                 : "bg-white text-gray-700 border-gray-200",
             )}
           >
@@ -108,7 +104,7 @@ export const DisplaySettings: React.FC<DisplaySettingsProps> = ({
               className={cn(
                 "px-2 py-1 rounded text-[10px] font-bold border",
                 settings.is24Hour
-                  ? "bg-[#539ba0] text-white border-[#539ba0]"
+                  ? "bg-primary text-white border-primary"
                   : "bg-white text-gray-500 border-gray-200",
               )}
             >
@@ -162,7 +158,7 @@ export const DisplaySettings: React.FC<DisplaySettingsProps> = ({
             className={cn(
               "px-4 py-2 rounded border text-sm transition-all",
               settings.showBatteryPercentage
-                ? "bg-[#539ba0] text-white border-[#539ba0]"
+                ? "bg-primary text-white border-primary"
                 : "bg-white text-gray-600 border-gray-200",
             )}
           >
@@ -184,7 +180,7 @@ export const DisplaySettings: React.FC<DisplaySettingsProps> = ({
               className={cn(
                 "flex-1 py-2 px-3 rounded border flex items-center justify-center gap-2 text-sm font-medium transition-all",
                 settings.headerIcon === icon
-                  ? "bg-[#539ba0] text-white border-[#539ba0]"
+                  ? "bg-primary text-white border-primary"
                   : "bg-white text-gray-600 border-gray-200",
               )}
             >
@@ -209,7 +205,10 @@ export const DisplaySettings: React.FC<DisplaySettingsProps> = ({
               type="color"
               value={settings.chatBackgroundColor}
               onChange={(e) =>
-                setSettings({ ...settings, chatBackgroundColor: e.target.value })
+                setSettings({
+                  ...settings,
+                  chatBackgroundColor: e.target.value,
+                })
               }
               className="w-full h-8 p-0 border-0 rounded cursor-pointer"
             />
@@ -218,7 +217,10 @@ export const DisplaySettings: React.FC<DisplaySettingsProps> = ({
             <label className="text-xs text-gray-500">My Bubble</label>
             <input
               type="color"
-              value={settings.userBubbleColor || (settings.isDarkMode ? '#005c4b' : '#d9fdd3')}
+              value={
+                settings.userBubbleColor ||
+                (settings.isDarkMode ? "var(--color-bubble-user-dark)" : "var(--color-bubble-user)")
+              }
               onChange={(e) =>
                 setSettings({ ...settings, userBubbleColor: e.target.value })
               }
@@ -229,9 +231,15 @@ export const DisplaySettings: React.FC<DisplaySettingsProps> = ({
             <label className="text-xs text-gray-500">Their Bubble</label>
             <input
               type="color"
-              value={settings.receiverBubbleColor || (settings.isDarkMode ? '#202c33' : '#ffffff')}
+              value={
+                settings.receiverBubbleColor ||
+                (settings.isDarkMode ? "var(--color-bubble-receiver-dark)" : "var(--color-bubble-receiver)")
+              }
               onChange={(e) =>
-                setSettings({ ...settings, receiverBubbleColor: e.target.value })
+                setSettings({
+                  ...settings,
+                  receiverBubbleColor: e.target.value,
+                })
               }
               className="w-full h-8 p-0 border-0 rounded cursor-pointer"
             />
@@ -265,7 +273,7 @@ export const DisplaySettings: React.FC<DisplaySettingsProps> = ({
             }
             className={cn(
               "p-2 rounded border text-xs transition-all flex items-center justify-center gap-2",
-              settings.hideHeader ? "bg-[#539ba0] text-white" : "bg-white",
+              settings.hideHeader ? "bg-primary text-white" : "bg-white",
             )}
           >
             <X size={14} /> Hide Header
@@ -276,7 +284,7 @@ export const DisplaySettings: React.FC<DisplaySettingsProps> = ({
             }
             className={cn(
               "p-2 rounded border text-xs transition-all flex items-center justify-center gap-2",
-              settings.hideFooter ? "bg-[#539ba0] text-white" : "bg-white",
+              settings.hideFooter ? "bg-primary text-white" : "bg-white",
             )}
           >
             <X size={14} /> Hide Footer
@@ -287,7 +295,7 @@ export const DisplaySettings: React.FC<DisplaySettingsProps> = ({
             }
             className={cn(
               "p-2 rounded border text-xs transition-all flex items-center justify-center gap-2",
-              settings.showPayment ? "bg-[#539ba0] text-white" : "bg-white",
+              settings.showPayment ? "bg-primary text-white" : "bg-white",
             )}
           >
             $ Show Payment
@@ -301,7 +309,7 @@ export const DisplaySettings: React.FC<DisplaySettingsProps> = ({
             }
             className={cn(
               "p-2 rounded border text-xs transition-all flex items-center justify-center gap-2",
-              settings.showChatArrow ? "bg-[#539ba0] text-white" : "bg-white",
+              settings.showChatArrow ? "bg-primary text-white" : "bg-white",
             )}
           >
             Chat Arrow

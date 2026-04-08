@@ -44,13 +44,13 @@ export const DocsMessageInput: React.FC<MessageInputProps> = ({
               type="text"
               value={docName}
               onChange={(e) => setDocName(e.target.value)}
-              className="w-[60%] p-2 rounded-md border border-gray-200 text-sm focus:ring-1 focus:ring-[#539ba0] outline-none"
+              className="w-[60%] p-2 rounded-md border border-gray-200 text-sm focus:ring-1 focus:ring-primary outline-none"
               placeholder="document name"
             />
             <select
               value={docExt}
               onChange={(e) => setDocExt(e.target.value)}
-              className="w-[40%] p-2 rounded-md border border-gray-200 text-sm focus:ring-1 focus:ring-[#539ba0] outline-none"
+              className="w-[40%] p-2 rounded-md border border-gray-200 text-sm focus:ring-1 focus:ring-primary outline-none"
             >
               <option value="JPG">JPG</option>
               <option value="PNG">PNG</option>
@@ -70,13 +70,13 @@ export const DocsMessageInput: React.FC<MessageInputProps> = ({
               type="text"
               value={docSize}
               onChange={(e) => setDocSize(e.target.value)}
-              className="w-[50%] p-2 rounded-md border border-gray-200 text-sm focus:ring-1 focus:ring-[#539ba0] outline-none"
+              className="w-[50%] p-2 rounded-md border border-gray-200 text-sm focus:ring-1 focus:ring-primary outline-none"
               placeholder="size"
             />
             <select
               value={docSizeType}
               onChange={(e) => setDocSizeType(e.target.value)}
-              className="w-[50%] p-2 rounded-md border border-gray-200 text-sm focus:ring-1 focus:ring-[#539ba0] outline-none"
+              className="w-[50%] p-2 rounded-md border border-gray-200 text-sm focus:ring-1 focus:ring-primary outline-none"
             >
               <option value="Bytes">Bytes</option>
               <option value="KB">KB</option>
@@ -86,7 +86,6 @@ export const DocsMessageInput: React.FC<MessageInputProps> = ({
           </div>
         </div>
       </div>
-
     </div>
   );
 };

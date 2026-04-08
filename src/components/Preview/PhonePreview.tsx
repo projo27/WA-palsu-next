@@ -24,17 +24,17 @@ export const PhonePreview: React.FC<PhonePreviewProps> = ({ settings, messages, 
   }, [messages]);
 
   return (
-    <div className="flex-1 flex items-center justify-center sticky top-8 h-full p-8 my-auto">
+    <div className="flex-1 flex items-center justify-center sticky top-8 h-full p-4 my-auto">
       <div className="relative h-full">
         {/* Device Frame */}
         <div className={cn(
-          "relative w-[380px] aspect-9/16 bg-black rounded-[3rem] p-3 shadow-2xl border-8 border-gray-800 overflow-hidden",
+          "relative w-[380px] aspect-9/18 bg-black rounded-[3rem] p-3 shadow-2xl border-8 border-gray-800 overflow-hidden",
           settings.layout === 'desktop' && "w-[600px] h-[400px] rounded-xl border-4"
         )}>
           {/* Screen Content */}
           <div className={cn(
             "w-full h-full rounded-4xl overflow-hidden flex flex-col relative",
-            settings.isDarkMode ? "bg-[#0b141a] text-[#e9edef]" : "bg-[#efeae2] text-[#111b21]"
+            settings.isDarkMode ? "bg-chat-dark text-[#e9edef]" : "bg-chat-light text-[#111b21]"
           )} style={{ 
             backgroundColor: settings.chatBackgroundColor,
             fontFamily: settings.layout === 'android' ? '"Roboto", sans-serif' : '-apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif'

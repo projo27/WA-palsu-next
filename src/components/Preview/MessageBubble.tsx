@@ -17,8 +17,8 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({ msg, settings }) =
     );
   }
 
-  const userColor = settings.userBubbleColor || (settings.isDarkMode ? "#005c4b" : "#d9fdd3");
-  const receiverColor = settings.receiverBubbleColor || (settings.isDarkMode ? "#202c33" : "#ffffff");
+  const userColor = settings.userBubbleColor || (settings.isDarkMode ? "var(--color-bubble-user-dark)" : "var(--color-bubble-user)");
+  const receiverColor = settings.receiverBubbleColor || (settings.isDarkMode ? "var(--color-bubble-receiver-dark)" : "var(--color-bubble-receiver)");
   const backgroundColor = msg.sender === 'user' ? userColor : receiverColor;
   const textColor = getContrastColor(backgroundColor);
 
@@ -137,7 +137,7 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({ msg, settings }) =
               </span>
             </div>
             <div className="h-px bg-black/10 w-full" />
-            <div className="py-2 text-center text-[#027eb5] font-medium text-sm">
+            <div className="py-2 text-center text-brand-blue font-medium text-sm">
               {isMultiple ? 'View all' : 'Message'}
             </div>
           </div>
@@ -161,7 +161,7 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({ msg, settings }) =
               {msg.fileUrl ? (
                 <img src={msg.fileUrl} alt="Map" className={cn("w-full h-32 object-cover rounded-t-lg", locType === 'stop_live' ? "grayscale opacity-80" : "")} />
               ) : (
-                <div className={cn("w-full h-32 bg-[#e5e5dc] rounded-t-lg flex items-center justify-center relative overflow-hidden", locType === 'stop_live' ? "grayscale opacity-80" : "")}>
+                <div className={cn("w-full h-32 bg-chat-light rounded-t-lg flex items-center justify-center relative overflow-hidden", locType === 'stop_live' ? "grayscale opacity-80" : "")}>
                   <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'radial-gradient(circle, #000 1px, transparent 1px)', backgroundSize: '10px 10px' }}></div>
                 </div>
               )}
@@ -225,7 +225,7 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({ msg, settings }) =
       {msg.reaction && (
         <div className={cn(
           "absolute -bottom-2 right-1 px-1 rounded-full text-[10px] shadow-sm border",
-          settings.isDarkMode ? "bg-[#202c33] border-gray-700" : "bg-white border-gray-100"
+          settings.isDarkMode ? "bg-bubble-receiver-dark border-gray-700" : "bg-white border-gray-100"
         )}>
           {msg.reaction}
         </div>
