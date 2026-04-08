@@ -29,3 +29,19 @@
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+
+/* ── Video recording animations ─────────────────────────────────────────── */
+
+/* Countdown number: scale up from small + fade in, then hold */
+@keyframes countdown-pop {
+  0%   { transform: scale(0.4); opacity: 0; }
+  40%  { transform: scale(1.15); opacity: 1; }
+  70%  { transform: scale(0.95); opacity: 1; }
+  100% { transform: scale(1); opacity: 0.85; }
+}
+
+/* REC indicator dot: blinks between fully visible and half-transparent */
+@keyframes rec-blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.25; }
+}
