@@ -21,24 +21,24 @@ export const SharedMessageOptions: React.FC<SharedMessageOptionsProps> = ({
   return (
     <div className="grid grid-cols-3 gap-4">
       <div className="space-y-1">
-        <label className="text-[10px] font-bold text-gray-400 uppercase">
+        <label className="text-xs font-semibold text-gray-500 capitalize">
           Message Time
         </label>
         <input
           type="time"
           value={msgTime}
           onChange={(e) => setMsgTime(e.target.value)}
-          className="w-full p-2 rounded border border-gray-200 text-sm"
+          className="w-full p-2.5 rounded-lg border border-gray-200 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
         />
       </div>
       <div className="space-y-1">
-        <label className="text-[10px] font-bold text-gray-400 uppercase">
+        <label className="text-xs font-semibold text-gray-500 capitalize">
           Status
         </label>
         <select
           value={msgStatus}
           onChange={(e) => setMsgStatus(e.target.value as MessageStatus)}
-          className="w-full p-2 rounded border border-gray-200 text-sm"
+          className="w-full p-2.5 rounded-lg text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all border-r-8 border-transparent outline outline-gray-200"
         >
           <option value="none">None</option>
           <option value="sent">Sent</option>
@@ -47,13 +47,13 @@ export const SharedMessageOptions: React.FC<SharedMessageOptionsProps> = ({
         </select>
       </div>
       <div className="space-y-1">
-        <label className="text-[10px] font-bold text-gray-400 uppercase">
+        <label className="text-xs font-semibold text-gray-500 capitalize">
           Reaction
         </label>
         <select
           value={msgReaction}
           onChange={(e) => setMsgReaction(e.target.value)}
-          className="w-full p-2 rounded border border-gray-200 text-sm"
+          className="w-full p-2.5 rounded-lg text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all border-r-8 border-transparent outline outline-gray-200"
         >
           <option value="">None</option>
           <option value="👍">👍</option>

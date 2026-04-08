@@ -127,7 +127,23 @@ export const DateMessageInput: React.FC<MessageInputProps> = ({
             setIsCustomDate(false);
             setMsgText(e.target.value);
           }}
-          className="px-3 py-1.5 rounded-md text-sm border bg-white text-gray-600 cursor-pointer"
+          className={cn(
+            "px-3 py-1.5 rounded-md border-r-8 border-transparent outline  text-sm border bg-white text-gray-600 cursor-pointer",
+            !isCustomDate &&
+              ([
+                "Monday",
+                "Tuesday",
+                "Wednesday",
+                "Thursday",
+                "Friday",
+                "Saturday",
+                "Sunday",
+              ].includes(msgText)
+                ? msgText
+                : "")
+              ? "bg-primary text-white border-primary"
+              : "bg-white text-gray-600 hover:bg-gray-50",
+          )}
         >
           <option value="" disabled hidden>
             Day...

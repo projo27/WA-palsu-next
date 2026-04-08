@@ -68,7 +68,7 @@ export const CallMessageInput: React.FC<MessageInputProps> = ({
           <select
             value={callType}
             onChange={(e) => setCallType(e.target.value)}
-            className="w-full p-2 rounded-md border border-gray-200 text-sm focus:ring-1 focus:ring-primary outline-none"
+            className="w-full p-2  rounded-lg border-r-8 border-transparent outline outline-gray-200 text-sm focus:ring-1 focus:ring-primary "
           >
             <option value="Call">Call</option>
             <option value="Missed Call">Missed Call</option>

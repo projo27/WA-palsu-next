@@ -185,27 +185,19 @@ export const AddChat: React.FC<AddChatProps> = ({
               onChange={(e) =>
                 setSettings({ ...settings, receiverName: e.target.value })
               }
-              className="w-full p-2 rounded border border-gray-200 text-sm"
+              className="w-full p-2.5 rounded-lg border border-gray-200 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all placeholder:text-gray-400"
             />
-            <input
-              type="text"
-              placeholder={
-                activeTab === "chat"
-                  ? "Status (Online/Offline)"
-                  : "Members (Member1, Member2...)"
-              }
-              value={
-                activeTab === "chat"
-                  ? settings.receiverStatus
-                  : settings.groupMembers
-              }
-              onChange={(e) =>
-                activeTab === "chat"
-                  ? setSettings({ ...settings, receiverStatus: e.target.value })
-                  : setSettings({ ...settings, groupMembers: e.target.value })
-              }
-              className="w-full p-2 rounded border border-gray-200 text-sm"
-            />
+            {activeTab === "chat" && (
+              <input
+                type="text"
+                placeholder="Status (Online/Offline)"
+                value={settings.receiverStatus}
+                onChange={(e) =>
+                  setSettings({ ...settings, receiverStatus: e.target.value })
+                }
+                className="w-full p-2.5 rounded-lg border border-gray-200 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all placeholder:text-gray-400"
+              />
+            )}
           </div>
         </div>
       </div>
@@ -213,7 +205,7 @@ export const AddChat: React.FC<AddChatProps> = ({
       {/* Sender/Receiver Toggle */}
       {activeTab === "group" ? (
         <div className="space-y-3">
-          <label className="text-sm font-medium text-gray-600">Select Message Sender</label>
+          <label className="text-sm font-semibold text-gray-700 capitalize">Select Message Sender</label>
           <div className="flex flex-col gap-2">
             <button
               onClick={() => setMsgSender("user")}
@@ -265,7 +257,7 @@ export const AddChat: React.FC<AddChatProps> = ({
                 value={newParticipantName}
                 onChange={(e) => setNewParticipantName(e.target.value)}
                 onKeyDown={(e) => { if (e.key === 'Enter') handleAddParticipant(); }}
-                className="flex-1 p-2 rounded border border-gray-200 text-sm focus:outline-none focus:border-primary"
+                className="flex-1 p-2 rounded-lg border border-gray-200 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all placeholder:text-gray-400"
               />
               <button
                 onClick={handleAddParticipant}

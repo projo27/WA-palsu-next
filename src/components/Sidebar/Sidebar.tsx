@@ -1,4 +1,4 @@
-import { Layout, Plus, Users } from "lucide-react";
+import { Layout, User, Users } from "lucide-react";
 import React from "react";
 import { cn } from "../../lib/utils";
 import { ChatSettings, MessageStatus, MessageType } from "../../types";
@@ -69,7 +69,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 : "hover:bg-white/10",
             )}
           >
-            <Plus size={18} /> Add Chat
+            <User size={18} /> Single Chat
           </button>
           <button
             onClick={() => {

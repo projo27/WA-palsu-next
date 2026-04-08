@@ -36,7 +36,7 @@ export const DocsMessageInput: React.FC<MessageInputProps> = ({
     <div className="space-y-4 animate-in fade-in duration-300">
       <div className="grid grid-cols-[2fr_1fr] gap-4">
         <div className="space-y-2">
-          <label className="text-[10px] font-bold text-gray-400 uppercase">
+          <label className="text-xs font-semibold text-gray-500 capitalize">
             Document Name & Type
           </label>
           <div className="flex gap-2">
@@ -44,13 +44,13 @@ export const DocsMessageInput: React.FC<MessageInputProps> = ({
               type="text"
               value={docName}
               onChange={(e) => setDocName(e.target.value)}
-              className="w-[60%] p-2 rounded-md border border-gray-200 text-sm focus:ring-1 focus:ring-primary outline-none"
+              className="w-[60%] p-2.5 rounded-lg border border-gray-200 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all placeholder:text-gray-400"
               placeholder="document name"
             />
             <select
               value={docExt}
               onChange={(e) => setDocExt(e.target.value)}
-              className="w-[40%] p-2 rounded-md border border-gray-200 text-sm focus:ring-1 focus:ring-primary outline-none"
+              className="w-[40%] p-2.5  rounded-lg border-r-8 border-transparent outline outline-gray-200 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
             >
               <option value="JPG">JPG</option>
               <option value="PNG">PNG</option>
@@ -62,7 +62,7 @@ export const DocsMessageInput: React.FC<MessageInputProps> = ({
           </div>
         </div>
         <div className="space-y-2">
-          <label className="text-[10px] font-bold text-gray-400 uppercase">
+          <label className="text-xs font-semibold text-gray-500 capitalize">
             Document Size & Type
           </label>
           <div className="flex gap-2">
@@ -70,13 +70,13 @@ export const DocsMessageInput: React.FC<MessageInputProps> = ({
               type="text"
               value={docSize}
               onChange={(e) => setDocSize(e.target.value)}
-              className="w-[50%] p-2 rounded-md border border-gray-200 text-sm focus:ring-1 focus:ring-primary outline-none"
+              className="w-[50%] p-2.5  rounded-lg border-r-8 border-transparent outline outline-gray-200 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all placeholder:text-gray-400"
               placeholder="size"
             />
             <select
               value={docSizeType}
               onChange={(e) => setDocSizeType(e.target.value)}
-              className="w-[50%] p-2 rounded-md border border-gray-200 text-sm focus:ring-1 focus:ring-primary outline-none"
+              className="w-[50%] p-2.5  rounded-lg border-r-8 border-transparent outline outline-gray-200 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
             >
               <option value="Bytes">Bytes</option>
               <option value="KB">KB</option>
