@@ -38,10 +38,8 @@ interface AddChatProps {
   msgReaction: string;
   setMsgReaction: (reaction: string) => void;
   msgFile: string | null;
-  setMsgFile: (file: string | null) => void;
-  addMessage: () => void;
-  resetForm: () => void;
-  resetGroup?: () => void;
+  msgBotSenderId?: string;
+  setMsgBotSenderId?: (id: string) => void;
 }
 
 export const AddChat: React.FC<AddChatProps> = ({
@@ -62,12 +60,16 @@ export const AddChat: React.FC<AddChatProps> = ({
   setMsgReaction,
   msgFile,
   setMsgFile,
+  msgBotSenderId,
+  setMsgBotSenderId,
   addMessage,
   resetForm,
   resetGroup,
 }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const profileInputRef = useRef<HTMLInputElement>(null);
+  const [newParticipantName, setNewParticipantName] = React.useState("");
+  const [newParticipantColor, setNewParticipantColor] = React.useState("#ffb300");
 
   const handleMsgFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -98,6 +100,39 @@ export const AddChat: React.FC<AddChatProps> = ({
         });
       };
       reader.readAsDataURL(file);
+    }
+  };
+
+  const handleAddParticipant = () => {
+    if (!newParticipantName.trim()) return;
+    const newParticipant = {
+      id: Date.now().toString(),
+      name: newParticipantName.trim(),
+      color: newParticipantColor
+    };
+    const updatedParticipants = [...(settings.groupParticipants || []), newParticipant];
+    setSettings({
+      ...settings,
+      groupParticipants: updatedParticipants
+    });
+    setNewParticipantName("");
+    if (setMsgBotSenderId) setMsgBotSenderId(newParticipant.id);
+    setMsgSender("bot");
+  };
+
+  const removeParticipant = (id: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    const updatedParticipants = (settings.groupParticipants || []).filter(p => p.id !== id);
+    setSettings({
+      ...settings,
+      groupParticipants: updatedParticipants
+    });
+    if (msgSender === "bot" && msgBotSenderId === id) {
+      if (updatedParticipants.length > 0) {
+        if (setMsgBotSenderId) setMsgBotSenderId(updatedParticipants[0].id);
+      } else {
+        setMsgSender("user");
+      }
     }
   };
 
@@ -176,30 +211,98 @@ export const AddChat: React.FC<AddChatProps> = ({
       </div>
 
       {/* Sender/Receiver Toggle */}
-      <div className="flex bg-gray-100 rounded-full p-1">
-        <button
-          onClick={() => setMsgSender("bot")}
-          className={cn(
-            "flex-1 py-2 rounded-full text-sm font-medium transition-all flex items-center justify-center gap-2",
-            msgSender === "bot"
-              ? "bg-white shadow-sm text-gray-800"
-              : "text-gray-500",
-          )}
-        >
-          <ArrowLeft size={14} className="rotate-180" /> Receiver
-        </button>
-        <button
-          onClick={() => setMsgSender("user")}
-          className={cn(
-            "flex-1 py-2 rounded-full text-sm font-medium transition-all flex items-center justify-center gap-2",
-            msgSender === "user"
-              ? "bg-primary shadow-sm text-white"
-              : "text-gray-500",
-          )}
-        >
-          <ArrowLeft size={14} /> Sender (You)
-        </button>
-      </div>
+      {activeTab === "group" ? (
+        <div className="space-y-3">
+          <label className="text-sm font-medium text-gray-600">Select Message Sender</label>
+          <div className="flex flex-col gap-2">
+            <button
+              onClick={() => setMsgSender("user")}
+              className={cn(
+                "w-full text-left p-3 rounded-lg border text-sm font-medium transition-all flex items-center gap-2",
+                msgSender === "user"
+                  ? "border-primary bg-primary/10 text-primary"
+                  : "border-gray-200 text-gray-700 hover:bg-gray-50",
+              )}
+            >
+              Sender (You)
+            </button>
+            {settings.groupParticipants?.map((p) => (
+              <button
+                key={p.id}
+                onClick={() => {
+                  setMsgSender("bot");
+                  if (setMsgBotSenderId) setMsgBotSenderId(p.id);
+                }}
+                className={cn(
+                  "w-full p-3 rounded-lg border text-sm font-medium transition-all flex items-center justify-between group",
+                  msgSender === "bot" && msgBotSenderId === p.id
+                    ? "border-primary bg-primary/10 text-primary"
+                    : "border-gray-200 text-gray-700 hover:bg-gray-50",
+                )}
+              >
+                <div className="flex items-center gap-2">
+                  <div className="w-3 h-3 rounded-full" style={{ backgroundColor: p.color }} />
+                  {p.name}
+                </div>
+                <div 
+                  onClick={(e) => removeParticipant(p.id, e)}
+                  className="p-1 rounded bg-red-100 text-red-500 hover:bg-red-200 opacity-0 group-hover:opacity-100 transition-opacity"
+                >
+                  <RotateCcw size={12} className="rotate-45" />
+                </div>
+              </button>
+            ))}
+            <div className="flex gap-2 items-center p-2 rounded-lg border border-gray-200 bg-gray-50">
+              <input
+                type="color"
+                value={newParticipantColor}
+                onChange={(e) => setNewParticipantColor(e.target.value)}
+                className="w-8 h-8 p-0 border-0 rounded cursor-pointer shrink-0"
+              />
+              <input
+                type="text"
+                placeholder="New user name..."
+                value={newParticipantName}
+                onChange={(e) => setNewParticipantName(e.target.value)}
+                onKeyDown={(e) => { if (e.key === 'Enter') handleAddParticipant(); }}
+                className="flex-1 p-2 rounded border border-gray-200 text-sm focus:outline-none focus:border-primary"
+              />
+              <button
+                onClick={handleAddParticipant}
+                disabled={!newParticipantName.trim()}
+                className="px-3 py-2 bg-primary text-white rounded text-sm font-medium hover:bg-primary-hover disabled:opacity-50 transition-all shrink-0"
+              >
+                + Add User
+              </button>
+            </div>
+          </div>
+        </div>
+      ) : (
+        <div className="flex bg-gray-100 rounded-full p-1">
+          <button
+            onClick={() => setMsgSender("bot")}
+            className={cn(
+              "flex-1 py-2 rounded-full text-sm font-medium transition-all flex items-center justify-center gap-2",
+              msgSender === "bot"
+                ? "bg-white shadow-sm text-gray-800"
+                : "text-gray-500",
+            )}
+          >
+            <ArrowLeft size={14} className="rotate-180" /> Receiver
+          </button>
+          <button
+            onClick={() => setMsgSender("user")}
+            className={cn(
+              "flex-1 py-2 rounded-full text-sm font-medium transition-all flex items-center justify-center gap-2",
+              msgSender === "user"
+                ? "bg-primary shadow-sm text-white"
+                : "text-gray-500",
+            )}
+          >
+            <ArrowLeft size={14} /> Sender (You)
+          </button>
+        </div>
+      )}
 
       {/* Message Type Tabs */}
       <div className="flex shrink-0 border-b border-gray-200 overflow-x-auto scrollbar">

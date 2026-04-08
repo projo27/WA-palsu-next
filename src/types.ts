@@ -13,6 +13,8 @@ export interface Message {
   fileName?: string;
   fileSize?: string;
   reaction?: string;
+  senderName?: string;
+  senderColor?: string;
 }
 
 export interface ChatSettings {
@@ -44,4 +46,5 @@ export interface ChatSettings {
   receiverAvatar: string;
   isGroup: boolean;
   groupMembers?: string;
+  groupParticipants?: { id: string; name: string; color: string }[];
 }

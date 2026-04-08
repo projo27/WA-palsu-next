@@ -24,6 +24,8 @@ interface SidebarProps {
   setMsgReaction: (reaction: string) => void;
   msgFile: string | null;
   setMsgFile: (file: string | null) => void;
+  msgBotSenderId: string;
+  setMsgBotSenderId: (id: string) => void;
   addMessage: () => void;
   resetForm: () => void;
   resetGroup: () => void;

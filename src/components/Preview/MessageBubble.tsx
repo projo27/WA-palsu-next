@@ -33,6 +33,16 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({ msg, settings }) =
       settings.textSize === 'default' && "text-xs",
       settings.textSize === 'large' && "text-sm"
     )} style={{ backgroundColor, color: textColor }}>
+      
+      {settings.isGroup && msg.sender !== 'user' && msg.senderName && (
+        <div 
+          className="text-[13px] font-bold leading-tight mb-1" 
+          style={{ color: msg.senderColor || '#00a884' }}
+        >
+          {msg.senderName}
+        </div>
+      )}
+
       {msg.fileUrl && (
         <div className="mb-1">
           <img src={msg.fileUrl} alt="Sent" className="rounded-md max-w-full max-h-64 object-contain" />

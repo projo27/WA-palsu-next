@@ -22,12 +22,17 @@ export default function App() {
   const [msgType, setMsgType] = useState<MessageType>('text');
   const [msgReaction, setMsgReaction] = useState('');
   const [msgFile, setMsgFile] = useState<string | null>(null);
+  const [msgBotSenderId, setMsgBotSenderId] = useState<string>('1');
 
   useEffect(() => {
     const saved = localStorage.getItem('wa_fake_gen_v2');
     if (saved) {
       const data = JSON.parse(saved);
-      setSettings(data.settings);
+      setSettings({
+        ...DEFAULT_SETTINGS,
+        ...data.settings,
+        groupParticipants: data.settings.groupParticipants || DEFAULT_SETTINGS.groupParticipants
+      });
       setMessages(data.messages);
     }
   }, []);
@@ -39,6 +44,15 @@ export default function App() {
   const addMessage = () => {
     if (!msgText && msgType === 'text') return;
     
+    let currentSenderName, currentSenderColor;
+    if (activeTab === 'group' && msgSender === 'bot') {
+      const participant = settings.groupParticipants?.find(p => p.id === msgBotSenderId);
+      if (participant) {
+        currentSenderName = participant.name;
+        currentSenderColor = participant.color;
+      }
+    }
+
     const newMessage: Message = {
       id: Date.now().toString(),
       text: (msgType === 'date' && !msgText) ? 'Today' : msgText,
@@ -47,7 +61,9 @@ export default function App() {
       timestamp: msgTime,
       status: msgStatus,
       reaction: msgReaction,
-      fileUrl: msgFile || undefined
+      fileUrl: msgFile || undefined,
+      senderName: currentSenderName,
+      senderColor: currentSenderColor
     };
     
     setMessages([...messages, newMessage]);
@@ -99,6 +115,8 @@ export default function App() {
         setMsgReaction={setMsgReaction}
         msgFile={msgFile}
         setMsgFile={setMsgFile}
+        msgBotSenderId={msgBotSenderId}
+        setMsgBotSenderId={setMsgBotSenderId}
         addMessage={addMessage}
         resetForm={resetForm}
         resetGroup={resetGroup}

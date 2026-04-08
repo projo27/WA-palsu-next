@@ -25,5 +25,9 @@ export const DEFAULT_SETTINGS: ChatSettings = {
   receiverStatus: 'Online',
   receiverAvatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=John',
   isGroup: false,
-  groupMembers: 'Member1, Member2'
+  groupMembers: 'Member1, Member2',
+  groupParticipants: [
+    { id: '1', name: 'User A', color: '#ffb300' },
+    { id: '2', name: 'User B', color: '#00a884' }
+  ]
 };
