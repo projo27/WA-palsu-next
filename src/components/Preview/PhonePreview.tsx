@@ -24,11 +24,11 @@ export const PhonePreview: React.FC<PhonePreviewProps> = ({ settings, messages, 
   }, [messages]);
 
   return (
-    <div className="flex-1 flex items-center justify-center sticky top-8 h-full p-8">
-      <div className="relative">
+    <div className="flex-1 flex items-center justify-center sticky top-8 h-full p-8 my-auto">
+      <div className="relative h-full">
         {/* Device Frame */}
         <div className={cn(
-          "relative h-full aspect-[9/16] bg-black rounded-[3rem] p-3 shadow-2xl border-8 border-gray-800 overflow-hidden",
+          "relative w-[380px] aspect-9/16 bg-black rounded-[3rem] p-3 shadow-2xl border-8 border-gray-800 overflow-hidden",
           settings.layout === 'desktop' && "w-[600px] h-[400px] rounded-xl border-4"
         )}>
           {/* Screen Content */}

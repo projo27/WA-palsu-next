@@ -1,4 +1,4 @@
-import { BatteryCharging, MapPin, Signal, VolumeX, Wifi } from "lucide-react";
+import { BatteryCharging, MapPin, Signal, VolumeX, Wifi, Zap } from "lucide-react";
 import React from "react";
 import { cn } from "../../lib/utils";
 import { ChatSettings } from "../../types";
@@ -32,12 +32,12 @@ export const StatusBar: React.FC<StatusBarProps> = ({ settings }) => {
             <div
               className={cn(
                 "h-full rounded-sm",
-                settings.batteryLevel < 20 ? "bg-red-500" : "bg-current",
+                settings.batteryLevel < 20 ? "bg-red-500" : "bg-green-500",
               )}
               style={{ width: `${settings.batteryLevel}%` }}
             />
             {settings.isCharging && (
-              <BatteryCharging size={8} className="absolute inset-0 m-auto" />
+              <Zap size={6} className="absolute inset-0 m-auto" />
             )}
           </div>
         </div>

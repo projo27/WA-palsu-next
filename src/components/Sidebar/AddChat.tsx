@@ -159,7 +159,14 @@ export const AddChat: React.FC<AddChatProps> = ({
         {(['text', 'date', 'file', 'call', 'contact', 'location'] as const).map((t) => (
           <button
             key={t}
-            onClick={() => setMsgType(t)}
+            onClick={() => {
+              if (msgType !== t) {
+                if (msgText.startsWith('{') || msgType === 'date') {
+                  setMsgText('');
+                }
+                setMsgType(t);
+              }
+            }}
             className={cn(
               "px-4 py-2 text-sm font-medium whitespace-nowrap transition-all border-b-2",
               msgType === t ? "border-[#539ba0] text-[#539ba0]" : "border-transparent text-gray-500 hover:text-gray-700"
