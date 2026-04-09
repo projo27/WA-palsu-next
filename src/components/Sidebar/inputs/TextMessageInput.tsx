@@ -27,10 +27,28 @@ export const TextMessageInput: React.FC<MessageInputProps> = ({
     if (msgFile && !msgFile.startsWith('http') && tab !== "local") setTab("local");
   }, [msgFile]);
 
+  const getYoutubeThumbnail = (url: string) => {
+    const regExp = /^.*(youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+    const match = url.match(regExp);
+    if (match && match[2].length === 11) {
+      return `https://img.youtube.com/vi/${match[2]}/hqdefault.jpg`;
+    }
+    return null;
+  };
+
   const handleUrlChange = (value: string) => {
-    setMsgFile(value);
-    if (value.trim() !== "") {
-      if (msgType !== "image" && msgType !== "file" && msgType !== "contact" && msgType !== "location") {
+    const ytThumb = getYoutubeThumbnail(value);
+    const finalVal = ytThumb || value;
+    
+    setMsgFile(finalVal);
+    
+    if (finalVal.trim() !== "") {
+      if (
+        msgType !== "image" &&
+        msgType !== "file" &&
+        msgType !== "contact" &&
+        msgType !== "location"
+      ) {
         setMsgType("image");
       }
     }

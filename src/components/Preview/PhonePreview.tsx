@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState } from "react";
-import { Trash2, Download, Upload, Camera, Video, Square } from "lucide-react";
+import { Trash2, Download, Upload, Camera, Video, Square, X } from "lucide-react";
 import { toPng } from "html-to-image";
 import { Message, ChatSettings } from "../../types";
 import { cn } from "../../lib/utils";
@@ -43,6 +43,9 @@ export const PhonePreview: React.FC<PhonePreviewProps> = ({
 
   // Screenshot in-progress state (to hide cursor from PNG)
   const [screenshotting, setScreenshotting] = useState(false);
+
+  // Full-screen media viewer
+  const [viewerMedia, setViewerMedia] = useState<string | null>(null);
 
   // Video recorder hook
   const { isRecording, countdown, toggleRecording } =
@@ -283,7 +286,11 @@ export const PhonePreview: React.FC<PhonePreviewProps> = ({
                 <div className="flex flex-col gap-1 relative z-10">
                   {messages.map((msg) => (
                     <div key={msg.id} className="flex flex-col">
-                      <MessageBubble msg={msg} settings={settings} />
+                      <MessageBubble
+                        msg={msg}
+                        settings={settings}
+                        onImageClick={setViewerMedia}
+                      />
                     </div>
                   ))}
                   <div ref={messagesEndRef} />
@@ -292,6 +299,35 @@ export const PhonePreview: React.FC<PhonePreviewProps> = ({
 
               <ChatFooter settings={settings} />
               <NavigationBar settings={settings} />
+
+              {/* ── Media Viewer (Popup) ─────────────────────────────────── */}
+              {viewerMedia && (
+                <div
+                  className="absolute inset-0 z-110 bg-black flex items-center justify-center p-4 animate-in fade-in duration-300"
+                >
+                  <button
+                    onClick={() => setViewerMedia(null)}
+                    className="absolute top-10 right-4 w-10 h-10 bg-white/10 hover:bg-white/20 text-white rounded-full flex items-center justify-center transition-colors shadow-lg"
+                  >
+                    <X size={24} />
+                  </button>
+                  <img
+                    src={viewerMedia}
+                    alt="Media Full View"
+                    className="max-w-full max-h-[80%] shadow-2xl animate-in zoom-in-95 duration-300"
+                  />
+                  <div className="absolute bottom-10 left-0 right-0 text-center">
+                    <span className="text-white/60 text-xs font-medium tracking-wide">
+                      TAP ANYWHERE TO CLOSE
+                    </span>
+                  </div>
+                  {/* Backdrop click to close */}
+                  <div 
+                    className="absolute inset-0 -z-10" 
+                    onClick={() => setViewerMedia(null)} 
+                  />
+                </div>
+              )}
 
               {/* ── 3-2-1 Countdown Overlay ─────────────────────────────── */}
               {countdown !== null && (

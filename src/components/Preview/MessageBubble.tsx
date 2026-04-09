@@ -6,9 +6,14 @@ import { cn, getContrastColor } from '../../lib/utils';
 interface MessageBubbleProps {
   msg: Message;
   settings: ChatSettings;
+  onImageClick?: (url: string) => void;
 }
 
-export const MessageBubble: React.FC<MessageBubbleProps> = ({ msg, settings }) => {
+export const MessageBubble: React.FC<MessageBubbleProps> = ({
+  msg,
+  settings,
+  onImageClick,
+}) => {
   if (msg.type === 'date') {
     return (
       <div className="self-center my-2 px-3 py-1 rounded-lg bg-black/10 text-[10px] uppercase font-medium">
@@ -45,7 +50,15 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({ msg, settings }) =
 
       {msg.fileUrl && (
         <div className="mb-1">
-          <img src={msg.fileUrl} alt="Sent" className="rounded-md max-w-full max-h-64 object-contain" />
+          <img
+            src={msg.fileUrl}
+            alt="Sent"
+            className={cn(
+              "rounded-md max-w-full max-h-64 object-contain",
+              onImageClick && "cursor-none active:scale-[0.98] transition-transform"
+            )}
+            onClick={() => onImageClick?.(msg.fileUrl!)}
+          />
         </div>
       )}
       
