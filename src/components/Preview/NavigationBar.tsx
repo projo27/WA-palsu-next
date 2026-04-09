@@ -12,7 +12,7 @@ export const NavigationBar: React.FC<NavigationBarProps> = ({ settings }) => {
   return (
     <div className={cn(
       "flex items-center justify-around px-8",
-      settings.isDarkMode ? "bg-[#0b141a]" : "bg-white/80",
+      settings.isDarkMode ? "bg-chat-dark" : "bg-white/80",
       settings.navigationBar === 'android' ? "h-12" : "h-6"
     )}>
       {settings.navigationBar === 'android' ? (

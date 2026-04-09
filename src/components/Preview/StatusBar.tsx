@@ -1,4 +1,4 @@
-import { BatteryCharging, MapPin, Signal, VolumeX, Wifi, Zap } from "lucide-react";
+import { MapPin, Signal, VolumeX, Wifi, Zap } from "lucide-react";
 import React from "react";
 import { cn } from "../../lib/utils";
 import { ChatSettings } from "../../types";
@@ -23,7 +23,7 @@ export const StatusBar: React.FC<StatusBarProps> = ({ settings }) => {
 
       <div className="justify-self-center">
         {settings.showDynamicIsland && (
-          <div className="w-20 h-5 bg-black rounded-full flex items-center justify-center shadow-sm">
+          <div className="absolute top-1.5 left-1/2 -translate-x-1/2 w-20 h-5 bg-black rounded-full flex items-center justify-center shadow-sm">
             {/* Subtle glow or detail if needed, but a clean black pill is the standard look */}
             <div className="w-1 h-1 bg-gray-800 rounded-full ml-auto mr-3 opacity-50" />
           </div>

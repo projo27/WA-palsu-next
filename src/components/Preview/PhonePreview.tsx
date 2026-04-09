@@ -157,7 +157,7 @@ export const PhonePreview: React.FC<PhonePreviewProps> = ({
 
   const handleImportChatClick = () => importInputRef.current?.click();
 
-  const handleImportChatFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImportFile = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
     const reader = new FileReader();
@@ -367,7 +367,7 @@ export const PhonePreview: React.FC<PhonePreviewProps> = ({
             ref={importInputRef}
             type="file"
             accept=".json,application/json"
-            onChange={handleImportChatFile}
+            onChange={handleImportFile}
             className="hidden"
           />
 
