@@ -147,6 +147,8 @@ export const AddChat: React.FC<AddChatProps> = ({
     setMsgReaction,
     msgFile,
     setMsgFile,
+    msgType,
+    setMsgType,
     fileInputRef,
     handleMsgFileUpload,
   };

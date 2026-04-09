@@ -12,6 +12,8 @@ export interface MessageInputProps {
   setMsgReaction: (reaction: string) => void;
   msgFile: string | null;
   setMsgFile: (file: string | null) => void;
+  msgType: MessageType;
+  setMsgType: (type: MessageType) => void;
   fileInputRef?: React.RefObject<HTMLInputElement>;
   handleMsgFileUpload?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }

@@ -81,7 +81,7 @@ export const LocationMessageInput: React.FC<LocationMessageInputProps> = ({
         <button
           onClick={() => handleLocType("current")}
           className={cn(
-            "flex-1 py-2 text-[11px] font-semibold transition-colors",
+            "flex-1 py-2 text-sm font-semibold transition-colors",
             locType === "current"
               ? "bg-primary text-white"
               : "text-gray-500 hover:bg-gray-50 border-r border-gray-200",
@@ -92,7 +92,7 @@ export const LocationMessageInput: React.FC<LocationMessageInputProps> = ({
         <button
           onClick={() => handleLocType("share_live")}
           className={cn(
-            "flex-1 py-2 text-[11px] font-semibold transition-colors",
+            "flex-1 py-2 text-sm font-semibold transition-colors",
             locType === "share_live"
               ? "bg-primary text-white"
               : "text-gray-500 hover:bg-gray-50 border-r border-gray-200",
@@ -103,7 +103,7 @@ export const LocationMessageInput: React.FC<LocationMessageInputProps> = ({
         <button
           onClick={() => handleLocType("stop_live")}
           className={cn(
-            "flex-1 py-2 text-[11px] font-semibold transition-colors",
+            "flex-1 py-2 text-sm font-semibold transition-colors",
             locType === "stop_live"
               ? "bg-primary text-white"
               : "text-gray-500 hover:bg-gray-50",
