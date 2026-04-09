@@ -13,12 +13,24 @@ export const StatusBar: React.FC<StatusBarProps> = ({ settings }) => {
   return (
     <div
       className={cn(
-        "px-4 py-2 flex justify-between items-center text-xs font-bold z-30",
+        "px-4 py-2 grid grid-cols-3 items-center text-xs font-bold z-30",
         settings.isDarkMode ? "bg-[#202c33]" : "bg-[#f5f5f5]",
       )}
     >
-      <span>{settings.clockTime}</span>
-      <div className="flex items-center gap-1">
+      <div className="justify-self-start">
+        <span>{settings.clockTime}</span>
+      </div>
+
+      <div className="justify-self-center">
+        {settings.showDynamicIsland && (
+          <div className="w-20 h-5 bg-black rounded-full flex items-center justify-center shadow-sm">
+            {/* Subtle glow or detail if needed, but a clean black pill is the standard look */}
+            <div className="w-1 h-1 bg-gray-800 rounded-full ml-auto mr-3 opacity-50" />
+          </div>
+        )}
+      </div>
+
+      <div className="justify-self-end flex items-center gap-1">
         {settings.headerIcon === "location" && <MapPin size={10} />}
         {settings.headerIcon === "silent" && <VolumeX size={10} />}
         <Signal size={10} />

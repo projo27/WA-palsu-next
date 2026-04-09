@@ -45,7 +45,8 @@ export const PhonePreview: React.FC<PhonePreviewProps> = ({
   const [screenshotting, setScreenshotting] = useState(false);
 
   // Video recorder hook
-  const { isRecording, countdown, toggleRecording } = useVideoRecorder(recordingWrapperRef);
+  const { isRecording, countdown, toggleRecording } =
+    useVideoRecorder(recordingWrapperRef);
 
   // ── Auto-scroll to bottom on new messages ───────────────────────────────
   useEffect(() => {
@@ -142,7 +143,7 @@ export const PhonePreview: React.FC<PhonePreviewProps> = ({
   };
 
   // ── Export / Import JSON ─────────────────────────────────────────────────
-  const handleExport = () => {
+  const handleExportChat = () => {
     const json = JSON.stringify({ settings, messages }, null, 2);
     const blob = new Blob([json], { type: "application/json" });
     const url = URL.createObjectURL(blob);
@@ -154,9 +155,9 @@ export const PhonePreview: React.FC<PhonePreviewProps> = ({
     URL.revokeObjectURL(url);
   };
 
-  const handleImportClick = () => importInputRef.current?.click();
+  const handleImportChatClick = () => importInputRef.current?.click();
 
-  const handleImportFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImportChatFile = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
     const reader = new FileReader();
@@ -187,11 +188,12 @@ export const PhonePreview: React.FC<PhonePreviewProps> = ({
   return (
     <div className="flex-1 flex items-center justify-center sticky top-8 h-full p-4 my-auto">
       <div className="relative h-full">
-
         {/* ── Recording wrapper (device frame + cursor) ─────────────────── */}
         {/* This is the element captured by useVideoRecorder                */}
-        <div ref={recordingWrapperRef} style={{ position: "relative", display: "inline-block" }}>
-
+        <div
+          ref={recordingWrapperRef}
+          style={{ position: "relative", display: "inline-block" }}
+        >
           {/* Assistive-Touch Cursor — absolute inside wrapper so it's captured */}
           <div
             ref={cursorRef}
@@ -242,7 +244,7 @@ export const PhonePreview: React.FC<PhonePreviewProps> = ({
                 "w-[600px] h-[400px] rounded-xl border-4",
             )}
           >
-            {/* Screen Content */}
+            {/* Screen Content */} 
             <div
               className={cn(
                 "w-full h-full rounded-4xl overflow-hidden flex flex-col relative",
@@ -261,6 +263,14 @@ export const PhonePreview: React.FC<PhonePreviewProps> = ({
               <StatusBar settings={settings} />
               <ChatHeader settings={settings} />
 
+              {/* Background Pattern */}
+              <div
+                className="absolute h-full w-full inset-0 pointer-events-none bg-repeat opacity-[0.4] bg-size-[400px_auto]"
+                style={{
+                  backgroundImage: `url(${settings.isDarkMode ? bgDark : bgLight})`,
+                }}
+              />
+
               {/* Chat Content — drag to scroll */}
               <main
                 ref={chatMainRef}
@@ -270,14 +280,6 @@ export const PhonePreview: React.FC<PhonePreviewProps> = ({
                 onMouseUp={onChatMouseUp}
                 onMouseLeave={onChatMouseUp}
               >
-                {/* Background Pattern */}
-                <div
-                  className="absolute h-full w-full inset-0 pointer-events-none bg-repeat opacity-[0.4] bg-size-[400px_auto]"
-                  style={{
-                    backgroundImage: `url(${settings.isDarkMode ? bgDark : bgLight})`,
-                  }}
-                />
-
                 <div className="flex flex-col gap-1 relative z-10">
                   {messages.map((msg) => (
                     <div key={msg.id} className="flex flex-col">
@@ -346,7 +348,7 @@ export const PhonePreview: React.FC<PhonePreviewProps> = ({
 
           {/* Export JSON */}
           <button
-            onClick={handleExport}
+            onClick={handleExportChat}
             className="w-12 h-12 bg-emerald-500 text-white rounded-full shadow-lg flex items-center justify-center hover:bg-emerald-600 active:scale-95 transition-all"
             title="Export chat ke JSON"
           >
@@ -355,7 +357,7 @@ export const PhonePreview: React.FC<PhonePreviewProps> = ({
 
           {/* Import JSON */}
           <button
-            onClick={handleImportClick}
+            onClick={handleImportChatClick}
             className="w-12 h-12 bg-blue-500 text-white rounded-full shadow-lg flex items-center justify-center hover:bg-blue-600 active:scale-95 transition-all"
             title="Import chat dari JSON"
           >
@@ -365,7 +367,7 @@ export const PhonePreview: React.FC<PhonePreviewProps> = ({
             ref={importInputRef}
             type="file"
             accept=".json,application/json"
-            onChange={handleImportFile}
+            onChange={handleImportChatFile}
             className="hidden"
           />
 

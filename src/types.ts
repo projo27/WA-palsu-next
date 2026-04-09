@@ -39,6 +39,7 @@ export interface ChatSettings {
   navigationBar: 'none' | 'android' | 'ios';
   clockTime: string;
   is24Hour: boolean;
+  showDynamicIsland: boolean;
 
   // Profile Settings
   receiverName: string;

@@ -12,7 +12,7 @@ export const ChatFooter: React.FC<ChatFooterProps> = ({ settings }) => {
 
   return (
     <footer className={cn(
-      "p-2 flex items-center gap-2",
+      "p-2 flex items-center gap-2 bg-transparent",
       settings.isDarkMode ? "bg-chat-dark" : "bg-transparent"
     )}>
       <div className={cn(
@@ -20,7 +20,7 @@ export const ChatFooter: React.FC<ChatFooterProps> = ({ settings }) => {
         settings.isDarkMode ? "bg-[#2a3942]" : "bg-white shadow-sm"
       )}>
         <WAIcon name="smile" size={24} className="opacity-60" isDarkMode={settings.isDarkMode} />
-        <span className="flex-1 text-xs opacity-50 ml-1">Message</span>
+        <span className="flex-1 text-xs ml-1">Message</span>
         {settings.showPayment && <span className="text-primary font-bold text-sm">$</span>}
         <WAIcon name="paperclip" size={20} className="opacity-60" isDarkMode={settings.isDarkMode} />
         <WAIcon name="camera" size={24} className="opacity-60" isDarkMode={settings.isDarkMode} />

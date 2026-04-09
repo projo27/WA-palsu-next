@@ -314,6 +314,20 @@ export const DisplaySettings: React.FC<DisplaySettingsProps> = ({
           >
             Chat Arrow
           </button>
+          <button
+            onClick={() =>
+              setSettings({
+                ...settings,
+                showDynamicIsland: !settings.showDynamicIsland,
+              })
+            }
+            className={cn(
+              "p-2 rounded border text-xs transition-all flex items-center justify-center gap-2",
+              settings.showDynamicIsland ? "bg-primary text-white" : "bg-white",
+            )}
+          >
+            Dynamic Island
+          </button>
         </div>
       </div>
 
