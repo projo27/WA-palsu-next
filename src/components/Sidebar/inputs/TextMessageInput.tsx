@@ -19,26 +19,32 @@ export const TextMessageInput: React.FC<MessageInputProps> = ({
   fileInputRef,
   handleMsgFileUpload,
 }) => {
-  const [tab, setTab] = React.useState<"local" | "url">(msgFile?.startsWith('http') ? "url" : "local");
+  const [tab, setTab] = React.useState<"local" | "url" | "youtube">(
+    msgFile?.includes("youtube.com") || msgFile?.includes("youtu.be") || msgFile?.includes("img.youtube.com") 
+      ? "youtube" 
+      : (msgFile?.startsWith('http') ? "url" : "local")
+  );
 
   // Sync tab with msgFile changes from outside if needed
   React.useEffect(() => {
-    if (msgFile?.startsWith('http') && tab !== "url") setTab("url");
-    if (msgFile && !msgFile.startsWith('http') && tab !== "local") setTab("local");
+    if (msgFile?.includes("youtube.com") || msgFile?.includes("youtu.be") || msgFile?.includes("img.youtube.com")) {
+      if (tab !== "youtube") setTab("youtube");
+    } else if (msgFile?.startsWith('http')) {
+      if (tab !== "url") setTab("url");
+    } else if (msgFile) {
+      if (tab !== "local") setTab("local");
+    }
   }, [msgFile]);
 
-  const getYoutubeThumbnail = (url: string) => {
-    const regExp = /^.*(youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+  const getYoutubeId = (url: string) => {
+    const regExp = /^.*(youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=|shorts\/)([^#\&\?]*).*/;
     const match = url.match(regExp);
-    if (match && match[2].length === 11) {
-      return `https://img.youtube.com/vi/${match[2]}/hqdefault.jpg`;
-    }
-    return null;
+    return (match && match[2].length === 11) ? match[2] : null;
   };
 
   const handleUrlChange = (value: string) => {
-    const ytThumb = getYoutubeThumbnail(value);
-    const finalVal = ytThumb || value;
+    const ytId = getYoutubeId(value);
+    const finalVal = ytId ? `https://img.youtube.com/vi/${ytId}/maxresdefault.jpg` : value;
     
     setMsgFile(finalVal);
     
@@ -60,6 +66,7 @@ export const TextMessageInput: React.FC<MessageInputProps> = ({
       setMsgType("text");
     }
   };
+
   return (
     <div className="space-y-4 animate-in fade-in duration-300">
       <div className="relative">
@@ -83,26 +90,34 @@ export const TextMessageInput: React.FC<MessageInputProps> = ({
           Add Image / Video Thumbnails
         </label>
         
-        <div className="grid grid-cols-2 gap-2 p-1 bg-gray-100 rounded-lg">
+        <div className="grid grid-cols-3 gap-2 p-1 bg-gray-100 rounded-lg">
           <button
             onClick={() => setTab("local")}
             className={cn(
-              "py-1.5 text-xs font-medium rounded-md transition-all",
+              "py-1.5 text-[10px] font-medium rounded-md transition-all",
               tab === "local" ? "bg-white shadow-sm text-primary" : "text-gray-500 hover:text-gray-700"
             )}
-            title="Upload from device"
           >
-            Local File
+            Local
           </button>
           <button
             onClick={() => setTab("url")}
             className={cn(
-              "py-1.5 text-xs font-medium rounded-md transition-all",
+              "py-1.5 text-[10px] font-medium rounded-md transition-all",
               tab === "url" ? "bg-white shadow-sm text-primary" : "text-gray-500 hover:text-gray-700"
             )}
-            title="External URL"
           >
-            URL Link
+            Image Link
+          </button>
+          <button
+            onClick={() => setTab("youtube")}
+            className={cn(
+              "py-1.5 text-[10px] font-medium rounded-md transition-all flex items-center justify-center gap-1",
+              tab === "youtube" ? "bg-white shadow-sm text-red-600" : "text-gray-500 hover:text-gray-700"
+            )}
+          >
+            <svg className="w-3 h-3 fill-current" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg> 
+            YouTube
           </button>
         </div>
 
@@ -154,8 +169,8 @@ export const TextMessageInput: React.FC<MessageInputProps> = ({
             <div className="relative">
               <input
                 type="text"
-                placeholder="Paste image URL here..."
-                value={msgFile || ""}
+                placeholder={tab === "youtube" ? "Paste YouTube Video URL here..." : "Paste image URL here..."}
+                value={(tab === "youtube" && msgFile?.includes("img.youtube.com")) ? "" : (msgFile || "")}
                 onChange={(e) => handleUrlChange(e.target.value)}
                 className="w-full p-2.5 rounded-lg border border-gray-200 text-xs focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all placeholder:text-gray-400 font-mono"
               />
@@ -169,19 +184,31 @@ export const TextMessageInput: React.FC<MessageInputProps> = ({
               )}
             </div>
             {msgFile && msgFile.startsWith('http') ? (
-              <div className="flex justify-center p-2 border border-gray-100 rounded-lg bg-gray-50 min-h-[100px] items-center">
+              <div className="flex justify-center p-2 border border-gray-100 rounded-lg bg-gray-50 min-h-[100px] items-center group relative overflow-hidden">
                 <img
                   src={msgFile}
                   alt="URL Preview"
-                  className="h-24 rounded shadow-sm object-contain"
+                  className="h-24 rounded shadow-sm object-contain lg:h-32"
                   onError={(e) => {
-                    (e.target as HTMLImageElement).src = "https://placehold.co/400x300?text=Invalid+Image+URL";
+                    if ((e.target as HTMLImageElement).src.includes('maxresdefault')) {
+                      (e.target as HTMLImageElement).src = (e.target as HTMLImageElement).src.replace('maxresdefault', 'hqdefault');
+                    } else {
+                      (e.target as HTMLImageElement).src = "https://placehold.co/400x300?text=Invalid+URL";
+                    }
                   }}
                 />
+                
+                {(tab === "youtube" || msgFile.includes("img.youtube.com")) && (
+                  <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                    <div className="bg-red-600 text-white p-2 rounded-full shadow-lg opacity-90 ring-4 ring-white/20">
+                      <svg className="w-6 h-6 fill-current" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                    </div>
+                  </div>
+                )}
               </div>
             ) : (
-              <div className="text-[10px] text-gray-400 text-center italic">
-                Preview will appear here once you paste a valid URL
+              <div className="text-[11px] text-gray-400 text-center italic py-4">
+                {tab === "youtube" ? "Enter a YouTube link to generate thumbnail" : "Preview will appear here once you paste a valid URL"}
               </div>
             )}
           </div>
