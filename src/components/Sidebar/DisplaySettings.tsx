@@ -28,7 +28,9 @@ export const DisplaySettings: React.FC<DisplaySettingsProps> = ({
     <div className="space-y-6 animate-in fade-in slide-in-from-left-4 duration-300">
       {/* Layout Selector */}
       <div className="space-y-2">
-        <label className="text-sm font-semibold text-gray-700 capitalize">Layout</label>
+        <label className="text-sm font-semibold text-gray-700 capitalize">
+          Layout
+        </label>
         <div className="flex gap-2">
           {(["android", "ios", "desktop"] as DeviceLayout[]).map((l) => (
             <button
@@ -72,7 +74,9 @@ export const DisplaySettings: React.FC<DisplaySettingsProps> = ({
       {/* Network & Clock */}
       <div className="grid grid-cols-2 gap-4">
         <div className="space-y-2">
-          <label className="text-sm font-semibold text-gray-700 capitalize">Network</label>
+          <label className="text-sm font-semibold text-gray-700 capitalize">
+            Network
+          </label>
           <select
             value={settings.networkType}
             onChange={(e) =>
@@ -87,7 +91,9 @@ export const DisplaySettings: React.FC<DisplaySettingsProps> = ({
           </select>
         </div>
         <div className="space-y-2">
-          <label className="text-sm font-semibold text-gray-700 capitalize">Clock</label>
+          <label className="text-sm font-semibold text-gray-700 capitalize">
+            Clock
+          </label>
           <div className="flex items-center gap-2">
             <input
               type="text"
@@ -116,7 +122,9 @@ export const DisplaySettings: React.FC<DisplaySettingsProps> = ({
 
       {/* Battery */}
       <div className="space-y-3">
-        <label className="text-sm font-semibold text-gray-700 capitalize">Battery</label>
+        <label className="text-sm font-semibold text-gray-700 capitalize">
+          Battery
+        </label>
         <div className="flex items-center gap-4">
           <input
             type="number"
@@ -200,7 +208,9 @@ export const DisplaySettings: React.FC<DisplaySettingsProps> = ({
         </label>
         <div className="grid grid-cols-3 gap-2">
           <div className="space-y-1">
-            <label className="text-xs font-semibold text-gray-500 capitalize">Background</label>
+            <label className="text-xs font-semibold text-gray-500 capitalize">
+              Background
+            </label>
             <input
               type="color"
               value={settings.chatBackgroundColor}
@@ -214,12 +224,16 @@ export const DisplaySettings: React.FC<DisplaySettingsProps> = ({
             />
           </div>
           <div className="space-y-1">
-            <label className="text-xs font-semibold text-gray-500 capitalize">My Bubble</label>
+            <label className="text-xs font-semibold text-gray-500 capitalize">
+              My Bubble
+            </label>
             <input
               type="color"
               value={
                 settings.userBubbleColor ||
-                (settings.isDarkMode ? "var(--color-bubble-user-dark)" : "var(--color-bubble-user)")
+                (settings.isDarkMode
+                  ? "var(--color-bubble-user-dark)"
+                  : "var(--color-bubble-user)")
               }
               onChange={(e) =>
                 setSettings({ ...settings, userBubbleColor: e.target.value })
@@ -228,12 +242,16 @@ export const DisplaySettings: React.FC<DisplaySettingsProps> = ({
             />
           </div>
           <div className="space-y-1">
-            <label className="text-xs font-semibold text-gray-500 capitalize">Their Bubble</label>
+            <label className="text-xs font-semibold text-gray-500 capitalize">
+              Their Bubble
+            </label>
             <input
               type="color"
               value={
                 settings.receiverBubbleColor ||
-                (settings.isDarkMode ? "var(--color-bubble-receiver-dark)" : "var(--color-bubble-receiver)")
+                (settings.isDarkMode
+                  ? "var(--color-bubble-receiver-dark)"
+                  : "var(--color-bubble-receiver)")
               }
               onChange={(e) =>
                 setSettings({
@@ -246,7 +264,9 @@ export const DisplaySettings: React.FC<DisplaySettingsProps> = ({
           </div>
         </div>
         <div className="space-y-2 mt-2">
-          <label className="text-sm font-semibold text-gray-700 capitalize">Text Size</label>
+          <label className="text-sm font-semibold text-gray-700 capitalize">
+            Text Size
+          </label>
           <select
             value={settings.textSize}
             onChange={(e) =>
@@ -272,7 +292,7 @@ export const DisplaySettings: React.FC<DisplaySettingsProps> = ({
               setSettings({ ...settings, hideHeader: !settings.hideHeader })
             }
             className={cn(
-              "p-2 rounded border text-xs transition-all flex items-center justify-center gap-2",
+              "p-2 rounded border text-sm transition-all flex items-center justify-center gap-2",
               settings.hideHeader ? "bg-primary text-white" : "bg-white",
             )}
           >
@@ -283,7 +303,7 @@ export const DisplaySettings: React.FC<DisplaySettingsProps> = ({
               setSettings({ ...settings, hideFooter: !settings.hideFooter })
             }
             className={cn(
-              "p-2 rounded border text-xs transition-all flex items-center justify-center gap-2",
+              "p-2 rounded border text-sm transition-all flex items-center justify-center gap-2",
               settings.hideFooter ? "bg-primary text-white" : "bg-white",
             )}
           >
@@ -294,7 +314,7 @@ export const DisplaySettings: React.FC<DisplaySettingsProps> = ({
               setSettings({ ...settings, showPayment: !settings.showPayment })
             }
             className={cn(
-              "p-2 rounded border text-xs transition-all flex items-center justify-center gap-2",
+              "p-2 rounded border text-sm transition-all flex items-center justify-center gap-2",
               settings.showPayment ? "bg-primary text-white" : "bg-white",
             )}
           >
@@ -308,7 +328,7 @@ export const DisplaySettings: React.FC<DisplaySettingsProps> = ({
               })
             }
             className={cn(
-              "p-2 rounded border text-xs transition-all flex items-center justify-center gap-2",
+              "p-2 rounded border text-sm transition-all flex items-center justify-center gap-2",
               settings.showChatArrow ? "bg-primary text-white" : "bg-white",
             )}
           >
@@ -322,7 +342,7 @@ export const DisplaySettings: React.FC<DisplaySettingsProps> = ({
               })
             }
             className={cn(
-              "p-2 rounded border text-xs transition-all flex items-center justify-center gap-2",
+              "p-2 rounded border text-sm transition-all flex items-center justify-center gap-2",
               settings.showDynamicIsland ? "bg-primary text-white" : "bg-white",
             )}
           >

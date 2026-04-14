@@ -283,16 +283,22 @@ export const PhonePreview: React.FC<PhonePreviewProps> = ({
                 onMouseUp={onChatMouseUp}
                 onMouseLeave={onChatMouseUp}
               >
-                <div className="flex flex-col gap-1 relative z-10">
-                  {messages.map((msg) => (
-                    <div key={msg.id} className="flex flex-col">
-                      <MessageBubble
-                        msg={msg}
-                        settings={settings}
-                        onImageClick={setViewerMedia}
-                      />
-                    </div>
-                  ))}
+                <div className="flex flex-col gap-0.5 relative z-10">
+                  {messages.map((msg, index) => {
+                    const prevMsg = messages[index - 1];
+                    const isFirstInGroup = !prevMsg || prevMsg.sender !== msg.sender || prevMsg.type === 'date';
+                    
+                    return (
+                      <div key={msg.id} className="flex flex-col">
+                        <MessageBubble
+                          msg={msg}
+                          settings={settings}
+                          isFirstInGroup={isFirstInGroup}
+                          onImageClick={setViewerMedia}
+                        />
+                      </div>
+                    );
+                  })}
                   <div ref={messagesEndRef} />
                 </div>
               </main>

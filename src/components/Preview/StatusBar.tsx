@@ -14,7 +14,7 @@ export const StatusBar: React.FC<StatusBarProps> = ({ settings }) => {
     <div
       className={cn(
         "px-4 py-2 grid grid-cols-3 items-center text-xs font-bold z-30",
-        settings.isDarkMode ? "bg-[#202c33]" : "bg-[#f5f5f5]",
+        settings.isDarkMode ? "bg-bubble-receiver-dark" : "bg-bubble-receiver",
       )}
     >
       <div className="justify-self-start">

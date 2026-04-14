@@ -38,8 +38,12 @@ interface AddChatProps {
   msgReaction: string;
   setMsgReaction: (reaction: string) => void;
   msgFile: string | null;
+  setMsgFile: (file: string | null) => void;
   msgBotSenderId?: string;
   setMsgBotSenderId?: (id: string) => void;
+  addMessage: () => void;
+  resetForm: () => void;
+  resetGroup?: () => void;
 }
 
 export const AddChat: React.FC<AddChatProps> = ({
@@ -69,7 +73,40 @@ export const AddChat: React.FC<AddChatProps> = ({
   const fileInputRef = useRef<HTMLInputElement>(null);
   const profileInputRef = useRef<HTMLInputElement>(null);
   const [newParticipantName, setNewParticipantName] = React.useState("");
-  const [newParticipantColor, setNewParticipantColor] = React.useState("#ffb300");
+  const [newParticipantColor, setNewParticipantColor] =
+    React.useState("#ffb300");
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.ctrlKey) {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        addMessage();
+      } else if (e.key >= "1" && e.key <= "9") {
+        const index = parseInt(e.key) - 1;
+        if (activeTab === "chat") {
+          if (index === 0) {
+            e.preventDefault();
+            setMsgSender("user");
+          } else if (index === 1) {
+            e.preventDefault();
+            setMsgSender("bot");
+          }
+        } else if (activeTab === "group") {
+          if (index === 0) {
+            e.preventDefault();
+            setMsgSender("user");
+          } else {
+            const participant = settings.groupParticipants?.[index - 1];
+            if (participant) {
+              e.preventDefault();
+              setMsgSender("bot");
+              if (setMsgBotSenderId) setMsgBotSenderId(participant.id);
+            }
+          }
+        }
+      }
+    }
+  };
 
   const handleMsgFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -108,12 +145,15 @@ export const AddChat: React.FC<AddChatProps> = ({
     const newParticipant = {
       id: Date.now().toString(),
       name: newParticipantName.trim(),
-      color: newParticipantColor
+      color: newParticipantColor,
     };
-    const updatedParticipants = [...(settings.groupParticipants || []), newParticipant];
+    const updatedParticipants = [
+      ...(settings.groupParticipants || []),
+      newParticipant,
+    ];
     setSettings({
       ...settings,
-      groupParticipants: updatedParticipants
+      groupParticipants: updatedParticipants,
     });
     setNewParticipantName("");
     if (setMsgBotSenderId) setMsgBotSenderId(newParticipant.id);
@@ -122,10 +162,12 @@ export const AddChat: React.FC<AddChatProps> = ({
 
   const removeParticipant = (id: string, e: React.MouseEvent) => {
     e.stopPropagation();
-    const updatedParticipants = (settings.groupParticipants || []).filter(p => p.id !== id);
+    const updatedParticipants = (settings.groupParticipants || []).filter(
+      (p) => p.id !== id,
+    );
     setSettings({
       ...settings,
-      groupParticipants: updatedParticipants
+      groupParticipants: updatedParticipants,
     });
     if (msgSender === "bot" && msgBotSenderId === id) {
       if (updatedParticipants.length > 0) {
@@ -154,7 +196,10 @@ export const AddChat: React.FC<AddChatProps> = ({
   };
 
   return (
-    <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
+    <div
+      onKeyDown={handleKeyDown}
+      className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300"
+    >
       {/* Profile Section */}
       <div className="p-4 rounded-lg bg-gray-50 border border-gray-100 space-y-4">
         <div className="flex items-center gap-4">
@@ -207,7 +252,9 @@ export const AddChat: React.FC<AddChatProps> = ({
       {/* Sender/Receiver Toggle */}
       {activeTab === "group" ? (
         <div className="space-y-3">
-          <label className="text-sm font-semibold text-gray-700 capitalize">Select Message Sender</label>
+          <label className="text-sm font-semibold text-gray-700 capitalize">
+            Select Message Sender
+          </label>
           <div className="flex flex-col gap-2">
             <button
               onClick={() => setMsgSender("user")}
@@ -235,10 +282,13 @@ export const AddChat: React.FC<AddChatProps> = ({
                 )}
               >
                 <div className="flex items-center gap-2">
-                  <div className="w-3 h-3 rounded-full" style={{ backgroundColor: p.color }} />
+                  <div
+                    className="w-3 h-3 rounded-full"
+                    style={{ backgroundColor: p.color }}
+                  />
                   {p.name}
                 </div>
-                <div 
+                <div
                   onClick={(e) => removeParticipant(p.id, e)}
                   className="p-1 rounded bg-red-100 text-red-500 hover:bg-red-200 opacity-0 group-hover:opacity-100 transition-opacity"
                 >
@@ -258,7 +308,12 @@ export const AddChat: React.FC<AddChatProps> = ({
                 placeholder="New user name..."
                 value={newParticipantName}
                 onChange={(e) => setNewParticipantName(e.target.value)}
-                onKeyDown={(e) => { if (e.key === 'Enter') handleAddParticipant(); }}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    e.stopPropagation();
+                    handleAddParticipant();
+                  }
+                }}
                 className="flex-1 p-2 rounded-lg border border-gray-200 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all placeholder:text-gray-400"
               />
               <button
