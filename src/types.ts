@@ -31,7 +31,8 @@ export interface ChatSettings {
   chatBackgroundColor: string;
   userBubbleColor: string;
   receiverBubbleColor: string;
-  textSize: 'small' | 'default' | 'large';
+  textSize: number;
+  uiTextSize: number;
   hideHeader: boolean;
   hideFooter: boolean;
   showPayment: boolean;

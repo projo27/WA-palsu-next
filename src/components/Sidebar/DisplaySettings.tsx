@@ -2,7 +2,10 @@ import {
   Battery,
   BatteryCharging,
   MapPin,
+  Minus,
   Moon,
+  Plus,
+  RotateCcw,
   Sun,
   VolumeX,
   X,
@@ -267,17 +270,62 @@ export const DisplaySettings: React.FC<DisplaySettingsProps> = ({
           <label className="text-sm font-semibold text-gray-700 capitalize">
             Text Size
           </label>
-          <select
-            value={settings.textSize}
-            onChange={(e) =>
-              setSettings({ ...settings, textSize: e.target.value as any })
-            }
-            className="w-full p-2.5 rounded-lg border-r-8 border-transparent outline outline-gray-200 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
-          >
-            <option value="small">Small</option>
-            <option value="default">Default</option>
-            <option value="large">Large</option>
-          </select>
+          <div className="flex gap-2">
+            <button
+              onClick={() => setSettings({ ...settings, textSize: (settings.textSize || 13) - 1 })}
+              className="flex-1 py-2 px-3 rounded border bg-white border-gray-200 text-gray-600 flex items-center justify-center gap-2 text-sm font-medium hover:bg-gray-50 transition-all font-bold"
+            >
+              <Minus size={14} /> Min
+            </button>
+            <button
+              onClick={() => setSettings({ ...settings, textSize: 13 })}
+              className={cn(
+                "flex-1 py-2 px-3 rounded border flex items-center justify-center gap-2 text-sm font-medium transition-all",
+                settings.textSize === 13
+                  ? "bg-primary text-white border-primary"
+                  : "bg-white text-gray-600 border-gray-200 hover:bg-gray-50",
+              )}
+            >
+              <RotateCcw size={14} /> Default
+            </button>
+            <button
+              onClick={() => setSettings({ ...settings, textSize: (settings.textSize || 13) + 1 })}
+              className="flex-1 py-2 px-3 rounded border bg-white border-gray-200 text-gray-600 flex items-center justify-center gap-2 text-sm font-medium hover:bg-gray-50 transition-all font-bold"
+            >
+              <Plus size={14} /> Plus
+            </button>
+          </div>
+        </div>
+
+        <div className="space-y-2 mt-2">
+          <label className="text-sm font-semibold text-gray-700 capitalize">
+            UI Text Size (Header, Footer, Status)
+          </label>
+          <div className="flex gap-2">
+            <button
+              onClick={() => setSettings({ ...settings, uiTextSize: (settings.uiTextSize || 13) - 1 })}
+              className="flex-1 py-2 px-3 rounded border bg-white border-gray-200 text-gray-600 flex items-center justify-center gap-2 text-sm font-medium hover:bg-gray-50 transition-all font-bold"
+            >
+              <Minus size={14} /> Min
+            </button>
+            <button
+              onClick={() => setSettings({ ...settings, uiTextSize: 13 })}
+              className={cn(
+                "flex-1 py-2 px-3 rounded border flex items-center justify-center gap-2 text-sm font-medium transition-all",
+                settings.uiTextSize === 13
+                  ? "bg-primary text-white border-primary"
+                  : "bg-white text-gray-600 border-gray-200 hover:bg-gray-50",
+              )}
+            >
+              <RotateCcw size={14} /> Default
+            </button>
+            <button
+              onClick={() => setSettings({ ...settings, uiTextSize: (settings.uiTextSize || 13) + 1 })}
+              className="flex-1 py-2 px-3 rounded border bg-white border-gray-200 text-gray-600 flex items-center justify-center gap-2 text-sm font-medium hover:bg-gray-50 transition-all font-bold"
+            >
+              <Plus size={14} /> Plus
+            </button>
+          </div>
         </div>
       </div>
 

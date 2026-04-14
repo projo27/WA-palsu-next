@@ -31,7 +31,10 @@ export const ChatHeader: React.FC<ChatHeaderProps> = ({ settings }) => {
             className="w-9 h-9 rounded-full object-cover cursor-pointer"
           />
           <div className="leading-tight">
-            <h1 className="font-semibold text-sm flex items-center gap-1 cursor-pointer">
+            <h1 
+              className="font-semibold flex items-center gap-1 cursor-pointer"
+              style={{ fontSize: `${(settings.uiTextSize || 13) + 1}px` }}
+            >
               {settings.receiverName}
               {settings.isGroup && (
                 <WAIcon
@@ -41,7 +44,10 @@ export const ChatHeader: React.FC<ChatHeaderProps> = ({ settings }) => {
                 />
               )}
             </h1>
-            <p className="text-[10px] opacity-70 truncate max-w-[120px]">
+            <p 
+              className="opacity-70 truncate max-w-[120px]"
+              style={{ fontSize: `${(settings.uiTextSize || 13) - 3}px` }}
+            >
               {settings.isGroup
                 ? `${settings.groupParticipants?.length ? settings.groupParticipants.map((p) => p.name).join(", ") + ", You" : "You"}`
                 : settings.receiverStatus}

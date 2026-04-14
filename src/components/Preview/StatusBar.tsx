@@ -13,9 +13,10 @@ export const StatusBar: React.FC<StatusBarProps> = ({ settings }) => {
   return (
     <div
       className={cn(
-        "px-4 py-2 grid grid-cols-3 items-center text-xs font-bold z-30",
+        "px-4 py-2 grid grid-cols-3 items-center font-bold z-30",
         settings.isDarkMode ? "bg-bubble-receiver-dark" : "bg-bubble-receiver",
       )}
+      style={{ fontSize: `${(settings.uiTextSize || 13) - 1}px` }}
     >
       <div className="justify-self-start">
         <span>{settings.clockTime}</span>

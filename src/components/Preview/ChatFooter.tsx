@@ -29,9 +29,9 @@ export const ChatFooter: React.FC<ChatFooterProps> = ({ settings }) => {
           className="opacity-60"
           isDarkMode={settings.isDarkMode}
         />
-        <span className="flex-1 text-xs ml-1 opacity-60">Message</span>
+        <span className="flex-1 ml-1 opacity-60" style={{ fontSize: `${(settings.uiTextSize || 13) - 1}px` }}>Message</span>
         {settings.showPayment && (
-          <span className="text-primary font-bold text-sm">$</span>
+          <span className="text-primary font-bold" style={{ fontSize: `${(settings.uiTextSize || 13) + 1}px` }}>$</span>
         )}
         <WAIcon
           name="paperclip"

@@ -33,12 +33,7 @@ export const MessageBubbleCard: React.FC<MessageBubbleCardProps> = ({
   const backgroundColor = msg.sender === "user" ? userColor : receiverColor;
   const textColor = getContrastColor(backgroundColor);
   const isTailVisible = settings.showChatArrow && isFirstInGroup;
-  const listTextSize = {
-    small: "text-[11px]",
-    default: "text-xs",
-    large: "text-sm",
-  };
-
+  
   const listClipPath = {
     user: "polygon(0 0, 0 100%, 100% 0)",
     bot: "polygon(100% 0, 100% 100%, 0 0)",
@@ -51,9 +46,8 @@ export const MessageBubbleCard: React.FC<MessageBubbleCardProps> = ({
         msg.sender === "user" ? "self-end" : "self-start",
         isTailVisible && msg.sender === "user" && "rounded-tr-none",
         isTailVisible && msg.sender !== "user" && "rounded-tl-none",
-        listTextSize[settings.textSize],
       )}
-      style={{ backgroundColor, color: textColor }}
+      style={{ backgroundColor, color: textColor, fontSize: `${settings.textSize || 13}px` }}
     >
       {/* Bubble Tail (Sudut Lancip) - Only show if it's the first message in the group */}
       {settings.showChatArrow && isFirstInGroup && (
