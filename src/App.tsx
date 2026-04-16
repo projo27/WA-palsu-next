@@ -13,6 +13,7 @@ export default function App() {
   const [activeTab, setActiveTab] = useState<'display' | 'chat' | 'group'>('display');
   const [settings, setSettings] = useState<ChatSettings>(DEFAULT_SETTINGS);
   const [messages, setMessages] = useState<Message[]>([]);
+  const [editingMessageId, setEditingMessageId] = useState<string | null>(null);
   
   // Form States for adding message
   const [msgText, setMsgText] = useState('');
@@ -53,22 +54,81 @@ export default function App() {
       }
     }
 
-    const newMessage: Message = {
-      id: Date.now().toString(),
-      text: (msgType === 'date' && !msgText) ? 'Today' : msgText,
-      type: msgType,
-      sender: msgSender,
-      timestamp: msgTime,
-      status: msgStatus,
-      reaction: msgReaction,
-      fileUrl: msgFile || undefined,
-      senderName: currentSenderName,
-      senderColor: currentSenderColor
-    };
-    
-    setMessages([...messages, newMessage]);
+    if (editingMessageId) {
+      setMessages(messages.map(m => m.id === editingMessageId ? {
+        ...m,
+        text: (msgType === 'date' && !msgText) ? 'Today' : msgText,
+        type: msgType,
+        sender: msgSender,
+        timestamp: msgTime,
+        status: msgStatus,
+        reaction: msgReaction,
+        fileUrl: msgFile || undefined,
+        senderName: currentSenderName,
+        senderColor: currentSenderColor
+      } : m));
+      setEditingMessageId(null);
+    } else {
+      const newMessage: Message = {
+        id: Date.now().toString(),
+        text: (msgType === 'date' && !msgText) ? 'Today' : msgText,
+        type: msgType,
+        sender: msgSender,
+        timestamp: msgTime,
+        status: msgStatus,
+        reaction: msgReaction,
+        fileUrl: msgFile || undefined,
+        senderName: currentSenderName,
+        senderColor: currentSenderColor
+      };
+      setMessages([...messages, newMessage]);
+    }
     setMsgText('');
     setMsgFile(null);
+  };
+
+  const cancelEdit = () => {
+    setEditingMessageId(null);
+    resetForm();
+  };
+
+  const handleEditRequest = (msg: Message) => {
+    setEditingMessageId(msg.id);
+    setMsgText(msg.text || '');
+    setMsgType(msg.type);
+    setMsgSender(msg.sender === 'system' ? 'bot' : msg.sender);
+    setMsgTime(msg.timestamp);
+    setMsgStatus(msg.status);
+    setMsgReaction(msg.reaction || '');
+    setMsgFile(msg.fileUrl || null);
+    
+    // Switch to active tab handling
+    if (!settings.isGroup) {
+      setActiveTab('chat');
+    } else {
+      setActiveTab('group');
+    }
+  };
+
+  const deleteMessage = (id: string) => {
+    setMessages(messages.filter(m => m.id !== id));
+  };
+
+  const moveMessage = (id: string, direction: 'up' | 'down') => {
+    const idx = messages.findIndex(m => m.id === id);
+    if (idx < 0) return;
+    const newMsgs = [...messages];
+    if (direction === 'up' && idx > 0) {
+      [newMsgs[idx - 1], newMsgs[idx]] = [newMsgs[idx], newMsgs[idx - 1]];
+      setMessages(newMsgs);
+    } else if (direction === 'down' && idx < messages.length - 1) {
+      [newMsgs[idx], newMsgs[idx + 1]] = [newMsgs[idx + 1], newMsgs[idx]];
+      setMessages(newMsgs);
+    }
+  };
+
+  const toggleMessageSender = (id: string) => {
+    setMessages(messages.map(m => m.id === id ? { ...m, sender: m.sender === 'user' ? 'bot' : 'user' } : m));
   };
 
   const resetForm = () => {
@@ -130,6 +190,8 @@ export default function App() {
         addMessage={addMessage}
         resetForm={resetForm}
         resetGroup={resetGroup}
+        editingMessageId={editingMessageId}
+        cancelEdit={cancelEdit}
       />
 
       <PhonePreview 
@@ -137,6 +199,10 @@ export default function App() {
         messages={messages}
         clearAll={clearAll}
         onImport={handleImport}
+        onEditRequest={handleEditRequest}
+        onDeleteMessage={deleteMessage}
+        onMoveMessage={moveMessage}
+        onToggleSender={toggleMessageSender}
       />
     </div>
   );

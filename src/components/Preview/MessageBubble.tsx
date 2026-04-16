@@ -1,7 +1,7 @@
 import { Check, CheckCheck } from "lucide-react";
 import React from "react";
 import { cn, getContrastColor } from "../../lib/utils";
-import { ChatSettings, Message } from "../../types";
+import { ChatSettings, Message, MessageStatus } from "../../types";
 
 interface MessageBubbleProps {
   msg: Message;
@@ -33,7 +33,7 @@ export const MessageBubbleCard: React.FC<MessageBubbleCardProps> = ({
   const backgroundColor = msg.sender === "user" ? userColor : receiverColor;
   const textColor = getContrastColor(backgroundColor);
   const isTailVisible = settings.showChatArrow && isFirstInGroup;
-  
+
   const listClipPath = {
     user: "polygon(0 0, 0 100%, 100% 0)",
     bot: "polygon(100% 0, 100% 100%, 0 0)",
@@ -46,8 +46,14 @@ export const MessageBubbleCard: React.FC<MessageBubbleCardProps> = ({
         msg.sender === "user" ? "self-end" : "self-start",
         isTailVisible && msg.sender === "user" && "rounded-tr-none",
         isTailVisible && msg.sender !== "user" && "rounded-tl-none",
+        isFirstInGroup && "mt-2",
+        msg.reaction && "mb-3.5",
       )}
-      style={{ backgroundColor, color: textColor, fontSize: `${settings.textSize || 13}px` }}
+      style={{
+        backgroundColor,
+        color: textColor,
+        fontSize: `${settings.textSize || 13}px`,
+      }}
     >
       {/* Bubble Tail (Sudut Lancip) - Only show if it's the first message in the group */}
       {settings.showChatArrow && isFirstInGroup && (
@@ -107,7 +113,7 @@ export const FileBubbleCard: React.FC<MessageBubbleProps> = ({ msg }) => {
   if (docSizeType === "Bytes") sizeUnit = "B";
 
   return (
-    <div className="flex items-center gap-3 bg-black/5 p-2 rounded-lg mb-1 pr-10 hover:bg-black/10 transition-colors min-w-[200px]">
+    <div className="flex items-center gap-3 bg-black/5 p-2 rounded-lg my-1 hover:bg-black/10 transition-colors min-w-[200px]">
       <div className="w-9 h-11 bg-black/10 rounded-sm relative flex items-center justify-center shrink-0">
         <div className="absolute inset-x-0 bottom-1 flex justify-center">
           <span className="text-[8px] font-bold opacity-70 bg-white/50 px-1 rounded-sm">
@@ -115,13 +121,14 @@ export const FileBubbleCard: React.FC<MessageBubbleProps> = ({ msg }) => {
           </span>
         </div>
       </div>
-      <div className="flex flex-col overflow-hidden">
+      <div className="flex flex-col overflow-hidden w-full">
         <span className="font-semibold text-sm truncate">
           {docName}.{docExt.toLowerCase()}
         </span>
         <span className="text-[10px] opacity-60">
           {docSize} {sizeUnit} • {docExt.toLowerCase()}
         </span>
+        <span className="text-[10px] opacity-60 self-end">{msg.timestamp}</span>
       </div>
     </div>
   );
@@ -157,7 +164,7 @@ export const CallBubbleCard: React.FC<MessageBubbleProps> = ({ msg }) => {
   }
 
   return (
-    <div className="flex items-center gap-3 bg-black/5 p-2 rounded-lg mb-1 pr-14 hover:bg-black/10 transition-colors">
+    <div className="flex items-center gap-3 bg-black/5 p-2 rounded-lg my-0.5 hover:bg-black/10 transition-colors">
       <div className="w-10 h-10 bg-black/40 rounded-full flex items-center justify-center shrink-0">
         {callMode === "video" ? (
           <svg
@@ -187,6 +194,7 @@ export const CallBubbleCard: React.FC<MessageBubbleProps> = ({ msg }) => {
         </span>
         <span className="text-xs opacity-60">{durationText}</span>
       </div>
+      <span className="text-[10px] opacity-60 self-end">{msg.timestamp}</span>
     </div>
   );
 };
@@ -210,7 +218,7 @@ export const ContactBubbleCard: React.FC<MessageBubbleProps> = ({ msg }) => {
 
   return (
     <div className="flex flex-col min-w-[200px] -mx-2 -mt-1 -mb-1 pt-1 pb-1">
-      <div className="flex items-center gap-3 px-3 py-2">
+      <div className="flex items-center gap-3 pl-3 pr-1.5 py-2">
         {msg.fileUrl ? (
           <img
             src={msg.fileUrl}
@@ -236,9 +244,13 @@ export const ContactBubbleCard: React.FC<MessageBubbleProps> = ({ msg }) => {
             ? ` and ${contactCount} other contact${parseInt(contactCount) > 1 ? "s" : ""}`
             : ""}
         </span>
+        <span className="text-[10px] self-end ml-auto flex items-center justify-end gap-1">
+          <span className="opacity-60">{msg.timestamp}</span>{" "}
+          <MessageStatusIcon msg={msg} />
+        </span>
       </div>
       <div className="h-px bg-black/10 w-full" />
-      <div className="py-2 text-center text-brand-blue font-medium text-sm">
+      <div className="pt-2 text-center text-brand-blue font-medium text-sm">
         {isMultiple ? "View all" : "Message"}
       </div>
     </div>
@@ -251,6 +263,7 @@ export const LocationBubbleCard: React.FC<MessageBubbleProps> = ({ msg }) => {
     liveTime = "",
     pinName = "",
     pinAvatar = "";
+
   try {
     if (msg.text && msg.text.startsWith("{")) {
       const parsed = JSON.parse(msg.text);
@@ -263,21 +276,21 @@ export const LocationBubbleCard: React.FC<MessageBubbleProps> = ({ msg }) => {
   } catch (e) {}
 
   return (
-    <div className="flex flex-col min-w-[200px] -mx-2 -mt-1 -mb-1 pt-1 pb-1">
-      <div className="relative">
+    <div className="flex flex-col min-w-[200px] -mx-2 -mt-1 -mb-1 pt-0 pb-0">
+      <div className="relative m-0.5">
         {msg.fileUrl ? (
           <img
             src={msg.fileUrl}
             alt="Map"
             className={cn(
-              "w-full h-32 object-cover rounded-t-lg",
+              "w-full h-32 object-cover rounded-lg",
               locType === "stop_live" ? "grayscale opacity-80" : "",
             )}
           />
         ) : (
           <div
             className={cn(
-              "w-full h-32 bg-chat-light rounded-t-lg flex items-center justify-center relative overflow-hidden",
+              "w-full h-32 bg-chat-light rounded-lg flex items-center justify-center relative overflow-hidden",
               locType === "stop_live" ? "grayscale opacity-80" : "",
             )}
           >
@@ -341,13 +354,18 @@ export const LocationBubbleCard: React.FC<MessageBubbleProps> = ({ msg }) => {
         </div>
       )}
 
-      {(notes || pinName) && (
-        <div className="px-2 py-1.5">
-          {notes && (
-            <div className="text-sm pb-1 whitespace-pre-wrap">{notes}</div>
-          )}
-        </div>
-      )}
+      <div className="flex items-center justify-between">
+        {(notes || pinName) && (
+          <div className="px-2 pt-2">
+            {notes && (
+              <div className="text-sm pb-1 whitespace-pre-wrap">{notes}</div>
+            )}
+          </div>
+        )}
+        <span className="text-[10px] opacity-60 self-end px-2 pb-1">
+          {msg.timestamp}
+        </span>
+      </div>
 
       {locType === "share_live" && (
         <>
@@ -367,6 +385,30 @@ export const DateBubbleCard: React.FC<MessageBubbleProps> = ({ msg }) => {
       {msg.text}
     </div>
   );
+};
+
+export const MessageStatusIcon: React.FC<MessageBubbleProps> = ({ msg }) => {
+  if (msg.sender !== "user") return null;
+  if (msg.status === "none") return null;
+  if (!["text", "contact"].includes(msg.type)) return null;
+
+  if (msg.status === "seen") {
+    return (
+      <span className="text-blue-400">
+        <CheckCheck size={12} />
+      </span>
+    );
+  }
+  if (msg.status === "delivered") {
+    return (
+      <span className="text-gray-400">
+        <CheckCheck size={12} />
+      </span>
+    );
+  }
+  if (msg.status === "sent") {
+    return <Check size={12} />;
+  }
 };
 
 export const MessageBubble: React.FC<MessageBubbleProps> = ({
@@ -402,30 +444,23 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({
       {msg.type === "call" && <CallBubbleCard msg={msg} />}
       {msg.type === "contact" && <ContactBubbleCard msg={msg} />}
       {msg.type === "location" && <LocationBubbleCard msg={msg} />}
-      
-      {msg.type === "text" && msg.text && <p className="pr-10 whitespace-pre-wrap">{msg.text}</p>}
 
-      <div className="flex items-center justify-end gap-1 mt-0.5">
-        <span className="text-[9px] opacity-60">{msg.timestamp}</span>
-        {msg.sender === "user" && msg.status !== "none" && (
-          <span
-            className={cn(
-              msg.status === "seen" ? "text-blue-400" : "text-gray-400",
+      {msg.type === "text" && msg.text && (
+        <div>
+          <p className={cn("whitespace-pre-wrap", msg.sender === "user" ? "pr-13" : "pr-10")}>{msg.text}</p>
+          <div className="flex items-center justify-end gap-1 -mt-3 ">
+            {msg.type === "text" && msg.text && (
+              <span className="text-[9px] opacity-60">{msg.timestamp}</span>
             )}
-          >
-            {msg.status === "seen" || msg.status === "delivered" ? (
-              <CheckCheck size={12} />
-            ) : (
-              <Check size={12} />
-            )}
-          </span>
-        )}
-      </div>
+            <MessageStatusIcon msg={msg} />
+          </div>
+        </div>
+      )}
 
       {msg.reaction && (
         <div
           className={cn(
-            "absolute -bottom-2 right-1 px-1 rounded-full text-[10px] shadow-sm border",
+            "absolute -bottom-3.5 right-1 px-1 rounded-full text-[10px] shadow-sm border",
             settings.isDarkMode
               ? "bg-bubble-receiver-dark border-gray-700"
               : "bg-white border-gray-100",

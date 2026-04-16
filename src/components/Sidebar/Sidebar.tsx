@@ -29,6 +29,8 @@ interface SidebarProps {
   addMessage: () => void;
   resetForm: () => void;
   resetGroup: () => void;
+  editingMessageId?: string | null;
+  cancelEdit?: () => void;
 }
 
 export const Sidebar: React.FC<SidebarProps> = ({

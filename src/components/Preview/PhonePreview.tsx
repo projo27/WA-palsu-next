@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState } from "react";
-import { Trash2, Download, Upload, Camera, Video, Square, X } from "lucide-react";
+import { Trash2, Download, Upload, Camera, Video, Square, X, Edit2, ArrowUp, ArrowDown, ArrowLeftRight, Trash } from "lucide-react";
 import { toPng } from "html-to-image";
 import { Message, ChatSettings } from "../../types";
 import { cn } from "../../lib/utils";
@@ -17,6 +17,10 @@ interface PhonePreviewProps {
   messages: Message[];
   clearAll: () => void;
   onImport: (data: { settings: ChatSettings; messages: Message[] }) => void;
+  onEditRequest?: (msg: Message) => void;
+  onDeleteMessage?: (id: string) => void;
+  onMoveMessage?: (id: string, dir: 'up' | 'down') => void;
+  onToggleSender?: (id: string) => void;
 }
 
 export const PhonePreview: React.FC<PhonePreviewProps> = ({
@@ -24,6 +28,10 @@ export const PhonePreview: React.FC<PhonePreviewProps> = ({
   messages,
   clearAll,
   onImport,
+  onEditRequest,
+  onDeleteMessage,
+  onMoveMessage,
+  onToggleSender,
 }) => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const importInputRef = useRef<HTMLInputElement>(null);
@@ -55,6 +63,27 @@ export const PhonePreview: React.FC<PhonePreviewProps> = ({
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
+
+  // ── Long Press Logic ───────────────────────────────────────────────────────
+  const [actionMenuId, setActionMenuId] = useState<string | null>(null);
+  const longPressTimer = useRef<NodeJS.Timeout | null>(null);
+
+  const startLongPress = (id: string, e: React.PointerEvent) => {
+    // Only accept left clicks or touch
+    if (e.button !== 0 && e.nativeEvent.type !== 'touchstart') return;
+    longPressTimer.current = setTimeout(() => {
+      setActionMenuId(id);
+    }, 500);
+  };
+
+  const cancelLongPress = () => {
+    if (longPressTimer.current) clearTimeout(longPressTimer.current);
+  };
+
+  const handleAction = (action: () => void) => {
+    action();
+    setActionMenuId(null);
+  };
 
   // ── Custom Assistive-Touch Cursor ────────────────────────────────────────
   // Cursor is now position:absolute inside recordingWrapper, so it is captured
@@ -289,13 +318,22 @@ export const PhonePreview: React.FC<PhonePreviewProps> = ({
                     const isFirstInGroup = !prevMsg || prevMsg.sender !== msg.sender || prevMsg.type === 'date';
                     
                     return (
-                      <div key={msg.id} className="flex flex-col">
-                        <MessageBubble
-                          msg={msg}
-                          settings={settings}
-                          isFirstInGroup={isFirstInGroup}
-                          onImageClick={setViewerMedia}
-                        />
+                      <div 
+                        key={msg.id} 
+                        className={cn("flex flex-col rounded-lg transition-colors cursor-pointer", actionMenuId === msg.id && "bg-black/10")}
+                        onPointerDown={(e) => startLongPress(msg.id, e)}
+                        onPointerUp={cancelLongPress}
+                        onPointerLeave={cancelLongPress}
+                        onPointerCancel={cancelLongPress}
+                      >
+                        <div className="pointer-events-none flex flex-col w-full">
+                          <MessageBubble
+                            msg={msg}
+                            settings={settings}
+                            isFirstInGroup={isFirstInGroup}
+                            onImageClick={setViewerMedia}
+                          />
+                        </div>
                       </div>
                     );
                   })}
@@ -334,6 +372,57 @@ export const PhonePreview: React.FC<PhonePreviewProps> = ({
                   />
                 </div>
               )}
+
+              {/* ── Action Menu Overlay ─────────────────────────────────────── */}
+              {actionMenuId && (() => {
+                const selectedMsg = messages.find((m) => m.id === actionMenuId);
+                const isStart = messages[0]?.id === actionMenuId;
+                const isEnd = messages[messages.length - 1]?.id === actionMenuId;
+
+                return (
+                  <div className="absolute inset-0 z-[120] bg-black/40 flex flex-col justify-end animate-in fade-in duration-200 shadow-2xl">
+                    <div 
+                      className="absolute inset-0 z-0" 
+                      onClick={() => setActionMenuId(null)}
+                    />
+                    <div className="bg-white dark:bg-gray-900 rounded-t-3xl p-5 shadow-xl relative z-10 animate-in slide-in-from-bottom-8 duration-300">
+                      <div className="flex justify-between items-center mb-4">
+                        <span className="font-bold text-gray-800 dark:text-gray-100 text-lg">Message Actions</span>
+                        <button onClick={() => setActionMenuId(null)} className="p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
+                          <X size={20} className="text-gray-500" />
+                        </button>
+                      </div>
+                      <div className="flex flex-col gap-2">
+                        {onEditRequest && selectedMsg && (
+                          <button onClick={() => handleAction(() => onEditRequest(selectedMsg))} className="w-full flex items-center gap-3 p-3 text-left hover:bg-gray-50 dark:hover:bg-gray-800 rounded-xl transition-colors font-medium text-gray-700 dark:text-gray-200">
+                            <div className="w-8 h-8 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center text-blue-600 dark:text-blue-400"><Edit2 size={16} /></div> Edit Message
+                          </button>
+                        )}
+                        {onMoveMessage && (
+                          <div className="flex gap-2">
+                            <button onClick={() => handleAction(() => onMoveMessage(actionMenuId, 'up'))} disabled={isStart} className="flex-1 flex items-center justify-center gap-2 p-3 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-xl transition-colors font-medium text-gray-700 dark:text-gray-200 disabled:opacity-30 border border-gray-100 dark:border-gray-800">
+                              <ArrowUp size={16} /> Move Up
+                            </button>
+                            <button onClick={() => handleAction(() => onMoveMessage(actionMenuId, 'down'))} disabled={isEnd} className="flex-1 flex items-center justify-center gap-2 p-3 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-xl transition-colors font-medium text-gray-700 dark:text-gray-200 disabled:opacity-30 border border-gray-100 dark:border-gray-800">
+                              <ArrowDown size={16} /> Move Down
+                            </button>
+                          </div>
+                        )}
+                        {onToggleSender && (
+                          <button onClick={() => handleAction(() => onToggleSender(actionMenuId))} className="w-full flex items-center gap-3 p-3 text-left hover:bg-gray-50 dark:hover:bg-gray-800 rounded-xl transition-colors font-medium text-gray-700 dark:text-gray-200">
+                            <div className="w-8 h-8 rounded-full bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center text-emerald-600 dark:text-emerald-400"><ArrowLeftRight size={16} /></div> Change Sender
+                          </button>
+                        )}
+                        {onDeleteMessage && (
+                          <button onClick={() => handleAction(() => onDeleteMessage(actionMenuId))} className="w-full flex items-center gap-3 p-3 text-left hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl transition-colors font-medium text-red-600 dark:text-red-400">
+                            <div className="w-8 h-8 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center text-red-600 dark:text-red-400"><Trash size={16} /></div> Delete Message
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                );
+              })()}
 
               {/* ── 3-2-1 Countdown Overlay ─────────────────────────────── */}
               {countdown !== null && (

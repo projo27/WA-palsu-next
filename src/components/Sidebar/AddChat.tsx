@@ -9,6 +9,7 @@ import {
   Plus,
   RotateCcw,
   Upload,
+  X
 } from "lucide-react";
 import React, { useRef } from "react";
 import { cn } from "../../lib/utils";
@@ -44,6 +45,8 @@ interface AddChatProps {
   addMessage: () => void;
   resetForm: () => void;
   resetGroup?: () => void;
+  editingMessageId?: string | null;
+  cancelEdit?: () => void;
 }
 
 export const AddChat: React.FC<AddChatProps> = ({
@@ -69,6 +72,8 @@ export const AddChat: React.FC<AddChatProps> = ({
   addMessage,
   resetForm,
   resetGroup,
+  editingMessageId,
+  cancelEdit,
 }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const profileInputRef = useRef<HTMLInputElement>(null);
@@ -411,25 +416,46 @@ export const AddChat: React.FC<AddChatProps> = ({
         )}
 
         <div className="flex gap-3 pt-2">
-          <button
-            onClick={addMessage}
-            className="flex-1 py-3 bg-primary text-white rounded-lg font-bold shadow-md hover:bg-primary-hover active:scale-95 transition-all flex items-center justify-center gap-2"
-          >
-            <Plus size={18} /> Add Message
-          </button>
-          <button
-            onClick={resetForm}
-            className="px-6 py-3 border border-red-200 text-red-500 rounded-lg font-bold hover:bg-red-50 transition-all flex items-center gap-2"
-          >
-            <RotateCcw size={18} /> Reset Form
-          </button>
-          {activeTab === "group" && resetGroup && (
-            <button
-              onClick={resetGroup}
-              className="px-6 py-3 border border-red-200 text-red-500 rounded-lg font-bold hover:bg-red-50 transition-all flex items-center gap-2"
-            >
-              <RotateCcw size={18} /> Reset Group
-            </button>
+          {editingMessageId ? (
+            <>
+              <button
+                onClick={addMessage}
+                className="flex-1 py-3 bg-blue-500 text-white rounded-lg font-bold shadow-md hover:bg-blue-600 active:scale-95 transition-all flex items-center justify-center gap-2"
+              >
+                <Plus size={18} /> Update Message
+              </button>
+              {cancelEdit && (
+                <button
+                  onClick={cancelEdit}
+                  className="px-6 py-3 border border-gray-200 text-gray-500 rounded-lg font-bold hover:bg-gray-50 transition-all flex items-center gap-2"
+                >
+                  <X size={18} /> Cancel
+                </button>
+              )}
+            </>
+          ) : (
+            <>
+              <button
+                onClick={addMessage}
+                className="flex-1 py-3 bg-primary text-white rounded-lg font-bold shadow-md hover:bg-primary-hover active:scale-95 transition-all flex items-center justify-center gap-2"
+              >
+                <Plus size={18} /> Add Message
+              </button>
+              <button
+                onClick={resetForm}
+                className="px-6 py-3 border border-red-200 text-red-500 rounded-lg font-bold hover:bg-red-50 transition-all flex items-center gap-2"
+              >
+                <RotateCcw size={18} /> Reset Form
+              </button>
+              {activeTab === "group" && resetGroup && (
+                <button
+                  onClick={resetGroup}
+                  className="px-6 py-3 border border-red-200 text-red-500 rounded-lg font-bold hover:bg-red-50 transition-all flex items-center gap-2"
+                >
+                  <RotateCcw size={18} /> Reset Group
+                </button>
+              )}
+            </>
           )}
         </div>
       </div>
