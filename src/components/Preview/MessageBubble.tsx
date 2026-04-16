@@ -90,7 +90,8 @@ export const FileUrlBubbleCard: React.FC<MessageBubbleProps> = ({
         )}
         onClick={() => onImageClick?.(msg.fileUrl!)}
       />
-      <span className="absolute bottom-0 right-1 flex items-center justify-end gap-1">
+      <div className="absolute bottom-0 inset-x-0 bg-linear-to-t from-gray-500/40 to-transparent h-4 rounded-b-md"></div>
+      <span className="absolute bottom-1 right-1 flex items-center justify-end gap-1">
         <span className="text-[9px] opacity-60">{msg.timestamp}</span>
         <MessageStatusIcon msg={msg} />
       </span>

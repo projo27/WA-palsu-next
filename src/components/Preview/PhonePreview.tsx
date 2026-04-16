@@ -67,11 +67,14 @@ export const PhonePreview: React.FC<PhonePreviewProps> = ({
   // ── Long Press Logic ───────────────────────────────────────────────────────
   const [actionMenuId, setActionMenuId] = useState<string | null>(null);
   const longPressTimer = useRef<NodeJS.Timeout | null>(null);
+  const hasLongPressed = useRef(false);
 
   const startLongPress = (id: string, e: React.PointerEvent) => {
     // Only accept left clicks or touch
     if (e.button !== 0 && e.nativeEvent.type !== 'touchstart') return;
+    hasLongPressed.current = false;
     longPressTimer.current = setTimeout(() => {
+      hasLongPressed.current = true;
       setActionMenuId(id);
     }, 500);
   };
@@ -325,8 +328,14 @@ export const PhonePreview: React.FC<PhonePreviewProps> = ({
                         onPointerUp={cancelLongPress}
                         onPointerLeave={cancelLongPress}
                         onPointerCancel={cancelLongPress}
+                        onClickCapture={(e) => {
+                          if (hasLongPressed.current) {
+                            e.stopPropagation();
+                            e.preventDefault();
+                          }
+                        }}
                       >
-                        <div className="pointer-events-none flex flex-col w-full">
+                        <div className="flex flex-col w-full">
                           <MessageBubble
                             msg={msg}
                             settings={settings}
