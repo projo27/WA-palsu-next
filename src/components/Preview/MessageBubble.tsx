@@ -1,7 +1,7 @@
 import { Check, CheckCheck } from "lucide-react";
 import React from "react";
 import { cn, getContrastColor } from "../../lib/utils";
-import { ChatSettings, Message, MessageStatus } from "../../types";
+import { ChatSettings, Message } from "../../types";
 
 interface MessageBubbleProps {
   msg: Message;
@@ -79,7 +79,7 @@ export const FileUrlBubbleCard: React.FC<MessageBubbleProps> = ({
   onImageClick,
 }) => {
   return (
-    <div className="mb-1">
+    <div className="mb-1 relative">
       <img
         src={msg.fileUrl}
         alt="Sent"
@@ -90,6 +90,10 @@ export const FileUrlBubbleCard: React.FC<MessageBubbleProps> = ({
         )}
         onClick={() => onImageClick?.(msg.fileUrl!)}
       />
+      <span className="absolute bottom-0 right-1 flex items-center justify-end gap-1">
+        <span className="text-[9px] opacity-60">{msg.timestamp}</span>
+        <MessageStatusIcon msg={msg} />
+      </span>
     </div>
   );
 };
@@ -390,7 +394,7 @@ export const DateBubbleCard: React.FC<MessageBubbleProps> = ({ msg }) => {
 export const MessageStatusIcon: React.FC<MessageBubbleProps> = ({ msg }) => {
   if (msg.sender !== "user") return null;
   if (msg.status === "none") return null;
-  if (!["text", "contact"].includes(msg.type)) return null;
+  if (!["text", "image", "contact"].includes(msg.type)) return null;
 
   if (msg.status === "seen") {
     return (
@@ -436,7 +440,7 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({
         </div>
       )}
 
-      {msg.fileUrl && (
+      {msg.type === "image" && msg.fileUrl && (
         <FileUrlBubbleCard msg={msg} onImageClick={onImageClick} />
       )}
 
@@ -447,7 +451,14 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({
 
       {msg.type === "text" && msg.text && (
         <div>
-          <p className={cn("whitespace-pre-wrap", msg.sender === "user" ? "pr-13" : "pr-10")}>{msg.text}</p>
+          <p
+            className={cn(
+              "whitespace-pre-wrap",
+              msg.sender === "user" ? "pr-13" : "pr-10",
+            )}
+          >
+            {msg.text}
+          </p>
           <div className="flex items-center justify-end gap-1 -mt-3 ">
             {msg.type === "text" && msg.text && (
               <span className="text-[9px] opacity-60">{msg.timestamp}</span>

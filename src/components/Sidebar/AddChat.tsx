@@ -9,7 +9,7 @@ import {
   Plus,
   RotateCcw,
   Upload,
-  X
+  X,
 } from "lucide-react";
 import React, { useRef } from "react";
 import { cn } from "../../lib/utils";
@@ -128,6 +128,8 @@ export const AddChat: React.FC<AddChatProps> = ({
         }
       };
       reader.readAsDataURL(file);
+    } else {
+      setMsgType("text");
     }
   };
 
