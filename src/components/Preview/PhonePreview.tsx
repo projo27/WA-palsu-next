@@ -73,6 +73,7 @@ export const PhonePreview: React.FC<PhonePreviewProps> = ({
     // Only accept left clicks or touch
     if (e.button !== 0 && e.nativeEvent.type !== 'touchstart') return;
     hasLongPressed.current = false;
+    if (!settings.enableContextMenu) return;
     longPressTimer.current = setTimeout(() => {
       hasLongPressed.current = true;
       setActionMenuId(id);
@@ -323,7 +324,7 @@ export const PhonePreview: React.FC<PhonePreviewProps> = ({
                     return (
                       <div 
                         key={msg.id} 
-                        className={cn("flex flex-col rounded-lg transition-colors cursor-pointer", actionMenuId === msg.id && "bg-black/10")}
+                        className={cn("flex flex-col rounded-lg transition-colors", actionMenuId === msg.id && "bg-black/10")}
                         onPointerDown={(e) => startLongPress(msg.id, e)}
                         onPointerUp={cancelLongPress}
                         onPointerLeave={cancelLongPress}

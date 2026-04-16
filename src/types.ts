@@ -41,6 +41,7 @@ export interface ChatSettings {
   clockTime: string;
   is24Hour: boolean;
   showDynamicIsland: boolean;
+  enableContextMenu: boolean;
 
   // Profile Settings
   receiverName: string;

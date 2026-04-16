@@ -396,6 +396,20 @@ export const DisplaySettings: React.FC<DisplaySettingsProps> = ({
           >
             Dynamic Island
           </button>
+          <button
+            onClick={() =>
+              setSettings({
+                ...settings,
+                enableContextMenu: !settings.enableContextMenu,
+              })
+            }
+            className={cn(
+              "p-2 rounded border text-sm transition-all flex items-center justify-center gap-2",
+              settings.enableContextMenu ? "bg-primary text-white" : "bg-white",
+            )}
+          >
+            Context Menu
+          </button>
         </div>
       </div>
 

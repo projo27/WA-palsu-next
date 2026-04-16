@@ -23,6 +23,7 @@ export const DEFAULT_SETTINGS: ChatSettings = {
   clockTime: '10:04',
   is24Hour: true,
   showDynamicIsland: false,
+  enableContextMenu: false,
   receiverName: 'John Doe',
   receiverStatus: 'Online',
   receiverAvatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=John',
