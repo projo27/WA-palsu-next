@@ -451,7 +451,7 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({
       {msg.type === "location" && <LocationBubbleCard msg={msg} />}
 
       {msg.type === "text" && msg.text && (
-        <div className="relative flex flex-wrap gap-x-4 gap-y-0.5">
+        <div className="relative flex flex-wrap gap-x-2 gap-y-0.5">
           <p
             className={cn(
               "whitespace-pre-line",
@@ -460,7 +460,7 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({
           >
             {msg.text}
           </p>
-          <span className="flex items-center justify-end gap-1 w-auto ml-auto self-end">
+          <span className="flex items-center justify-end gap-0.5 w-auto ml-auto self-end">
             {msg.type === "text" && msg.text && (
               <span className="text-[9px] opacity-60">{msg.timestamp}</span>
             )}
