@@ -273,7 +273,7 @@ export const DisplaySettings: React.FC<DisplaySettingsProps> = ({
           <div className="flex gap-2">
             <button
               onClick={() => setSettings({ ...settings, textSize: (settings.textSize || 13) - 1 })}
-              className="flex-1/4 py-2 px-3 rounded border bg-white border-gray-200 text-gray-600 flex items-center justify-center gap-2 text-sm font-medium hover:bg-gray-50 transition-all font-bold"
+              className="flex-1/4 py-2 px-3 rounded border bg-white border-gray-200 text-gray-600 flex items-center justify-center gap-2 text-sm font-medium hover:bg-gray-50 transition-all"
             >
               <Minus size={14} /> Min
             </button>
@@ -290,7 +290,7 @@ export const DisplaySettings: React.FC<DisplaySettingsProps> = ({
             </button>
             <button
               onClick={() => setSettings({ ...settings, textSize: (settings.textSize || 13) + 1 })}
-              className="flex-1/4 py-2 px-3 rounded border bg-white border-gray-200 text-gray-600 flex items-center justify-center gap-2 text-sm font-medium hover:bg-gray-50 transition-all font-bold"
+              className="flex-1/4 py-2 px-3 rounded border bg-white border-gray-200 text-gray-600 flex items-center justify-center gap-2 text-sm font-medium hover:bg-gray-50 transition-all"
             >
               <Plus size={14} /> Plus
             </button>
@@ -304,7 +304,7 @@ export const DisplaySettings: React.FC<DisplaySettingsProps> = ({
           <div className="flex gap-2">
             <button
               onClick={() => setSettings({ ...settings, uiTextSize: (settings.uiTextSize || 13) - 1 })}
-              className="flex-1/4 py-2 px-3 rounded border bg-white border-gray-200 text-gray-600 flex items-center justify-center gap-2 text-sm font-medium hover:bg-gray-50 transition-all font-bold"
+              className="flex-1/4 py-2 px-3 rounded border bg-white border-gray-200 text-gray-600 flex items-center justify-center gap-2 text-sm font-medium hover:bg-gray-50 transition-all"
             >
               <Minus size={14} /> Min
             </button>
@@ -321,7 +321,7 @@ export const DisplaySettings: React.FC<DisplaySettingsProps> = ({
             </button>
             <button
               onClick={() => setSettings({ ...settings, uiTextSize: (settings.uiTextSize || 13) + 1 })}
-              className="flex-1/4 py-2 px-3 rounded border bg-white border-gray-200 text-gray-600 flex items-center justify-center gap-2 text-sm font-medium hover:bg-gray-50 transition-all font-bold"
+              className="flex-1/4 py-2 px-3 rounded border bg-white border-gray-200 text-gray-600 flex items-center justify-center gap-2 text-sm font-medium hover:bg-gray-50 transition-all"
             >
               <Plus size={14} /> Plus
             </button>

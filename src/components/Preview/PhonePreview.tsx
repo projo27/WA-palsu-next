@@ -416,7 +416,7 @@ export const PhonePreview: React.FC<PhonePreviewProps> = ({
                     messages[messages.length - 1]?.id === actionMenuId;
 
                   return (
-                    <div className="absolute inset-0 z-[120] bg-black/40 flex flex-col justify-end animate-in fade-in duration-200 shadow-2xl">
+                    <div className="absolute inset-0 z-120 bg-black/40 flex flex-col justify-end animate-in fade-in duration-200 shadow-2xl">
                       <div
                         className="absolute inset-0 z-0"
                         onClick={() => setActionMenuId(null)}
@@ -586,7 +586,7 @@ export const PhonePreview: React.FC<PhonePreviewProps> = ({
           />
 
           {/* Paste JSON Text */}
-          <div className="relative">
+          <div className="relative hidden">
             <button
               // onClick={handleImportChatClick}
               className="w-12 h-12 bg-gray-500 text-white rounded-full shadow-lg flex items-center justify-center hover:bg-gray-600 active:scale-95 transition-all"
