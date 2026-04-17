@@ -297,7 +297,7 @@ export const PhonePreview: React.FC<PhonePreviewProps> = ({
               }}
             >
               <StatusBar settings={settings} />
-              <ChatHeader settings={settings} />
+              <ChatHeader settings={settings} onImageClick={setViewerMedia} />
 
               {/* Background Pattern */}
               <div

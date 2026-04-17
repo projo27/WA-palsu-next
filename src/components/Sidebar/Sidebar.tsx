@@ -48,7 +48,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           <button
             onClick={() => {
               setActiveTab("display");
-              setSettings({ ...settings, isGroup: false });
+              setSettings({ ...settings });
             }}
             className={cn(
               "flex-1 py-3 px-4 flex items-center justify-center gap-2 font-medium transition-colors",

@@ -252,6 +252,15 @@ export const AddChat: React.FC<AddChatProps> = ({
                 className="w-full p-2.5 rounded-lg border border-gray-200 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all placeholder:text-gray-400"
               />
             )}
+            <input
+              type="text"
+              placeholder="Profile Image URL (e.g. https://...)"
+              value={settings.receiverAvatar.startsWith("data:") ? "" : settings.receiverAvatar}
+              onChange={(e) =>
+                setSettings({ ...settings, receiverAvatar: e.target.value })
+              }
+              className="w-full p-2.5 rounded-lg border border-gray-200 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all placeholder:text-gray-400"
+            />
           </div>
         </div>
       </div>
