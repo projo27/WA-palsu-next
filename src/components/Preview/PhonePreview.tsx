@@ -1,16 +1,30 @@
-import React, { useRef, useEffect, useState } from "react";
-import { Trash2, Download, Upload, Camera, Video, Square, X, Edit2, ArrowUp, ArrowDown, ArrowLeftRight, Trash } from "lucide-react";
 import { toPng } from "html-to-image";
-import { Message, ChatSettings } from "../../types";
-import { cn } from "../../lib/utils";
-import { StatusBar } from "./StatusBar";
-import { ChatHeader } from "./ChatHeader";
-import { MessageBubble } from "./MessageBubble";
-import { ChatFooter } from "./ChatFooter";
-import { NavigationBar } from "./NavigationBar";
-import { useVideoRecorder } from "./useVideoRecorder";
+import {
+  ArrowDown,
+  ArrowLeftRight,
+  ArrowUp,
+  Camera,
+  Download,
+  Edit2,
+  FileText,
+  Square,
+  Trash,
+  Trash2,
+  Upload,
+  Video,
+  X,
+} from "lucide-react";
+import React, { useEffect, useRef, useState } from "react";
 import bgDark from "../../assets/image/whatsapp-bg-dark.png";
 import bgLight from "../../assets/image/whatsapp-bg-light.png";
+import { cn } from "../../lib/utils";
+import { ChatSettings, Message } from "../../types";
+import { ChatFooter } from "./ChatFooter";
+import { ChatHeader } from "./ChatHeader";
+import { MessageBubble } from "./MessageBubble";
+import { NavigationBar } from "./NavigationBar";
+import { StatusBar } from "./StatusBar";
+import { useVideoRecorder } from "./useVideoRecorder";
 
 interface PhonePreviewProps {
   settings: ChatSettings;
@@ -19,7 +33,7 @@ interface PhonePreviewProps {
   onImport: (data: { settings: ChatSettings; messages: Message[] }) => void;
   onEditRequest?: (msg: Message) => void;
   onDeleteMessage?: (id: string) => void;
-  onMoveMessage?: (id: string, dir: 'up' | 'down') => void;
+  onMoveMessage?: (id: string, dir: "up" | "down") => void;
   onToggleSender?: (id: string) => void;
 }
 
@@ -71,7 +85,7 @@ export const PhonePreview: React.FC<PhonePreviewProps> = ({
 
   const startLongPress = (id: string, e: React.PointerEvent) => {
     // Only accept left clicks or touch
-    if (e.button !== 0 && e.nativeEvent.type !== 'touchstart') return;
+    if (e.button !== 0 && e.nativeEvent.type !== "touchstart") return;
     hasLongPressed.current = false;
     if (!settings.enableContextMenu) return;
     longPressTimer.current = setTimeout(() => {
@@ -198,26 +212,30 @@ export const PhonePreview: React.FC<PhonePreviewProps> = ({
     if (!file) return;
     const reader = new FileReader();
     reader.onload = (ev) => {
-      try {
-        const parsed = JSON.parse(ev.target?.result as string);
-        if (
-          typeof parsed === "object" &&
-          parsed !== null &&
-          Array.isArray(parsed.messages) &&
-          typeof parsed.settings === "object"
-        ) {
-          onImport(parsed);
-        } else {
-          alert(
-            'Format JSON tidak valid. Pastikan file memiliki properti "messages" (array) dan "settings" (object).',
-          );
-        }
-      } catch {
-        alert("File tidak dapat dibaca. Pastikan file adalah JSON yang valid.");
-      }
+      parseJsonToChat(ev.target?.result as string);
     };
     reader.readAsText(file);
     e.target.value = "";
+  };
+
+  const parseJsonToChat = (json: string) => {
+    try {
+      const parsed = JSON.parse(json);
+      if (
+        typeof parsed === "object" &&
+        parsed !== null &&
+        Array.isArray(parsed.messages) &&
+        typeof parsed.settings === "object"
+      ) {
+        onImport(parsed);
+      } else {
+        alert(
+          'Format JSON tidak valid. Pastikan file memiliki properti "messages" (array) dan "settings" (object).',
+        );
+      }
+    } catch {
+      alert("File tidak dapat dibaca. Pastikan file adalah JSON yang valid.");
+    }
   };
 
   // ── Render ───────────────────────────────────────────────────────────────
@@ -280,7 +298,7 @@ export const PhonePreview: React.FC<PhonePreviewProps> = ({
                 "w-[600px] h-[400px] rounded-xl border-4",
             )}
           >
-            {/* Screen Content */} 
+            {/* Screen Content */}
             <div
               className={cn(
                 "w-full h-full rounded-4xl overflow-hidden flex flex-col relative",
@@ -319,12 +337,18 @@ export const PhonePreview: React.FC<PhonePreviewProps> = ({
                 <div className="flex flex-col gap-0.5 relative z-10">
                   {messages.map((msg, index) => {
                     const prevMsg = messages[index - 1];
-                    const isFirstInGroup = !prevMsg || prevMsg.sender !== msg.sender || prevMsg.type === 'date';
-                    
+                    const isFirstInGroup =
+                      !prevMsg ||
+                      prevMsg.sender !== msg.sender ||
+                      prevMsg.type === "date";
+
                     return (
-                      <div 
-                        key={msg.id} 
-                        className={cn("flex flex-col rounded-lg transition-colors", actionMenuId === msg.id && "bg-black/10")}
+                      <div
+                        key={msg.id}
+                        className={cn(
+                          "flex flex-col rounded-lg transition-colors",
+                          actionMenuId === msg.id && "bg-black/10",
+                        )}
                         onPointerDown={(e) => startLongPress(msg.id, e)}
                         onPointerUp={cancelLongPress}
                         onPointerLeave={cancelLongPress}
@@ -356,9 +380,7 @@ export const PhonePreview: React.FC<PhonePreviewProps> = ({
 
               {/* ── Media Viewer (Popup) ─────────────────────────────────── */}
               {viewerMedia && (
-                <div
-                  className="absolute inset-0 z-110 bg-black flex items-center justify-center p-4 animate-in fade-in duration-300"
-                >
+                <div className="absolute inset-0 z-110 bg-black flex items-center justify-center p-4 animate-in fade-in duration-300">
                   <button
                     onClick={() => setViewerMedia(null)}
                     className="absolute top-10 right-4 w-10 h-10 bg-white/10 hover:bg-white/20 text-white rounded-full flex items-center justify-center transition-colors shadow-lg"
@@ -376,63 +398,114 @@ export const PhonePreview: React.FC<PhonePreviewProps> = ({
                     </span>
                   </div>
                   {/* Backdrop click to close */}
-                  <div 
-                    className="absolute inset-0 -z-10" 
-                    onClick={() => setViewerMedia(null)} 
+                  <div
+                    className="absolute inset-0 -z-10"
+                    onClick={() => setViewerMedia(null)}
                   />
                 </div>
               )}
 
               {/* ── Action Menu Overlay ─────────────────────────────────────── */}
-              {actionMenuId && (() => {
-                const selectedMsg = messages.find((m) => m.id === actionMenuId);
-                const isStart = messages[0]?.id === actionMenuId;
-                const isEnd = messages[messages.length - 1]?.id === actionMenuId;
+              {actionMenuId &&
+                (() => {
+                  const selectedMsg = messages.find(
+                    (m) => m.id === actionMenuId,
+                  );
+                  const isStart = messages[0]?.id === actionMenuId;
+                  const isEnd =
+                    messages[messages.length - 1]?.id === actionMenuId;
 
-                return (
-                  <div className="absolute inset-0 z-[120] bg-black/40 flex flex-col justify-end animate-in fade-in duration-200 shadow-2xl">
-                    <div 
-                      className="absolute inset-0 z-0" 
-                      onClick={() => setActionMenuId(null)}
-                    />
-                    <div className="bg-white dark:bg-gray-900 rounded-t-3xl p-5 shadow-xl relative z-10 animate-in slide-in-from-bottom-8 duration-300">
-                      <div className="flex justify-between items-center mb-4">
-                        <span className="font-bold text-gray-800 dark:text-gray-100 text-lg">Message Actions</span>
-                        <button onClick={() => setActionMenuId(null)} className="p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
-                          <X size={20} className="text-gray-500" />
-                        </button>
-                      </div>
-                      <div className="flex flex-col gap-2">
-                        {onEditRequest && selectedMsg && (
-                          <button onClick={() => handleAction(() => onEditRequest(selectedMsg))} className="w-full flex items-center gap-3 p-3 text-left hover:bg-gray-50 dark:hover:bg-gray-800 rounded-xl transition-colors font-medium text-gray-700 dark:text-gray-200">
-                            <div className="w-8 h-8 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center text-blue-600 dark:text-blue-400"><Edit2 size={16} /></div> Edit Message
+                  return (
+                    <div className="absolute inset-0 z-[120] bg-black/40 flex flex-col justify-end animate-in fade-in duration-200 shadow-2xl">
+                      <div
+                        className="absolute inset-0 z-0"
+                        onClick={() => setActionMenuId(null)}
+                      />
+                      <div className="bg-white dark:bg-gray-900 rounded-t-3xl p-5 shadow-xl relative z-10 animate-in slide-in-from-bottom-8 duration-300">
+                        <div className="flex justify-between items-center mb-4">
+                          <span className="font-bold text-gray-800 dark:text-gray-100 text-lg">
+                            Message Actions
+                          </span>
+                          <button
+                            onClick={() => setActionMenuId(null)}
+                            className="p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                          >
+                            <X size={20} className="text-gray-500" />
                           </button>
-                        )}
-                        {onMoveMessage && (
-                          <div className="flex gap-2">
-                            <button onClick={() => handleAction(() => onMoveMessage(actionMenuId, 'up'))} disabled={isStart} className="flex-1 flex items-center justify-center gap-2 p-3 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-xl transition-colors font-medium text-gray-700 dark:text-gray-200 disabled:opacity-30 border border-gray-100 dark:border-gray-800">
-                              <ArrowUp size={16} /> Move Up
+                        </div>
+                        <div className="flex flex-col gap-2">
+                          {onEditRequest && selectedMsg && (
+                            <button
+                              onClick={() =>
+                                handleAction(() => onEditRequest(selectedMsg))
+                              }
+                              className="w-full flex items-center gap-3 p-3 text-left hover:bg-gray-50 dark:hover:bg-gray-800 rounded-xl transition-colors font-medium text-gray-700 dark:text-gray-200"
+                            >
+                              <div className="w-8 h-8 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center text-blue-600 dark:text-blue-400">
+                                <Edit2 size={16} />
+                              </div>{" "}
+                              Edit Message
                             </button>
-                            <button onClick={() => handleAction(() => onMoveMessage(actionMenuId, 'down'))} disabled={isEnd} className="flex-1 flex items-center justify-center gap-2 p-3 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-xl transition-colors font-medium text-gray-700 dark:text-gray-200 disabled:opacity-30 border border-gray-100 dark:border-gray-800">
-                              <ArrowDown size={16} /> Move Down
+                          )}
+                          {onMoveMessage && (
+                            <div className="flex gap-2">
+                              <button
+                                onClick={() =>
+                                  handleAction(() =>
+                                    onMoveMessage(actionMenuId, "up"),
+                                  )
+                                }
+                                disabled={isStart}
+                                className="flex-1 flex items-center justify-center gap-2 p-3 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-xl transition-colors font-medium text-gray-700 dark:text-gray-200 disabled:opacity-30 border border-gray-100 dark:border-gray-800"
+                              >
+                                <ArrowUp size={16} /> Move Up
+                              </button>
+                              <button
+                                onClick={() =>
+                                  handleAction(() =>
+                                    onMoveMessage(actionMenuId, "down"),
+                                  )
+                                }
+                                disabled={isEnd}
+                                className="flex-1 flex items-center justify-center gap-2 p-3 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-xl transition-colors font-medium text-gray-700 dark:text-gray-200 disabled:opacity-30 border border-gray-100 dark:border-gray-800"
+                              >
+                                <ArrowDown size={16} /> Move Down
+                              </button>
+                            </div>
+                          )}
+                          {onToggleSender && (
+                            <button
+                              onClick={() =>
+                                handleAction(() => onToggleSender(actionMenuId))
+                              }
+                              className="w-full flex items-center gap-3 p-3 text-left hover:bg-gray-50 dark:hover:bg-gray-800 rounded-xl transition-colors font-medium text-gray-700 dark:text-gray-200"
+                            >
+                              <div className="w-8 h-8 rounded-full bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center text-emerald-600 dark:text-emerald-400">
+                                <ArrowLeftRight size={16} />
+                              </div>{" "}
+                              Change Sender
                             </button>
-                          </div>
-                        )}
-                        {onToggleSender && (
-                          <button onClick={() => handleAction(() => onToggleSender(actionMenuId))} className="w-full flex items-center gap-3 p-3 text-left hover:bg-gray-50 dark:hover:bg-gray-800 rounded-xl transition-colors font-medium text-gray-700 dark:text-gray-200">
-                            <div className="w-8 h-8 rounded-full bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center text-emerald-600 dark:text-emerald-400"><ArrowLeftRight size={16} /></div> Change Sender
-                          </button>
-                        )}
-                        {onDeleteMessage && (
-                          <button onClick={() => handleAction(() => onDeleteMessage(actionMenuId))} className="w-full flex items-center gap-3 p-3 text-left hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl transition-colors font-medium text-red-600 dark:text-red-400">
-                            <div className="w-8 h-8 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center text-red-600 dark:text-red-400"><Trash size={16} /></div> Delete Message
-                          </button>
-                        )}
+                          )}
+                          {onDeleteMessage && (
+                            <button
+                              onClick={() =>
+                                handleAction(() =>
+                                  onDeleteMessage(actionMenuId),
+                                )
+                              }
+                              className="w-full flex items-center gap-3 p-3 text-left hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl transition-colors font-medium text-red-600 dark:text-red-400"
+                            >
+                              <div className="w-8 h-8 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center text-red-600 dark:text-red-400">
+                                <Trash size={16} />
+                              </div>{" "}
+                              Delete Message
+                            </button>
+                          )}
+                        </div>
                       </div>
                     </div>
-                  </div>
-                );
-              })()}
+                  );
+                })()}
 
               {/* ── 3-2-1 Countdown Overlay ─────────────────────────────── */}
               {countdown !== null && (
@@ -511,6 +584,23 @@ export const PhonePreview: React.FC<PhonePreviewProps> = ({
             onChange={handleImportFile}
             className="hidden"
           />
+
+          {/* Paste JSON Text */}
+          <div className="relative">
+            <button
+              // onClick={handleImportChatClick}
+              className="w-12 h-12 bg-gray-500 text-white rounded-full shadow-lg flex items-center justify-center hover:bg-gray-600 active:scale-95 transition-all"
+              title="Paste JSON Text here"
+            >
+              <FileText size={20} />
+            </button>
+            <input
+              // ref={importInputRef}
+              type="text"
+              // onChange={handleImportFile}
+              className="absolute top-0 left-0 w-full h-full opacity-0 cursor-pointer"
+            />
+          </div>
 
           {/* Screenshot PNG */}
           <button

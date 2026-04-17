@@ -8,6 +8,7 @@ import {
   PhoneCall,
   Plus,
   RotateCcw,
+  Trash,
   Upload,
   X,
 } from "lucide-react";
@@ -255,7 +256,11 @@ export const AddChat: React.FC<AddChatProps> = ({
             <input
               type="text"
               placeholder="Profile Image URL (e.g. https://...)"
-              value={settings.receiverAvatar.startsWith("data:") ? "" : settings.receiverAvatar}
+              value={
+                settings.receiverAvatar.startsWith("data:")
+                  ? ""
+                  : settings.receiverAvatar
+              }
               onChange={(e) =>
                 setSettings({ ...settings, receiverAvatar: e.target.value })
               }
@@ -281,37 +286,40 @@ export const AddChat: React.FC<AddChatProps> = ({
                   : "border-gray-200 text-gray-700 hover:bg-gray-50",
               )}
             >
+              <div className="w-3 h-3 rounded-sm bg-primary" />
               Sender (You)
             </button>
-            {settings.groupParticipants?.map((p) => (
-              <button
-                key={p.id}
-                onClick={() => {
-                  setMsgSender("bot");
-                  if (setMsgBotSenderId) setMsgBotSenderId(p.id);
-                }}
-                className={cn(
-                  "w-full p-3 rounded-lg border text-sm font-medium transition-all flex items-center justify-between group",
-                  msgSender === "bot" && msgBotSenderId === p.id
-                    ? "border-primary bg-primary/10 text-primary"
-                    : "border-gray-200 text-gray-700 hover:bg-gray-50",
-                )}
-              >
-                <div className="flex items-center gap-2">
-                  <div
-                    className="w-3 h-3 rounded-full"
-                    style={{ backgroundColor: p.color }}
-                  />
-                  {p.name}
-                </div>
-                <div
-                  onClick={(e) => removeParticipant(p.id, e)}
-                  className="p-1 rounded bg-red-100 text-red-500 hover:bg-red-200 opacity-0 group-hover:opacity-100 transition-opacity"
+            <div className="grid grid-cols-3 gap-1 w-full">
+              {settings.groupParticipants?.map((p) => (
+                <button
+                  key={p.id}
+                  onClick={() => {
+                    setMsgSender("bot");
+                    if (setMsgBotSenderId) setMsgBotSenderId(p.id);
+                  }}
+                  className={cn(
+                    "p-3 rounded-lg border text-sm font-medium transition-all flex items-center justify-between group text-left truncate",
+                    msgSender === "bot" && msgBotSenderId === p.id
+                      ? "border-primary bg-primary/10 text-primary"
+                      : "border-gray-200 text-gray-700 hover:bg-gray-50",
+                  )}
                 >
-                  <RotateCcw size={12} className="rotate-45" />
-                </div>
-              </button>
-            ))}
+                  <div className="flex items-center gap-2">
+                    <div
+                      className="w-3 h-3 rounded-full"
+                      style={{ backgroundColor: p.color }}
+                    />
+                    {p.name}
+                  </div>
+                  <div
+                    onClick={(e) => removeParticipant(p.id, e)}
+                    className="p-1 rounded bg-red-100 text-red-500 hover:bg-red-200 opacity-0 group-hover:opacity-100 transition-opacity"
+                  >
+                    <Trash size={12} />
+                  </div>
+                </button>
+              ))}
+            </div>
             <div className="flex gap-2 items-center p-2 rounded-lg border border-gray-200 bg-gray-50">
               <input
                 type="color"

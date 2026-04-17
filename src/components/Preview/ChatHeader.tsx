@@ -17,43 +17,41 @@ export const ChatHeader: React.FC<ChatHeaderProps> = ({
   return (
     <header
       className={cn(
-        "flex items-center justify-between px-3 py-2 z-20 shadow-sm",
+        "w-full flex flex-row items-center justify-between px-2 py-2 z-20 shadow-sm",
         settings.isDarkMode ? "bg-bubble-receiver-dark" : "bg-[#f0f2f5]",
       )}
     >
-      <div className="flex-1 flex items-center gap-1">
+      <div className="flex-1 flex-wrap flex items-center gap-1 pr-2">
         <WAIcon
           name="backArrow"
           size={24}
           className="-ml-1"
           isDarkMode={settings.isDarkMode}
         />
-        <div className="flex items-center gap-2">
-          <img
-            src={settings.receiverAvatar}
-            alt="Avatar"
-            className="w-9 h-9 rounded-full object-cover cursor-pointer"
-            onClick={() => onImageClick?.(settings.receiverAvatar)}
-          />
-          <div className="leading-tight min-w-0">
-            <h1
-              className="font-semibold flex items-center gap-1 cursor-pointer"
-              style={{ fontSize: `${(settings.uiTextSize || 13) + 1}px` }}
-            >
-              <div className="truncate">{settings.receiverName}</div>
-            </h1>
-            <p
-              className="opacity-70 truncate max-w-[120px]"
-              style={{ fontSize: `${(settings.uiTextSize || 13) - 3}px` }}
-            >
-              {settings.isGroup
-                ? `${settings.groupParticipants?.length ? settings.groupParticipants.map((p) => p.name).join(", ") + ", You" : "You"}`
-                : settings.receiverStatus}
-            </p>
-          </div>
+        <img
+          src={settings.receiverAvatar}
+          alt="Avatar"
+          className="w-9 h-9 rounded-full object-cover cursor-pointer"
+          onClick={() => onImageClick?.(settings.receiverAvatar)}
+        />
+        <div className="max-w-full flex-1 truncate">
+          <h1
+            className="font-semibold flex items-center gap-1 cursor-pointer"
+            style={{ fontSize: `${(settings.uiTextSize || 13) + 1}px` }}
+          >
+            <div className="truncate">{settings.receiverName}</div>
+          </h1>
+          <p
+            className="opacity-70 truncate max-w-[200px]"
+            style={{ fontSize: `${(settings.uiTextSize || 13) - 3}px` }}
+          >
+            {settings.isGroup
+              ? `${settings.groupParticipants?.length ? settings.groupParticipants.map((p) => p.name).join(", ") + ", You" : "You"}`
+              : settings.receiverStatus}
+          </p>
         </div>
       </div>
-      <div className="flex items-center justify-self-end gap-2 ml-auto">
+      <div className="flex items-center justify-end gap-1">
         {/* {settings.isGroup && (
           <WAIcon
             name="chevronDown"
@@ -63,7 +61,7 @@ export const ChatHeader: React.FC<ChatHeaderProps> = ({
         )} */}
         <WAIcon name="video" size={24} isDarkMode={settings.isDarkMode} />
         {settings.isGroup && (
-          <span className="-ml-2 text-sm self-center">▾</span>
+          <span className="-ml-1.5 text-sm self-center">▾</span>
         )}
         {!settings.isGroup && (
           <WAIcon name="phone" size={24} isDarkMode={settings.isDarkMode} />
