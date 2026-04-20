@@ -3,10 +3,14 @@ import {
   ArrowDown,
   ArrowLeftRight,
   ArrowUp,
+  Bot,
   Camera,
   Download,
   Edit2,
   FileText,
+  MinusCircleIcon,
+  PlusCircleIcon,
+  Scroll,
   Square,
   Trash,
   Trash2,
@@ -35,6 +39,8 @@ interface PhonePreviewProps {
   onDeleteMessage?: (id: string) => void;
   onMoveMessage?: (id: string, dir: "up" | "down") => void;
   onToggleSender?: (id: string) => void;
+  onToggleAIPanel?: () => void;
+  className?: string;
 }
 
 export const PhonePreview: React.FC<PhonePreviewProps> = ({
@@ -46,6 +52,8 @@ export const PhonePreview: React.FC<PhonePreviewProps> = ({
   onDeleteMessage,
   onMoveMessage,
   onToggleSender,
+  onToggleAIPanel,
+  className,
 }) => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const importInputRef = useRef<HTMLInputElement>(null);
@@ -82,6 +90,9 @@ export const PhonePreview: React.FC<PhonePreviewProps> = ({
   const [actionMenuId, setActionMenuId] = useState<string | null>(null);
   const longPressTimer = useRef<NodeJS.Timeout | null>(null);
   const hasLongPressed = useRef(false);
+
+  const [isScrollPanelOpen, setIsScrollPanelOpen] = useState(false);
+  const [scrollSpeed, setScrollSpeed] = useState(5);
 
   const startLongPress = (id: string, e: React.PointerEvent) => {
     // Only accept left clicks or touch
@@ -238,9 +249,20 @@ export const PhonePreview: React.FC<PhonePreviewProps> = ({
     }
   };
 
+  // Set Scrolling Message
+  useEffect(() => {
+    
+  }, [scrollSpeed])
+
+
   // ── Render ───────────────────────────────────────────────────────────────
   return (
-    <div className="flex-1 flex items-center justify-center sticky top-8 h-full p-4 my-auto">
+    <div
+      className={cn(
+        "justify-center sticky top-8 h-full p-4 my-auto",
+        className,
+      )}
+    >
       <div className="relative h-full">
         {/* ── Recording wrapper (device frame + cursor) ─────────────────── */}
         {/* This is the element captured by useVideoRecorder                */}
@@ -550,11 +572,11 @@ export const PhonePreview: React.FC<PhonePreviewProps> = ({
         {/* end recording wrapper */}
 
         {/* ── Floating Action Buttons (outside recording wrapper) ──────────── */}
-        <div className="absolute -right-16 top-0 flex flex-col gap-2">
+        <div className="absolute -right-16 top-8 flex flex-col gap-2 justify-start">
           {/* Clear All */}
           <button
             onClick={clearAll}
-            className="w-12 h-12 bg-red-500 text-white rounded-full shadow-lg flex items-center justify-center hover:bg-red-600 active:scale-95 transition-all"
+            className="w-12 h-12 bg-red-500 text-white rounded-full shadow-lg flex items-center justify-center hover:bg-red-600 active:scale-95 transition-all cursor-pointer"
             title="Hapus semua pesan"
           >
             <Trash2 size={20} />
@@ -563,7 +585,7 @@ export const PhonePreview: React.FC<PhonePreviewProps> = ({
           {/* Export JSON */}
           <button
             onClick={handleExportChat}
-            className="w-12 h-12 bg-emerald-500 text-white rounded-full shadow-lg flex items-center justify-center hover:bg-emerald-600 active:scale-95 transition-all"
+            className="w-12 h-12 bg-emerald-500 text-white rounded-full shadow-lg flex items-center justify-center hover:bg-emerald-600 active:scale-95 transition-all cursor-pointer"
             title="Export chat ke JSON"
           >
             <Download size={20} />
@@ -572,7 +594,7 @@ export const PhonePreview: React.FC<PhonePreviewProps> = ({
           {/* Import JSON */}
           <button
             onClick={handleImportChatClick}
-            className="w-12 h-12 bg-blue-500 text-white rounded-full shadow-lg flex items-center justify-center hover:bg-blue-600 active:scale-95 transition-all"
+            className="w-12 h-12 bg-blue-500 text-white rounded-full shadow-lg flex items-center justify-center hover:bg-blue-600 active:scale-95 transition-all cursor-pointer"
             title="Import chat dari JSON"
           >
             <Upload size={20} />
@@ -589,7 +611,7 @@ export const PhonePreview: React.FC<PhonePreviewProps> = ({
           <div className="relative hidden">
             <button
               // onClick={handleImportChatClick}
-              className="w-12 h-12 bg-gray-500 text-white rounded-full shadow-lg flex items-center justify-center hover:bg-gray-600 active:scale-95 transition-all"
+              className="w-12 h-12 bg-gray-500 text-white rounded-full shadow-lg flex items-center justify-center hover:bg-gray-600 active:scale-95 transition-all cursor-pointer"
               title="Paste JSON Text here"
             >
               <FileText size={20} />
@@ -602,11 +624,21 @@ export const PhonePreview: React.FC<PhonePreviewProps> = ({
             />
           </div>
 
+          {/* AI Panel */}
+          <button
+            onClick={onToggleAIPanel}
+            disabled={isRecording || countdown !== null}
+            className="w-12 h-12 bg-black text-white rounded-full shadow-lg flex items-center justify-center hover:bg-black/80 active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer cursor-pointer"
+            title="AI Panel"
+          >
+            <Bot size={20} />
+          </button>
+
           {/* Screenshot PNG */}
           <button
             onClick={handleScreenshot}
             disabled={isRecording || countdown !== null}
-            className="w-12 h-12 bg-violet-500 text-white rounded-full shadow-lg flex items-center justify-center hover:bg-violet-600 active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-12 h-12 bg-violet-500 text-white rounded-full shadow-lg flex items-center justify-center hover:bg-violet-600 active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
             title="Screenshot ke PNG"
           >
             <Camera size={20} />
@@ -617,7 +649,7 @@ export const PhonePreview: React.FC<PhonePreviewProps> = ({
             onClick={toggleRecording}
             disabled={countdown !== null}
             className={cn(
-              "w-12 h-12 rounded-full shadow-lg flex items-center justify-center active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed",
+              "w-12 h-12 rounded-full shadow-lg flex items-center justify-center active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer",
               isRecording
                 ? "bg-red-600 hover:bg-red-700"
                 : "bg-orange-500 hover:bg-orange-600",
@@ -630,6 +662,36 @@ export const PhonePreview: React.FC<PhonePreviewProps> = ({
               <Video size={20} className="text-white" />
             )}
           </button>
+
+          {/* Scroller Phone Preview */}
+          <div className="flex flex-col gap-2 group relative items-center">
+            <button
+              onClick={() => setIsScrollPanelOpen(!isScrollPanelOpen)}
+              className="w-12 h-12 bg-gray-500 text-white rounded-full shadow-lg flex items-center justify-center hover:bg-gray-600 active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+            >
+              <Scroll size={20} className="text-white" />
+            </button>
+            <div
+              className={cn(
+                "justify-between items-center gap-2",
+                isScrollPanelOpen ? "flex flex-col" : "hidden",
+              )}
+            >
+              <button className="w-8 h-8 rounded-full bg-gray-500 place-items-center">
+                <MinusCircleIcon size={18} className="text-white" />
+              </button>
+              <input
+                type="number"
+                value={scrollSpeed}
+                // onChange={handleScrollChange}
+                min={0}
+                className="w-10 h-8 rounded-sm bg-white-500 outline-gray-500 outline-2 text-gray-500 font-bold text-center [appearance:textfield]  [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+              />
+              <button className="w-8 h-8 rounded-full bg-gray-500 place-items-center">
+                <PlusCircleIcon size={18} className="text-white" />
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </div>

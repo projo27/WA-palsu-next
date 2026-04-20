@@ -1,0 +1,144 @@
+{
+  "settings": {
+    "layout": "android",
+    "isDarkMode": true,
+    "networkType": "5G",
+    "isDualSim": false,
+    "batteryLevel": 85,
+    "isCharging": false,
+    "showBatteryPercentage": true,
+    "headerIcon": "none",
+    "backgroundImage": "",
+    "chatBackgroundColor": "#0b141a",
+    "userBubbleColor": "#005c4b",
+    "receiverBubbleColor": "#202c33",
+    "textSize": 14,
+    "uiTextSize": 14,
+    "hideHeader": false,
+    "hideFooter": false,
+    "showPayment": false,
+    "showChatArrow": true,
+    "navigationBar": "none",
+    "clockTime": "14:30",
+    "is24Hour": true,
+    "showDynamicIsland": false,
+    "enableContextMenu": false,
+    "receiverName": "Strategist Senior",
+    "receiverStatus": "Online",
+    "receiverAvatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=Strategy",
+    "isGroup": true,
+    "groupMembers": "Member1, Member2",
+    "groupParticipants": [
+      {
+        "id": "1",
+        "name": "User A",
+        "color": "#ffb300"
+      },
+      {
+        "id": "2",
+        "name": "User B",
+        "color": "#00a884"
+      }
+    ]
+  },
+  "messages": [
+    {
+      "id": "1776325373772",
+      "text": "tes",
+      "type": "text",
+      "sender": "bot",
+      "timestamp": "07:49",
+      "status": "seen",
+      "reaction": "",
+      "senderName": "User A",
+      "senderColor": "#ffb300"
+    },
+    {
+      "id": "1776325377414",
+      "text": "tes",
+      "type": "text",
+      "sender": "bot",
+      "timestamp": "07:49",
+      "status": "seen",
+      "reaction": "",
+      "senderName": "User B",
+      "senderColor": "#00a884"
+    },
+    {
+      "id": "1776325382884",
+      "text": "tes",
+      "type": "text",
+      "sender": "user",
+      "timestamp": "07:49",
+      "status": "seen",
+      "reaction": ""
+    },
+    {
+      "id": "1776390678241",
+      "text": "",
+      "type": "image",
+      "sender": "bot",
+      "timestamp": "07:49",
+      "status": "seen",
+      "reaction": "",
+      "fileUrl": "https://media.tenor.com/AHAi9SFQE9cAAAAm/quby-yeah.webp",
+      "senderName": "User A",
+      "senderColor": "#ffb300"
+    },
+    {
+      "id": "1776396333810",
+      "text": "Today",
+      "type": "date",
+      "sender": "bot",
+      "timestamp": "07:49",
+      "status": "seen",
+      "reaction": "",
+      "senderName": "User A",
+      "senderColor": "#ffb300"
+    },
+    {
+      "id": "1776396337229",
+      "text": "{\"docName\":\"document name\",\"docExt\":\"JPG\",\"docSize\":\"12\",\"docSizeType\":\"KB\"}",
+      "type": "file",
+      "sender": "bot",
+      "timestamp": "07:49",
+      "status": "seen",
+      "reaction": "",
+      "senderName": "User A",
+      "senderColor": "#ffb300"
+    },
+    {
+      "id": "1776396341861",
+      "text": "{\"callMode\":\"video\",\"callType\":\"Call\",\"hh\":\"\",\"mm\":\"\",\"ss\":\"\"}",
+      "type": "call",
+      "sender": "bot",
+      "timestamp": "07:49",
+      "status": "seen",
+      "reaction": "",
+      "senderName": "User A",
+      "senderColor": "#ffb300"
+    },
+    {
+      "id": "1776396347401",
+      "text": "{\"contactName\":\"tes\",\"isMultiple\":false,\"contactCount\":\"1\"}",
+      "type": "contact",
+      "sender": "bot",
+      "timestamp": "07:49",
+      "status": "seen",
+      "reaction": "",
+      "senderName": "User A",
+      "senderColor": "#ffb300"
+    },
+    {
+      "id": "1776396359374",
+      "text": "{\"locType\":\"current\",\"notes\":\"tes\",\"liveTime\":\"\",\"pinName\":\"\",\"pinAvatar\":\"\"}",
+      "type": "location",
+      "sender": "bot",
+      "timestamp": "07:49",
+      "status": "seen",
+      "reaction": "",
+      "senderName": "User A",
+      "senderColor": "#ffb300"
+    }
+  ]
+}

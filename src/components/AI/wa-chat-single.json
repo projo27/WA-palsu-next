@@ -1,0 +1,484 @@
+{
+  "settings": {
+    "layout": "android",
+    "isDarkMode": true,
+    "networkType": "5G",
+    "isDualSim": false,
+    "batteryLevel": 85,
+    "isCharging": false,
+    "showBatteryPercentage": true,
+    "headerIcon": "none",
+    "backgroundImage": "",
+    "chatBackgroundColor": "#0b141a",
+    "userBubbleColor": "#005c4b",
+    "receiverBubbleColor": "#202c33",
+    "textSize": 14,
+    "uiTextSize": 14,
+    "hideHeader": false,
+    "hideFooter": false,
+    "showPayment": false,
+    "showChatArrow": true,
+    "navigationBar": "none",
+    "clockTime": "14:30",
+    "is24Hour": true,
+    "showDynamicIsland": false,
+    "receiverName": "Strategist Senior",
+    "receiverStatus": "Online",
+    "receiverAvatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=Strategy",
+    "isGroup": false
+  },
+  "messages": [
+    {
+      "id": "1776318000000",
+      "text": "April 16, 2026",
+      "type": "date",
+      "sender": "user",
+      "timestamp": "09:00",
+      "status": "seen",
+      "reaction": ""
+    },
+    {
+      "id": "1776318001000",
+      "text": "Pagi! Gue baru liat data retensi user buat tool randomizer kita. Agak drop nih.",
+      "type": "text",
+      "sender": "user",
+      "timestamp": "09:01",
+      "status": "seen",
+      "reaction": ""
+    },
+    {
+      "id": "1776318002000",
+      "text": "Pagi. Drop-nya di bagian mana? Pas onboarding atau setelah seminggu?",
+      "type": "text",
+      "sender": "bot",
+      "timestamp": "09:02",
+      "status": "seen",
+      "reaction": ""
+    },
+    {
+      "id": "1776318003000",
+      "text": "Setelah 3 hari. Kayaknya user cuma pakai sekali terus lupa.",
+      "type": "text",
+      "sender": "user",
+      "timestamp": "09:03",
+      "status": "seen",
+      "reaction": ""
+    },
+    {
+      "id": "1776318004000",
+      "text": "Kita butuh 'hook'. Lu udah implementasi sistem Zettelkasten buat nyimpen hasil riset mereka belum?",
+      "type": "text",
+      "sender": "bot",
+      "timestamp": "09:05",
+      "status": "seen",
+      "reaction": "💡"
+    },
+    {
+      "id": "1776318005000",
+      "text": "Lagi gue build pake Next.js + Supabase. Tapi butuh waktu buat mapping link antar notes-nya.",
+      "type": "text",
+      "sender": "user",
+      "timestamp": "09:06",
+      "status": "seen",
+      "reaction": ""
+    },
+    {
+      "id": "1776318006000",
+      "text": "Coba liat progress UI-nya dong.",
+      "type": "text",
+      "sender": "bot",
+      "timestamp": "09:07",
+      "status": "seen",
+      "reaction": ""
+    },
+    {
+      "id": "1776318007000",
+      "text": "Ini mockup buat graph view-nya.",
+      "type": "image",
+      "sender": "user",
+      "timestamp": "09:08",
+      "status": "seen",
+      "reaction": "",
+      "fileUrl": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=400"
+    },
+    {
+      "id": "1776318008000",
+      "text": "Cakep! Pake Tailwind kan? Clean banget.",
+      "type": "text",
+      "sender": "bot",
+      "timestamp": "09:10",
+      "status": "seen",
+      "reaction": "🔥"
+    },
+    {
+      "id": "1776318009000",
+      "text": "Yo'i. Nah, masalahnya sekarang gimana narik organic traffic tanpa bakar duit iklan?",
+      "type": "text",
+      "sender": "user",
+      "timestamp": "09:12",
+      "status": "seen",
+      "reaction": ""
+    },
+    {
+      "id": "1776318100000",
+      "text": "SEO is key. Jangan cuma bikin landing page. Bikin 'programmatic SEO'.",
+      "type": "text",
+      "sender": "bot",
+      "timestamp": "09:15",
+      "status": "seen",
+      "reaction": ""
+    },
+    {
+      "id": "1776318101000",
+      "text": "Maksudnya bikin ribuan page berdasarkan long-tail keywords?",
+      "type": "text",
+      "sender": "user",
+      "timestamp": "09:16",
+      "status": "seen",
+      "reaction": ""
+    },
+    {
+      "id": "1776318102000",
+      "text": "Tepat. Misalnya 'randomizer for [niche name]'. Kita automate pakenya Go biar kenceng generating-nya.",
+      "type": "text",
+      "sender": "bot",
+      "timestamp": "09:18",
+      "status": "seen",
+      "reaction": ""
+    },
+    {
+      "id": "1776318103000",
+      "text": "Boleh juga. Oya, gue dapet kontak dev yang jago optimasi database nih.",
+      "type": "text",
+      "sender": "user",
+      "timestamp": "09:20",
+      "status": "seen",
+      "reaction": ""
+    },
+    {
+      "id": "1776318104000",
+      "text": "{\"contactName\":\"Andi DB Ops\",\"isMultiple\":false,\"contactCount\":\"1\"}",
+      "type": "contact",
+      "sender": "user",
+      "timestamp": "09:21",
+      "status": "seen",
+      "reaction": ""
+    },
+    {
+      "id": "1776318105000",
+      "text": "Mantap, kita butuh itu pas scale up nanti.",
+      "type": "text",
+      "sender": "bot",
+      "timestamp": "09:23",
+      "status": "seen",
+      "reaction": ""
+    },
+    {
+      "id": "1776318106000",
+      "text": "Menurut lu, mending model subscription atau pay-per-credits?",
+      "type": "text",
+      "sender": "user",
+      "timestamp": "09:25",
+      "status": "seen",
+      "reaction": ""
+    },
+    {
+      "id": "1776318107000",
+      "text": "Pay-per-credits buat awal. User males komitmen bulanan kalau belum ngerasa butuh.",
+      "type": "text",
+      "sender": "bot",
+      "timestamp": "09:27",
+      "status": "seen",
+      "reaction": ""
+    },
+    {
+      "id": "1776318108000",
+      "text": "Setuju. Eh, sorry tadi kepencet.",
+      "type": "text",
+      "sender": "user",
+      "timestamp": "09:29",
+      "status": "seen",
+      "reaction": ""
+    },
+    {
+      "id": "1776318109000",
+      "text": "{\"callMode\":\"video\",\"callType\":\"Missed Call\",\"hh\":\"\",\"mm\":\"\",\"ss\":\"\"}",
+      "type": "call",
+      "sender": "user",
+      "timestamp": "09:29",
+      "status": "seen",
+      "reaction": ""
+    },
+    {
+      "id": "1776318200000",
+      "text": "Haha santai. Fokus ke core value dulu. Fitur AI generator videonya gimana?",
+      "type": "text",
+      "sender": "bot",
+      "timestamp": "09:32",
+      "status": "seen",
+      "reaction": ""
+    },
+    {
+      "id": "1776318201000",
+      "text": "Lagi integrasi sama API Veo. Hasilnya smooth banget buat konten pendek.",
+      "type": "text",
+      "sender": "user",
+      "timestamp": "09:34",
+      "status": "seen",
+      "reaction": ""
+    },
+    {
+      "id": "1776318202000",
+      "text": "Coba kirim sample-nya kalau ada.",
+      "type": "text",
+      "sender": "bot",
+      "timestamp": "09:35",
+      "status": "seen",
+      "reaction": ""
+    },
+    {
+      "id": "1776318203000",
+      "text": "Ini screenshot frame-nya. Resolusinya tajam.",
+      "type": "image",
+      "sender": "user",
+      "timestamp": "09:37",
+      "status": "seen",
+      "reaction": "",
+      "fileUrl": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=400"
+    },
+    {
+      "id": "1776318204000",
+      "text": "Gila, ini bakal laku keras di market affiliate marketing.",
+      "type": "text",
+      "sender": "bot",
+      "timestamp": "09:39",
+      "status": "seen",
+      "reaction": "🙌"
+    },
+    {
+      "id": "1776318205000",
+      "text": "Iya, niatnya emang buat bantu mereka bikin konten promosi otomatis.",
+      "type": "text",
+      "sender": "user",
+      "timestamp": "09:41",
+      "status": "seen",
+      "reaction": ""
+    },
+    {
+      "id": "1776318206000",
+      "text": "Besok kita meeting offline yuk? Gue mau kenalin ke investor lokal.",
+      "type": "text",
+      "sender": "bot",
+      "timestamp": "09:43",
+      "status": "seen",
+      "reaction": ""
+    },
+    {
+      "id": "1776318207000",
+      "text": "Boleh. Di mana?",
+      "type": "text",
+      "sender": "user",
+      "timestamp": "09:44",
+      "status": "seen",
+      "reaction": ""
+    },
+    {
+      "id": "1776318208000",
+      "text": "{\"locType\":\"current\",\"notes\":\"Di cafe ini jam 10 pagi ya.\",\"liveTime\":\"\",\"pinName\":\"Digital Hub Coffee\",\"pinAvatar\":\"\"}",
+      "type": "location",
+      "sender": "bot",
+      "timestamp": "09:45",
+      "status": "seen",
+      "reaction": ""
+    },
+    {
+      "id": "1776318209000",
+      "text": "Sip. Gue siapin pitch deck singkat.",
+      "type": "text",
+      "sender": "user",
+      "timestamp": "09:47",
+      "status": "seen",
+      "reaction": ""
+    },
+    {
+      "id": "1776318300000",
+      "text": "Oya, jangan lupa bahas struktur data di Supabase-nya juga.",
+      "type": "text",
+      "sender": "bot",
+      "timestamp": "09:50",
+      "status": "seen",
+      "reaction": ""
+    },
+    {
+      "id": "1776318301000",
+      "text": "Aman. Udah gue normalisasi kok biarpun datanya banyak.",
+      "type": "text",
+      "sender": "user",
+      "timestamp": "09:52",
+      "status": "seen",
+      "reaction": ""
+    },
+    {
+      "id": "1776318302000",
+      "text": "Good job. Satu lagi, pastiin sistem backup-nya jalan.",
+      "type": "text",
+      "sender": "bot",
+      "timestamp": "09:54",
+      "status": "seen",
+      "reaction": ""
+    },
+    {
+      "id": "1776318303000",
+      "text": "Tiap malem jam 2 udah otomatis backup ke cloud storage lain.",
+      "type": "text",
+      "sender": "user",
+      "timestamp": "09:56",
+      "status": "seen",
+      "reaction": "👍"
+    },
+    {
+      "id": "1776318304000",
+      "text": "Strategi pricing-nya udah fix?",
+      "type": "text",
+      "sender": "bot",
+      "timestamp": "09:58",
+      "status": "seen",
+      "reaction": ""
+    },
+    {
+      "id": "1776318305000",
+      "text": "Masih galau antara $9 atau $14 buat tier basic.",
+      "type": "text",
+      "sender": "user",
+      "timestamp": "10:00",
+      "status": "seen",
+      "reaction": ""
+    },
+    {
+      "id": "1776318306000",
+      "text": "Start di $9 aja biar volume-nya dapet dulu.",
+      "type": "text",
+      "sender": "bot",
+      "timestamp": "10:02",
+      "status": "seen",
+      "reaction": ""
+    },
+    {
+      "id": "1776318307000",
+      "text": "Oke, masuk akal. Oh iya, buat mobile app-nya gimana?",
+      "type": "text",
+      "sender": "user",
+      "timestamp": "10:05",
+      "status": "seen",
+      "reaction": ""
+    },
+    {
+      "id": "1776318308000",
+      "text": "Pake Capacitor aja biar cepet dari web ke APK.",
+      "type": "text",
+      "sender": "bot",
+      "timestamp": "10:07",
+      "status": "seen",
+      "reaction": ""
+    },
+    {
+      "id": "1776318309000",
+      "text": "Udah gue coba kemaren, performanya lumayan stabil.",
+      "type": "text",
+      "sender": "user",
+      "timestamp": "10:09",
+      "status": "seen",
+      "reaction": ""
+    },
+    {
+      "id": "1776318400000",
+      "text": "Mantap. Market Android di sini gede banget soalnya.",
+      "type": "text",
+      "sender": "bot",
+      "timestamp": "10:12",
+      "status": "seen",
+      "reaction": ""
+    },
+    {
+      "id": "1776318401000",
+      "text": "Bener banget. Gue mau lanjut coding bagian payment gateway dulu.",
+      "type": "text",
+      "sender": "user",
+      "timestamp": "10:15",
+      "status": "seen",
+      "reaction": ""
+    },
+    {
+      "id": "1776318402000",
+      "text": "Semangat! Inget, utamain user experience pas checkout.",
+      "type": "text",
+      "sender": "bot",
+      "timestamp": "10:18",
+      "status": "seen",
+      "reaction": "💪"
+    },
+    {
+      "id": "1776318403000",
+      "text": "Siap. Makasih masukannya hari ini.",
+      "type": "text",
+      "sender": "user",
+      "timestamp": "10:20",
+      "status": "seen",
+      "reaction": ""
+    },
+    {
+      "id": "1776318404000",
+      "text": "Sama-sama. See you tomorrow!",
+      "type": "text",
+      "sender": "bot",
+      "timestamp": "10:22",
+      "status": "seen",
+      "reaction": ""
+    },
+    {
+      "id": "1776318405000",
+      "text": "Siap, sampai ketemu.",
+      "type": "text",
+      "sender": "user",
+      "timestamp": "10:23",
+      "status": "seen",
+      "reaction": ""
+    },
+    {
+      "id": "1776318406000",
+      "text": "Eh, satu lagi. Cek email, gue kirim draft buat SEO-nya.",
+      "type": "text",
+      "sender": "bot",
+      "timestamp": "10:25",
+      "status": "seen",
+      "reaction": ""
+    },
+    {
+      "id": "1776318407000",
+      "text": "Sip, langsung gue cek nanti malem.",
+      "type": "text",
+      "sender": "user",
+      "timestamp": "10:26",
+      "status": "seen",
+      "reaction": ""
+    },
+    {
+      "id": "1776318408000",
+      "text": "Oke. Bye.",
+      "type": "text",
+      "sender": "bot",
+      "timestamp": "10:28",
+      "status": "seen",
+      "reaction": "👋"
+    },
+    {
+      "id": "1776318409000",
+      "text": "Bye.",
+      "type": "text",
+      "sender": "user",
+      "timestamp": "10:30",
+      "status": "seen",
+      "reaction": ""
+    }
+  ]
+}

@@ -4,9 +4,11 @@
  */
 
 import { useEffect, useState } from "react";
+import { AIPanel } from "./components/AI/Panel";
 import { PhonePreview } from "./components/Preview/PhonePreview";
 import { Sidebar } from "./components/Sidebar/Sidebar";
 import { DEFAULT_SETTINGS } from "./constants";
+import { cn } from "./lib/utils";
 import { ChatSettings, Message, MessageStatus, MessageType } from "./types";
 
 export default function App() {
@@ -26,6 +28,7 @@ export default function App() {
   const [msgReaction, setMsgReaction] = useState("");
   const [msgFile, setMsgFile] = useState<string | null>(null);
   const [msgBotSenderId, setMsgBotSenderId] = useState<string>("1");
+  const [showAIPanel, setShowAIPanel] = useState(false);
 
   useEffect(() => {
     const saved = localStorage.getItem("wa_fake_gen_v2");
@@ -50,7 +53,7 @@ export default function App() {
 
   const addMessage = () => {
     if (!msgText && msgType === "text") return;
-    
+
     let currentSenderName, currentSenderColor;
     if (activeTab === "group" && msgSender === "bot") {
       const participant = settings.groupParticipants?.find(
@@ -188,6 +191,10 @@ export default function App() {
     setMessages(data.messages);
   };
 
+  const toggleAIPanel = () => {
+    setShowAIPanel(!showAIPanel);
+  };
+
   return (
     <div className="h-screen bg-[#f8f9fa] flex flex-col md:flex-row p-4 md:p-8 gap-8 overflow-x-hidden">
       <Sidebar
@@ -216,6 +223,18 @@ export default function App() {
         resetGroup={resetGroup}
         editingMessageId={editingMessageId}
         cancelEdit={cancelEdit}
+        className="w-full md:w-1/2 xl:w-1/3"
+      />
+
+      <AIPanel
+        onImport={handleImport}
+        activeTab={activeTab}
+        className={cn(
+          "w-full md:w-1/3 xl:w-1/4 h-auto mb-auto transition-all duration-300 ease-in-out transform",
+          showAIPanel
+            ? "block opacity-100 scale-100"
+            : "hidden opacity-0 scale-95",
+        )}
       />
 
       <PhonePreview
@@ -227,6 +246,8 @@ export default function App() {
         onDeleteMessage={deleteMessage}
         onMoveMessage={moveMessage}
         onToggleSender={toggleMessageSender}
+        onToggleAIPanel={toggleAIPanel}
+        className="flex-1 flex items-center"
       />
     </div>
   );

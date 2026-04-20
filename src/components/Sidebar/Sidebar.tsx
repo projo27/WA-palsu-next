@@ -31,9 +31,11 @@ interface SidebarProps {
   resetGroup: () => void;
   editingMessageId?: string | null;
   cancelEdit?: () => void;
+  className?: string;
 }
 
 export const Sidebar: React.FC<SidebarProps> = ({
+  className,
   activeTab,
   setActiveTab,
   settings,
@@ -41,7 +43,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
   ...addChatProps
 }) => {
   return (
-    <div className="w-full md:w-1/2 xl:w-1/3 flex flex-col gap-6">
+    <div className={cn("flex flex-col gap-6", className)}>
       <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
         {/* Tabs Navigation */}
         <div className="flex bg-primary text-white">
