@@ -6,6 +6,8 @@ import {
   MapPin,
   MessageSquare,
   PhoneCall,
+  Check,
+  Edit2,
   Plus,
   RotateCcw,
   Trash,
@@ -81,6 +83,8 @@ export const AddChat: React.FC<AddChatProps> = ({
   const [newParticipantName, setNewParticipantName] = React.useState("");
   const [newParticipantColor, setNewParticipantColor] =
     React.useState("#ffb300");
+  const [editingParticipantId, setEditingParticipantId] =
+    React.useState<string | null>(null);
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.ctrlKey) {
@@ -150,22 +154,42 @@ export const AddChat: React.FC<AddChatProps> = ({
 
   const handleAddParticipant = () => {
     if (!newParticipantName.trim()) return;
-    const newParticipant = {
-      id: Date.now().toString(),
-      name: newParticipantName.trim(),
-      color: newParticipantColor,
-    };
-    const updatedParticipants = [
-      ...(settings.groupParticipants || []),
-      newParticipant,
-    ];
-    setSettings({
-      ...settings,
-      groupParticipants: updatedParticipants,
-    });
+
+    if (editingParticipantId) {
+      const updatedParticipants = (settings.groupParticipants || []).map((p) =>
+        p.id === editingParticipantId
+          ? {
+              ...p,
+              name: newParticipantName.trim(),
+              color: newParticipantColor,
+            }
+          : p,
+      );
+      setSettings({
+        ...settings,
+        groupParticipants: updatedParticipants,
+      });
+      setEditingParticipantId(null);
+    } else {
+      const newParticipant = {
+        id: Date.now().toString(),
+        name: newParticipantName.trim(),
+        color: newParticipantColor,
+      };
+      const updatedParticipants = [
+        ...(settings.groupParticipants || []),
+        newParticipant,
+      ];
+      setSettings({
+        ...settings,
+        groupParticipants: updatedParticipants,
+      });
+      if (setMsgBotSenderId) setMsgBotSenderId(newParticipant.id);
+      setMsgSender("bot");
+    }
+
     setNewParticipantName("");
-    if (setMsgBotSenderId) setMsgBotSenderId(newParticipant.id);
-    setMsgSender("bot");
+    setNewParticipantColor("#ffb300");
   };
 
   const removeParticipant = (id: string, e: React.MouseEvent) => {
@@ -184,6 +208,24 @@ export const AddChat: React.FC<AddChatProps> = ({
         setMsgSender("user");
       }
     }
+  };
+
+  const startEditingParticipant = (
+    id: string,
+    name: string,
+    color: string,
+    e: React.MouseEvent,
+  ) => {
+    e.stopPropagation();
+    setEditingParticipantId(id);
+    setNewParticipantName(name);
+    setNewParticipantColor(color);
+  };
+
+  const cancelParticipantEdit = () => {
+    setEditingParticipantId(null);
+    setNewParticipantName("");
+    setNewParticipantColor("#ffb300");
   };
 
   const inputProps = {
@@ -304,18 +346,28 @@ export const AddChat: React.FC<AddChatProps> = ({
                       : "border-gray-200 text-gray-700 hover:bg-gray-50",
                   )}
                 >
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-2 min-w-0">
                     <div
-                      className="w-3 h-3 rounded-full"
+                      className="w-3 h-3 rounded-full shrink-0"
                       style={{ backgroundColor: p.color }}
                     />
-                    {p.name}
+                    <span className="truncate">{p.name}</span>
                   </div>
-                  <div
-                    onClick={(e) => removeParticipant(p.id, e)}
-                    className="p-1 rounded bg-red-100 text-red-500 hover:bg-red-200 opacity-0 group-hover:opacity-100 transition-opacity"
-                  >
-                    <Trash size={12} />
+                  <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <div
+                      onClick={(e) =>
+                        startEditingParticipant(p.id, p.name, p.color, e)
+                      }
+                      className="p-1 rounded bg-blue-100 text-blue-500 hover:bg-blue-200"
+                    >
+                      <Edit2 size={12} />
+                    </div>
+                    <div
+                      onClick={(e) => removeParticipant(p.id, e)}
+                      className="p-1 rounded bg-red-100 text-red-500 hover:bg-red-200"
+                    >
+                      <Trash size={12} />
+                    </div>
                   </div>
                 </button>
               ))}
@@ -336,6 +388,8 @@ export const AddChat: React.FC<AddChatProps> = ({
                   if (e.key === "Enter") {
                     e.stopPropagation();
                     handleAddParticipant();
+                  } else if (e.key === "Escape") {
+                    cancelParticipantEdit();
                   }
                 }}
                 className="flex-1 p-2 rounded-lg border border-gray-200 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all placeholder:text-gray-400"
@@ -343,10 +397,23 @@ export const AddChat: React.FC<AddChatProps> = ({
               <button
                 onClick={handleAddParticipant}
                 disabled={!newParticipantName.trim()}
-                className="px-3 py-2 bg-primary text-white rounded text-sm font-medium hover:bg-primary-hover disabled:opacity-50 transition-all shrink-0"
+                className={cn(
+                  "px-3 py-2 text-white rounded text-sm font-medium transition-all shrink-0",
+                  editingParticipantId
+                    ? "bg-blue-500 hover:bg-blue-600"
+                    : "bg-primary hover:bg-primary-hover",
+                )}
               >
-                + Add User
+                {editingParticipantId ? "Update Name" : "+ Add User"}
               </button>
+              {editingParticipantId && (
+                <button
+                  onClick={cancelParticipantEdit}
+                  className="p-2 text-gray-500 hover:bg-gray-100 rounded-lg"
+                >
+                  <X size={18} />
+                </button>
+              )}
             </div>
           </div>
         </div>

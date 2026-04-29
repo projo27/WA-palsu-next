@@ -15,6 +15,7 @@ export interface Message {
   reaction?: string;
   senderName?: string;
   senderColor?: string;
+  senderId?: string;
 }
 
 export interface ChatSettings {

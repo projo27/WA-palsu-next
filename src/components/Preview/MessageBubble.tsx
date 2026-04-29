@@ -432,12 +432,19 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({
       settings={settings}
       isFirstInGroup={isFirstInGroup}
     >
-      {settings.isGroup && msg.sender !== "user" && msg.senderName && (
+      {settings.isGroup && msg.sender !== "user" && (
         <div
           className="text-[13px] font-bold leading-tight mb-1"
-          style={{ color: msg.senderColor || "#00a884" }}
+          style={{
+            color:
+              settings.groupParticipants?.find((p) => p.id === msg.senderId)
+                ?.color ||
+              msg.senderColor ||
+              "#00a884",
+          }}
         >
-          {msg.senderName}
+          {settings.groupParticipants?.find((p) => p.id === msg.senderId)
+            ?.name || msg.senderName}
         </div>
       )}
 

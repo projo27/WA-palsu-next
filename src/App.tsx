@@ -51,6 +51,38 @@ export default function App() {
     );
   }, [settings, messages]);
 
+  // Sync message sender data when participants are edited
+  useEffect(() => {
+    if (settings.isGroup && settings.groupParticipants?.length) {
+      setMessages((prevMessages) =>
+        prevMessages.map((msg) => {
+          // 1. If message has senderId, keep name/color in sync with latest participant data
+          if (msg.senderId) {
+            const p = settings.groupParticipants?.find(
+              (p) => p.id === msg.senderId,
+            );
+            if (
+              p &&
+              (p.name !== msg.senderName || p.color !== msg.senderColor)
+            ) {
+              return { ...msg, senderName: p.name, senderColor: p.color };
+            }
+          }
+          // 2. If message LACKS senderId (old JSON), try to link it via name match
+          else if (msg.sender === "bot" && msg.senderName) {
+            const p = settings.groupParticipants?.find(
+              (p) => p.name === msg.senderName,
+            );
+            if (p) {
+              return { ...msg, senderId: p.id, senderColor: p.color };
+            }
+          }
+          return msg;
+        }),
+      );
+    }
+  }, [settings.groupParticipants]);
+
   const addMessage = () => {
     if (!msgText && msgType === "text") return;
 
@@ -80,6 +112,7 @@ export default function App() {
                 fileUrl: msgFile || undefined,
                 senderName: currentSenderName,
                 senderColor: currentSenderColor,
+                senderId: msgSender === "bot" ? msgBotSenderId : undefined,
               }
             : m,
         ),
@@ -97,6 +130,7 @@ export default function App() {
         fileUrl: msgFile || undefined,
         senderName: currentSenderName,
         senderColor: currentSenderColor,
+        senderId: msgSender === "bot" ? msgBotSenderId : undefined,
       };
       setMessages([...messages, newMessage]);
     }
@@ -113,17 +147,32 @@ export default function App() {
     setEditingMessageId(msg.id);
     setMsgText(msg.text || "");
     setMsgType(msg.type);
-    setMsgSender(msg.sender === "system" ? "bot" : msg.sender);
     setMsgTime(msg.timestamp);
     setMsgStatus(msg.status);
     setMsgReaction(msg.reaction || "");
     setMsgFile(msg.fileUrl || null);
 
-    // Switch to active tab handling
-    if (!settings.isGroup) {
-      setActiveTab("chat");
-    } else {
+    // Determine sender type
+    const isBot = msg.sender === "bot" || msg.sender === "system";
+    setMsgSender(isBot ? "bot" : "user");
+
+    // If it's a group participant, try to select them in the sidebar
+    if (isBot) {
+      if (msg.senderId) {
+        setMsgBotSenderId(msg.senderId);
+      } else if (msg.senderName) {
+        const participant = settings.groupParticipants?.find(
+          (p) => p.name === msg.senderName,
+        );
+        if (participant) setMsgBotSenderId(participant.id);
+      }
+    }
+
+    // Switch to appropriate tab
+    if (settings.isGroup) {
       setActiveTab("group");
+    } else {
+      setActiveTab("chat");
     }
   };
 

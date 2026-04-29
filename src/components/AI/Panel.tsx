@@ -97,6 +97,7 @@ The JSON must have this exact structure:
       "reaction": "",
       "fileUrl": "https://media.tenor.com/AHAi9SFQE9cAAAAm/quby-yeah.webp",
       "senderName": "User A",
+      "senderId" : "1",
       "senderColor": "#ffb300"
     },
     {
@@ -108,6 +109,7 @@ The JSON must have this exact structure:
       "status": "seen",
       "reaction": "",
       "senderName": "User A",
+      "senderId" : "1",
       "senderColor": "#ffb300"
     },
     {
@@ -119,6 +121,7 @@ The JSON must have this exact structure:
       "status": "seen",
       "reaction": "",
       "senderName": "User A",
+      "senderId" : "1",
       "senderColor": "#ffb300"
     },
     {
@@ -130,6 +133,7 @@ The JSON must have this exact structure:
       "status": "seen",
       "reaction": "",
       "senderName": "User A",
+      "senderId" : "1",
       "senderColor": "#ffb300"
     },
     {
@@ -140,7 +144,8 @@ The JSON must have this exact structure:
       "timestamp": "07:49",
       "status": "seen",
       "reaction": "👍",
-      "senderName": "User A",
+      "senderName": "User B",
+      "senderId" : "2",
       "senderColor": "#ffb300"
     },
     {
@@ -152,7 +157,8 @@ The JSON must have this exact structure:
       "status": "seen",
       "reaction": "",
       "fileUrl": "test.mp3",
-      "senderName": "User A",
+      "senderName": "User B",
+      "senderId" : "2",
       "senderColor": "#ffb300"
     }
   ]
