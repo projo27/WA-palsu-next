@@ -1,4 +1,4 @@
-export type MessageType = 'text' | 'image' | 'file' | 'date' | 'call' | 'contact' | 'location';
+export type MessageType = 'text' | 'video' | 'image' | 'file' | 'date' | 'call' | 'contact' | 'location';
 export type MessageStatus = 'sent' | 'delivered' | 'seen' | 'none';
 export type DeviceLayout = 'android' | 'ios' | 'desktop';
 
@@ -12,6 +12,7 @@ export interface Message {
   fileUrl?: string;
   fileName?: string;
   fileSize?: string;
+  thumbnailUrl?: string;
   reaction?: string;
   senderName?: string;
   senderColor?: string;

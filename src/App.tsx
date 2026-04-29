@@ -27,6 +27,7 @@ export default function App() {
   const [msgType, setMsgType] = useState<MessageType>("text");
   const [msgReaction, setMsgReaction] = useState("");
   const [msgFile, setMsgFile] = useState<string | null>(null);
+  const [msgThumbnail, setMsgThumbnail] = useState<string | null>(null);
   const [msgBotSenderId, setMsgBotSenderId] = useState<string>("1");
   const [showAIPanel, setShowAIPanel] = useState(false);
 
@@ -110,6 +111,7 @@ export default function App() {
                 status: msgStatus,
                 reaction: msgReaction,
                 fileUrl: msgFile || undefined,
+                thumbnailUrl: msgThumbnail || undefined,
                 senderName: currentSenderName,
                 senderColor: currentSenderColor,
                 senderId: msgSender === "bot" ? msgBotSenderId : undefined,
@@ -128,6 +130,7 @@ export default function App() {
         status: msgStatus,
         reaction: msgReaction,
         fileUrl: msgFile || undefined,
+        thumbnailUrl: msgThumbnail || undefined,
         senderName: currentSenderName,
         senderColor: currentSenderColor,
         senderId: msgSender === "bot" ? msgBotSenderId : undefined,
@@ -135,7 +138,10 @@ export default function App() {
       setMessages([...messages, newMessage]);
     }
     setMsgText("");
+    setMsgReaction("");
     setMsgFile(null);
+    setMsgThumbnail(null);
+    setMsgType("text");
   };
 
   const cancelEdit = () => {
@@ -151,6 +157,7 @@ export default function App() {
     setMsgStatus(msg.status);
     setMsgReaction(msg.reaction || "");
     setMsgFile(msg.fileUrl || null);
+    setMsgThumbnail(msg.thumbnailUrl || null);
 
     // Determine sender type
     const isBot = msg.sender === "bot" || msg.sender === "system";
@@ -265,6 +272,8 @@ export default function App() {
         setMsgReaction={setMsgReaction}
         msgFile={msgFile}
         setMsgFile={setMsgFile}
+        msgThumbnail={msgThumbnail}
+        setMsgThumbnail={setMsgThumbnail}
         msgBotSenderId={msgBotSenderId}
         setMsgBotSenderId={setMsgBotSenderId}
         addMessage={addMessage}

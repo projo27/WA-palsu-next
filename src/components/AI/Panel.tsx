@@ -150,13 +150,14 @@ The JSON must have this exact structure:
     },
     {
       "id": "1776397294464",
-      "text": "{"duration":"00:00","format":"mp3"}",
-      "type": "voice",
+      "text": "",
+      "type": "video",
       "sender": "bot",
-      "timestamp": "08:04",
+      "timestamp": "08:10",
       "status": "seen",
       "reaction": "",
-      "fileUrl": "test.mp3",
+      "fileUrl": "test-video.mp4",
+      "thumbnailUrl": "https://placehold.co/400x225?text=Video+Thumbnail",
       "senderName": "User B",
       "senderId" : "2",
       "senderColor": "#ffb300"

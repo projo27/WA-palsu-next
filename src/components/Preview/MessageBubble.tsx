@@ -99,6 +99,35 @@ export const FileUrlBubbleCard: React.FC<MessageBubbleProps> = ({
   );
 };
 
+export const VideoBubbleCard: React.FC<MessageBubbleProps> = ({
+  msg,
+  onImageClick,
+}) => {
+  return (
+    <div className="mb-1 relative cursor-pointer" onClick={() => onImageClick?.(msg.fileUrl!)}>
+      <img
+        src={msg.thumbnailUrl || "https://placehold.co/400x225?text=Video+Thumbnail"}
+        alt="Video Thumbnail"
+        className="rounded-md max-w-full max-h-64 object-cover aspect-video bg-black/10"
+      />
+      <div className="absolute inset-0 flex items-center justify-center">
+        <div className="bg-black/40 text-white p-3 rounded-full backdrop-blur-sm border border-white/20 shadow-lg group-hover:scale-110 transition-transform">
+          <svg className="w-8 h-8 fill-current" viewBox="0 0 24 24">
+            <path d="M8 5v14l11-7z" />
+          </svg>
+        </div>
+      </div>
+      <div className="absolute bottom-0 inset-x-0 bg-linear-to-t from-black/60 to-transparent h-10 rounded-b-md"></div>
+      <span className="absolute bottom-1 right-1 flex items-center justify-end gap-1">
+        <span className="text-[10px] text-white font-medium drop-shadow-md">
+          {msg.timestamp}
+        </span>
+        <MessageStatusIcon msg={msg} />
+      </span>
+    </div>
+  );
+};
+
 export const FileBubbleCard: React.FC<MessageBubbleProps> = ({ msg }) => {
   let docName = "document",
     docExt = "JPG",
@@ -395,7 +424,7 @@ export const DateBubbleCard: React.FC<MessageBubbleProps> = ({ msg }) => {
 export const MessageStatusIcon: React.FC<MessageBubbleProps> = ({ msg }) => {
   if (msg.sender !== "user") return null;
   if (msg.status === "none") return null;
-  if (!["text", "image", "contact"].includes(msg.type)) return null;
+  if (!["text", "image", "contact", "video"].includes(msg.type)) return null;
 
   if (msg.status === "seen") {
     return (
@@ -450,6 +479,10 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({
 
       {msg.type === "image" && msg.fileUrl && (
         <FileUrlBubbleCard msg={msg} onImageClick={onImageClick} />
+      )}
+
+      {msg.type === "video" && (
+        <VideoBubbleCard msg={msg} onImageClick={onImageClick} />
       )}
 
       {msg.type === "file" && <FileBubbleCard msg={msg} />}

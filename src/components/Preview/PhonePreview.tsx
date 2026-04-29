@@ -443,15 +443,33 @@ export const PhonePreview: React.FC<PhonePreviewProps> = ({
                 <div className="absolute inset-0 z-110 bg-black flex items-center justify-center p-4 animate-in fade-in duration-300">
                   <button
                     onClick={() => setViewerMedia(null)}
-                    className="absolute top-10 right-4 w-10 h-10 bg-white/10 hover:bg-white/20 text-white rounded-full flex items-center justify-center transition-colors shadow-lg"
+                    className="absolute top-10 right-4 w-10 h-10 bg-white/10 hover:bg-white/20 text-white rounded-full flex items-center justify-center transition-colors shadow-lg z-50"
                   >
                     <X size={24} />
                   </button>
-                  <img
-                    src={viewerMedia}
-                    alt="Media Full View"
-                    className="max-w-full max-h-[80%] shadow-2xl animate-in zoom-in-95 duration-300"
-                  />
+                  
+                  {viewerMedia.includes('youtube.com') || viewerMedia.includes('youtu.be') ? (
+                    <iframe
+                      src={`https://www.youtube.com/embed/${viewerMedia.match(/^.*(youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=|shorts\/)([^#\&\?]*).*/)?.[2] || ''}`}
+                      className="w-full aspect-video max-w-4xl shadow-2xl"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowFullScreen
+                    ></iframe>
+                  ) : viewerMedia.startsWith('blob:') || viewerMedia.endsWith('.mp4') || viewerMedia.endsWith('.webm') || viewerMedia.endsWith('.mov') ? (
+                    <video
+                      src={viewerMedia}
+                      controls
+                      autoPlay
+                      className="max-w-full max-h-full shadow-2xl rounded-lg"
+                    ></video>
+                  ) : (
+                    <img
+                      src={viewerMedia}
+                      alt="Full view"
+                      className="max-w-full max-h-full object-contain shadow-2xl"
+                    />
+                  )}
+                  
                   <div className="absolute bottom-10 left-0 right-0 text-center">
                     <span className="text-white/60 text-xs font-medium tracking-wide">
                       TAP ANYWHERE TO CLOSE

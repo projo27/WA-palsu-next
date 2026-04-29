@@ -12,6 +12,7 @@ import {
   RotateCcw,
   Trash,
   Upload,
+  Video,
   X,
 } from "lucide-react";
 import React, { useRef } from "react";
@@ -24,6 +25,7 @@ import { DocsMessageInput } from "./inputs/DocsMessageInput";
 import { LocationMessageInput } from "./inputs/LocationMessageInput";
 import { SharedMessageOptions } from "./inputs/SharedMessageOptions";
 import { TextMessageInput } from "./inputs/TextMessageInput";
+import { VideoMessageInput } from "./inputs/VideoMessageInput";
 
 interface AddChatProps {
   activeTab: "chat" | "group";
@@ -43,6 +45,8 @@ interface AddChatProps {
   setMsgReaction: (reaction: string) => void;
   msgFile: string | null;
   setMsgFile: (file: string | null) => void;
+  msgThumbnail: string | null;
+  setMsgThumbnail: (thumb: string | null) => void;
   msgBotSenderId?: string;
   setMsgBotSenderId?: (id: string) => void;
   addMessage: () => void;
@@ -70,6 +74,8 @@ export const AddChat: React.FC<AddChatProps> = ({
   setMsgReaction,
   msgFile,
   setMsgFile,
+  msgThumbnail,
+  setMsgThumbnail,
   msgBotSenderId,
   setMsgBotSenderId,
   addMessage,
@@ -239,6 +245,8 @@ export const AddChat: React.FC<AddChatProps> = ({
     setMsgReaction,
     msgFile,
     setMsgFile,
+    msgThumbnail,
+    setMsgThumbnail,
     msgType,
     setMsgType,
     fileInputRef,
@@ -446,8 +454,9 @@ export const AddChat: React.FC<AddChatProps> = ({
 
       {/* Message Type Tabs */}
       <div className="flex shrink-0 border-b border-gray-200 overflow-x-auto scrollbar">
-        {(["text", "date", "file", "call", "contact", "location"] as const).map(
-          (t) => (
+        {(
+          ["text", "video", "date", "file", "call", "contact", "location"] as const
+        ).map((t) => (
             <button
               key={t}
               onClick={() => {
@@ -468,6 +477,7 @@ export const AddChat: React.FC<AddChatProps> = ({
               {t === "text" && (
                 <MessageSquare size={14} className="inline mr-1" />
               )}
+              {t === "video" && <Video size={14} className="inline mr-1" />}
               {t === "date" && <Calendar size={14} className="inline mr-1" />}
               {t === "file" && <FileIcon size={14} className="inline mr-1" />}
               {t === "call" && <PhoneCall size={14} className="inline mr-1" />}
@@ -481,6 +491,9 @@ export const AddChat: React.FC<AddChatProps> = ({
 
       {/* Message Input */}
       <div className="space-y-4">
+        {msgType === "video" && (
+          <VideoMessageInput {...inputProps} />
+        )}
         {msgType === "date" && <DateMessageInput {...inputProps} />}
         {msgType === "file" && <DocsMessageInput {...inputProps} />}
         {msgType === "call" && <CallMessageInput {...inputProps} />}

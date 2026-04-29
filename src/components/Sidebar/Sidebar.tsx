@@ -24,6 +24,8 @@ interface SidebarProps {
   setMsgReaction: (reaction: string) => void;
   msgFile: string | null;
   setMsgFile: (file: string | null) => void;
+  msgThumbnail: string | null;
+  setMsgThumbnail: (thumb: string | null) => void;
   msgBotSenderId: string;
   setMsgBotSenderId: (id: string) => void;
   addMessage: () => void;
