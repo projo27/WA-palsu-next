@@ -195,7 +195,7 @@ Please reply with ONLY valid JSON and no extra text.`;
         className,
       )}
     >
-      <div className="bg-indigo-600 text-white py-4 px-5 shrink-0">
+      <div className="bg-black text-white py-4 px-5 shrink-0">
         <h2 className="font-bold text-lg flex items-center gap-2">
           <Bot size={20} /> AI Chat Generator
         </h2>
@@ -280,7 +280,7 @@ Please reply with ONLY valid JSON and no extra text.`;
         <button
           onClick={handleGenerate}
           disabled={loading || !theme.trim()}
-          className="mt-4 w-full py-3 bg-indigo-600 hover:bg-indigo-700 disabled:bg-indigo-300 disabled:cursor-not-allowed text-white font-medium rounded-lg transition-colors flex justify-center items-center gap-2 shadow-sm"
+          className="mt-4 w-full py-3 bg-black hover:bg-gray-800 disabled:bg-gray-500 disabled:cursor-not-allowed cursor-pointer text-white font-medium rounded-lg transition-colors flex justify-center items-center gap-2 shadow-sm"
         >
           {loading ? (
             <>

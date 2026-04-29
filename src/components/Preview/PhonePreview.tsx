@@ -5,12 +5,14 @@ import {
   ArrowUp,
   Bot,
   Camera,
+  ChevronDown,
+  ChevronsUpDown,
+  ChevronUp,
   Download,
   Edit2,
   FileText,
   MinusCircleIcon,
   PlusCircleIcon,
-  Scroll,
   Square,
   Trash,
   Trash2,
@@ -81,9 +83,14 @@ export const PhonePreview: React.FC<PhonePreviewProps> = ({
   const { isRecording, countdown, toggleRecording } =
     useVideoRecorder(recordingWrapperRef);
 
-  // ── Auto-scroll to bottom on new messages ───────────────────────────────
+  const prevMessagesLengthRef = useRef(messages.length);
+
+  // ── Auto-scroll to bottom only when NEW messages are added ──────────────
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    if (messages.length > prevMessagesLengthRef.current) {
+      messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    }
+    prevMessagesLengthRef.current = messages.length;
   }, [messages]);
 
   // ── Long Press Logic ───────────────────────────────────────────────────────
@@ -92,7 +99,7 @@ export const PhonePreview: React.FC<PhonePreviewProps> = ({
   const hasLongPressed = useRef(false);
 
   const [isScrollPanelOpen, setIsScrollPanelOpen] = useState(false);
-  const [scrollSpeed, setScrollSpeed] = useState(5);
+  const [scrollSpeed, setScrollSpeed] = useState(1.0);
 
   const startLongPress = (id: string, e: React.PointerEvent) => {
     // Only accept left clicks or touch
@@ -251,9 +258,40 @@ export const PhonePreview: React.FC<PhonePreviewProps> = ({
 
   // Set Scrolling Message
   useEffect(() => {
-    
-  }, [scrollSpeed])
+    let animationFrameId: number;
+    let accumulatedScroll = 0;
 
+    const scroll = () => {
+      if (isScrollPanelOpen && chatMainRef.current) {
+        const { scrollTop, scrollHeight, clientHeight } = chatMainRef.current;
+        // Check if we haven't reached the bottom
+        if (scrollTop + clientHeight < scrollHeight) {
+          // Kurangi kecepatan dengan mengalikan dengan faktor (misal 0.2)
+          // Gunakan accumulator untuk menangani pecahan pixel agar scroll tetap mulus
+          accumulatedScroll += scrollSpeed * 0.15;
+
+          if (accumulatedScroll >= 1) {
+            const pixelsToScroll = Math.floor(accumulatedScroll);
+            chatMainRef.current.scrollTop += pixelsToScroll;
+            accumulatedScroll -= pixelsToScroll;
+          }
+
+          animationFrameId = requestAnimationFrame(scroll);
+        } else {
+          // Turn off scroll panel when we reach the bottom
+          setIsScrollPanelOpen(false);
+        }
+      }
+    };
+
+    if (isScrollPanelOpen && scrollSpeed > 0) {
+      animationFrameId = requestAnimationFrame(scroll);
+    }
+
+    return () => {
+      if (animationFrameId) cancelAnimationFrame(animationFrameId);
+    };
+  }, [isScrollPanelOpen, scrollSpeed]);
 
   // ── Render ───────────────────────────────────────────────────────────────
   return (
@@ -572,7 +610,7 @@ export const PhonePreview: React.FC<PhonePreviewProps> = ({
         {/* end recording wrapper */}
 
         {/* ── Floating Action Buttons (outside recording wrapper) ──────────── */}
-        <div className="absolute -right-16 top-8 flex flex-col gap-2 justify-start">
+        <div className="absolute -right-16 top-8 flex flex-col gap-2 justify-start items-center">
           {/* Clear All */}
           <button
             onClick={clearAll}
@@ -667,9 +705,14 @@ export const PhonePreview: React.FC<PhonePreviewProps> = ({
           <div className="flex flex-col gap-2 group relative items-center">
             <button
               onClick={() => setIsScrollPanelOpen(!isScrollPanelOpen)}
-              className="w-12 h-12 bg-gray-500 text-white rounded-full shadow-lg flex items-center justify-center hover:bg-gray-600 active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+              className={cn(
+                "w-12 h-12 rounded-full shadow-lg flex items-center justify-center active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer",
+                !isScrollPanelOpen
+                  ? "bg-gray-500 hover:bg-gray-600"
+                  : "bg-gray-900 hover:bg-gray-800",
+              )}
             >
-              <Scroll size={20} className="text-white" />
+              <ChevronsUpDown size={20} className="text-white" />
             </button>
             <div
               className={cn(
@@ -677,21 +720,53 @@ export const PhonePreview: React.FC<PhonePreviewProps> = ({
                 isScrollPanelOpen ? "flex flex-col" : "hidden",
               )}
             >
-              <button className="w-8 h-8 rounded-full bg-gray-500 place-items-center">
-                <MinusCircleIcon size={18} className="text-white" />
+              <button
+                onClick={() => setScrollSpeed(scrollSpeed + 1)}
+                className="w-8 h-8 rounded-full bg-gray-500 place-items-center flex justify-center items-center cursor-pointer"
+              >
+                <PlusCircleIcon size={18} className="text-white" />
               </button>
               <input
                 type="number"
                 value={scrollSpeed}
-                // onChange={handleScrollChange}
+                onChange={(e) => setScrollSpeed(Number(e.target.value) || 0)}
                 min={0}
-                className="w-10 h-8 rounded-sm bg-white-500 outline-gray-500 outline-2 text-gray-500 font-bold text-center [appearance:textfield]  [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                className="w-10 h-8 rounded-sm bg-white outline-gray-500 outline-2 text-gray-500 font-bold text-center [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
               />
-              <button className="w-8 h-8 rounded-full bg-gray-500 place-items-center">
-                <PlusCircleIcon size={18} className="text-white" />
+              <button
+                onClick={() => setScrollSpeed(Math.max(0, scrollSpeed - 1))}
+                className="w-8 h-8 rounded-full bg-gray-500 place-items-center flex justify-center items-center cursor-pointer"
+              >
+                <MinusCircleIcon size={18} className="text-white" />
               </button>
             </div>
           </div>
+
+          {/* Scroll to Up and Scroll to Down */}
+
+          <button
+            onClick={() =>
+              chatMainRef.current?.scrollTo({
+                top: 0,
+                behavior: "smooth",
+              })
+            }
+            className={cn(
+              "w-8 h-8 rounded-full bg-yellow-500 place-items-center flex justify-center items-center cursor-pointer",
+            )}
+          >
+            <ChevronUp size={18} className="text-white" />
+          </button>
+          <button
+            onClick={() =>
+              messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
+            }
+            className={cn(
+              "w-8 h-8 rounded-full bg-yellow-500 place-items-center flex justify-center items-center cursor-pointer",
+            )}
+          >
+            <ChevronDown size={18} className="text-white" />
+          </button>
         </div>
       </div>
     </div>
