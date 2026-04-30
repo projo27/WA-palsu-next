@@ -30,6 +30,7 @@ export default function App() {
   const [msgThumbnail, setMsgThumbnail] = useState<string | null>(null);
   const [msgBotSenderId, setMsgBotSenderId] = useState<string>("1");
   const [showAIPanel, setShowAIPanel] = useState(false);
+  const [replyToId, setReplyToId] = useState<string | null>(null);
 
   useEffect(() => {
     const saved = localStorage.getItem("wa_fake_gen_v2");
@@ -115,6 +116,7 @@ export default function App() {
                 senderName: currentSenderName,
                 senderColor: currentSenderColor,
                 senderId: msgSender === "bot" ? msgBotSenderId : undefined,
+                replyToId: replyToId || undefined,
               }
             : m,
         ),
@@ -134,6 +136,7 @@ export default function App() {
         senderName: currentSenderName,
         senderColor: currentSenderColor,
         senderId: msgSender === "bot" ? msgBotSenderId : undefined,
+        replyToId: replyToId || undefined,
       };
       setMessages([...messages, newMessage]);
     }
@@ -142,11 +145,13 @@ export default function App() {
     setMsgFile(null);
     setMsgThumbnail(null);
     setMsgType("text");
+    setReplyToId(null);
   };
 
   const cancelEdit = () => {
     setEditingMessageId(null);
     resetForm();
+    setReplyToId(null);
   };
 
   const handleEditRequest = (msg: Message) => {
@@ -158,6 +163,7 @@ export default function App() {
     setMsgReaction(msg.reaction || "");
     setMsgFile(msg.fileUrl || null);
     setMsgThumbnail(msg.thumbnailUrl || null);
+    setReplyToId(msg.replyToId || null);
 
     // Determine sender type
     const isBot = msg.sender === "bot" || msg.sender === "system";
@@ -175,6 +181,16 @@ export default function App() {
       }
     }
 
+    // Switch to appropriate tab
+    if (settings.isGroup) {
+      setActiveTab("group");
+    } else {
+      setActiveTab("chat");
+    }
+  };
+  
+  const handleReplyRequest = (msg: Message) => {
+    setReplyToId(msg.id);
     // Switch to appropriate tab
     if (settings.isGroup) {
       setActiveTab("group");
@@ -217,6 +233,7 @@ export default function App() {
     setMsgType("text");
     setMsgReaction("");
     setMsgFile(null);
+    setReplyToId(null);
   };
 
   const resetGroup = () => {
@@ -281,6 +298,9 @@ export default function App() {
         resetGroup={resetGroup}
         editingMessageId={editingMessageId}
         cancelEdit={cancelEdit}
+        replyToId={replyToId}
+        setReplyToId={setReplyToId}
+        messages={messages}
         className="w-full md:w-1/2 xl:w-1/3"
       />
 
@@ -301,6 +321,7 @@ export default function App() {
         clearAll={clearAll}
         onImport={handleImport}
         onEditRequest={handleEditRequest}
+        onReplyRequest={handleReplyRequest}
         onDeleteMessage={deleteMessage}
         onMoveMessage={moveMessage}
         onToggleSender={toggleMessageSender}

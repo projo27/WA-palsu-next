@@ -13,6 +13,7 @@ import {
   FileText,
   MinusCircleIcon,
   PlusCircleIcon,
+  Reply,
   Square,
   Trash,
   Trash2,
@@ -27,6 +28,7 @@ import { cn } from "../../lib/utils";
 import { ChatSettings, Message } from "../../types";
 import { ChatFooter } from "./ChatFooter";
 import { ChatHeader } from "./ChatHeader";
+import { MediaViewer } from "./MediaViewer";
 import { MessageBubble } from "./MessageBubble";
 import { NavigationBar } from "./NavigationBar";
 import { StatusBar } from "./StatusBar";
@@ -38,6 +40,7 @@ interface PhonePreviewProps {
   clearAll: () => void;
   onImport: (data: { settings: ChatSettings; messages: Message[] }) => void;
   onEditRequest?: (msg: Message) => void;
+  onReplyRequest?: (msg: Message) => void;
   onDeleteMessage?: (id: string) => void;
   onMoveMessage?: (id: string, dir: "up" | "down") => void;
   onToggleSender?: (id: string) => void;
@@ -55,6 +58,7 @@ export const PhonePreview: React.FC<PhonePreviewProps> = ({
   onMoveMessage,
   onToggleSender,
   onToggleAIPanel,
+  onReplyRequest,
   className,
 }) => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -309,45 +313,7 @@ export const PhonePreview: React.FC<PhonePreviewProps> = ({
           style={{ position: "relative", display: "inline-block" }}
         >
           {/* Assistive-Touch Cursor — absolute inside wrapper so it's captured */}
-          <div
-            ref={cursorRef}
-            aria-hidden="true"
-            style={{
-              position: "absolute",
-              pointerEvents: "none",
-              zIndex: 9999,
-              opacity: screenshotting ? 0 : undefined, // hide during PNG screenshot
-              transform: "translate(-50%, -50%) scale(1)",
-              transition: "transform 80ms ease, opacity 120ms ease",
-              top: 0,
-              left: 0,
-            }}
-          >
-            <div
-              style={{
-                width: 44,
-                height: 44,
-                borderRadius: "50%",
-                background: "rgba(255,255,255,0.18)",
-                border: "1.5px solid rgba(255,255,255,0.45)",
-                boxShadow: "0 4px 16px rgba(0,0,0,0.35)",
-                backdropFilter: "blur(6px)",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <div
-                style={{
-                  width: 18,
-                  height: 18,
-                  borderRadius: "50%",
-                  background: "rgba(200,200,200,0.20)",
-                  boxShadow: "inset 0 1px 2px rgba(0,0,0,0.2)",
-                }}
-              />
-            </div>
-          </div>
+          <CursorPreview ref={cursorRef} screenshotting={screenshotting} />
 
           {/* Device Frame */}
           <div
@@ -426,6 +392,9 @@ export const PhonePreview: React.FC<PhonePreviewProps> = ({
                             settings={settings}
                             isFirstInGroup={isFirstInGroup}
                             onImageClick={setViewerMedia}
+                            replyMsg={messages.find(
+                              (m) => m.id === msg.replyToId,
+                            )}
                           />
                         </div>
                       </div>
@@ -439,49 +408,10 @@ export const PhonePreview: React.FC<PhonePreviewProps> = ({
               <NavigationBar settings={settings} />
 
               {/* ── Media Viewer (Popup) ─────────────────────────────────── */}
-              {viewerMedia && (
-                <div className="absolute inset-0 z-110 bg-black flex items-center justify-center p-4 animate-in fade-in duration-300">
-                  <button
-                    onClick={() => setViewerMedia(null)}
-                    className="absolute top-10 right-4 w-10 h-10 bg-white/10 hover:bg-white/20 text-white rounded-full flex items-center justify-center transition-colors shadow-lg z-50"
-                  >
-                    <X size={24} />
-                  </button>
-                  
-                  {viewerMedia.includes('youtube.com') || viewerMedia.includes('youtu.be') ? (
-                    <iframe
-                      src={`https://www.youtube.com/embed/${viewerMedia.match(/^.*(youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=|shorts\/)([^#\&\?]*).*/)?.[2] || ''}`}
-                      className="w-full aspect-video max-w-4xl shadow-2xl"
-                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                      allowFullScreen
-                    ></iframe>
-                  ) : viewerMedia.startsWith('blob:') || viewerMedia.endsWith('.mp4') || viewerMedia.endsWith('.webm') || viewerMedia.endsWith('.mov') ? (
-                    <video
-                      src={viewerMedia}
-                      controls
-                      autoPlay
-                      className="max-w-full max-h-full shadow-2xl rounded-lg"
-                    ></video>
-                  ) : (
-                    <img
-                      src={viewerMedia}
-                      alt="Full view"
-                      className="max-w-full max-h-full object-contain shadow-2xl"
-                    />
-                  )}
-                  
-                  <div className="absolute bottom-10 left-0 right-0 text-center">
-                    <span className="text-white/60 text-xs font-medium tracking-wide">
-                      TAP ANYWHERE TO CLOSE
-                    </span>
-                  </div>
-                  {/* Backdrop click to close */}
-                  <div
-                    className="absolute inset-0 -z-10"
-                    onClick={() => setViewerMedia(null)}
-                  />
-                </div>
-              )}
+              <MediaViewer
+                mediaUrl={viewerMedia}
+                onClose={() => setViewerMedia(null)}
+              />
 
               {/* ── Action Menu Overlay ─────────────────────────────────────── */}
               {actionMenuId &&
@@ -489,6 +419,8 @@ export const PhonePreview: React.FC<PhonePreviewProps> = ({
                   const selectedMsg = messages.find(
                     (m) => m.id === actionMenuId,
                   );
+                  if (!selectedMsg) return null;
+
                   const isStart = messages[0]?.id === actionMenuId;
                   const isEnd =
                     messages[messages.length - 1]?.id === actionMenuId;
@@ -512,6 +444,19 @@ export const PhonePreview: React.FC<PhonePreviewProps> = ({
                           </button>
                         </div>
                         <div className="flex flex-col gap-2">
+                          {onReplyRequest && selectedMsg && (
+                            <button
+                              onClick={() =>
+                                handleAction(() => onReplyRequest(selectedMsg))
+                              }
+                              className="w-full flex items-center gap-3 p-3 text-left hover:bg-gray-50 dark:hover:bg-gray-800 rounded-xl transition-colors font-medium text-gray-700 dark:text-gray-200"
+                            >
+                              <div className="w-8 h-8 rounded-full bg-indigo-100 dark:bg-indigo-900/30 flex items-center justify-center text-indigo-600 dark:text-indigo-400">
+                                <Reply size={16} />
+                              </div>{" "}
+                              Reply Message
+                            </button>
+                          )}
                           {onEditRequest && selectedMsg && (
                             <button
                               onClick={() =>
@@ -786,6 +731,56 @@ export const PhonePreview: React.FC<PhonePreviewProps> = ({
             <ChevronDown size={18} className="text-white" />
           </button>
         </div>
+      </div>
+    </div>
+  );
+};
+
+export const CursorPreview = ({
+  screenshotting,
+  ref,
+}: {
+  screenshotting: boolean;
+  ref: any;
+}) => {
+  return (
+    <div
+      ref={ref}
+      aria-hidden="true"
+      style={{
+        position: "absolute",
+        pointerEvents: "none",
+        zIndex: 9999,
+        opacity: screenshotting ? 0 : undefined, // hide during PNG screenshot
+        transform: "translate(-50%, -50%) scale(1)",
+        transition: "transform 80ms ease, opacity 120ms ease",
+        top: 0,
+        left: 0,
+      }}
+    >
+      <div
+        style={{
+          width: 44,
+          height: 44,
+          borderRadius: "50%",
+          background: "rgba(255,255,255,0.18)",
+          border: "1.5px solid rgba(255,255,255,0.45)",
+          boxShadow: "0 4px 16px rgba(0,0,0,0.35)",
+          backdropFilter: "blur(6px)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <div
+          style={{
+            width: 18,
+            height: 18,
+            borderRadius: "50%",
+            background: "rgba(200,200,200,0.20)",
+            boxShadow: "inset 0 1px 2px rgba(0,0,0,0.2)",
+          }}
+        />
       </div>
     </div>
   );

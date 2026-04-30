@@ -58,6 +58,7 @@ export const DocsMessageInput: React.FC<MessageInputProps> = ({
               <option value="DOCX">DOCX</option>
               <option value="XLSX">XLSX</option>
               <option value="ZIP">ZIP</option>
+              <option value="APK">APK</option>
             </select>
           </div>
         </div>

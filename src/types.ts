@@ -17,6 +17,7 @@ export interface Message {
   senderName?: string;
   senderColor?: string;
   senderId?: string;
+  replyToId?: string;
 }
 
 export interface ChatSettings {

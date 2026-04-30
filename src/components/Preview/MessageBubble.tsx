@@ -8,6 +8,7 @@ interface MessageBubbleProps {
   settings: ChatSettings;
   isFirstInGroup?: boolean;
   onImageClick?: (url: string) => void;
+  replyMsg?: Message;
 }
 
 interface MessageBubbleCardProps extends MessageBubbleProps {
@@ -441,8 +442,55 @@ export const MessageStatusIcon: React.FC<MessageBubbleProps> = ({ msg }) => {
     );
   }
   if (msg.status === "sent") {
-    return <Check size={12} />;
+    return (
+      <span className="text-gray-400">
+        <Check size={12} />
+      </span>
+    );
   }
+  return null;
+};
+
+export const ReplyQuote: React.FC<{
+  replyMsg?: Message;
+  settings: ChatSettings;
+}> = ({ replyMsg, settings }) => {
+  if (!replyMsg) return null;
+  const mapMsg = typeof replyMsg.text === 'string' ? JSON.parse(replyMsg.text) : replyMsg.text;
+
+  const truncateText = (text?: string) => {
+    if (!text) return "";
+    return text.length > 80 ? text.substring(0, 80) + "..." : text;
+  };
+
+  const nameColor = replyMsg.sender === "user" ? "#00a884" : (replyMsg.senderColor || "#53bdeb");
+
+  return (
+    <div className="mb-1 flex rounded-md overflow-hidden bg-black/5 border-l-4"
+    style={{ borderLeftColor: nameColor }}
+    >
+      <div className="flex-1 p-1.5 flex flex-col min-w-0">
+        <span className="text-[11px] font-bold truncate" style={{ color: nameColor }}>
+          {replyMsg.sender === "user" ? "You" : (replyMsg.senderName || settings.receiverName)}
+        </span>
+        <div className="text-[11px] opacity-70 truncate leading-tight">
+          {replyMsg.type === "text" ? truncateText(replyMsg.text) : 
+           replyMsg.type === "image" ? "📷 Photo" : 
+           replyMsg.type === "video" ? "🎥 Video" : 
+           replyMsg.type === "file" ? `📄 ${mapMsg.docName}.${mapMsg.docExt}` : 
+           replyMsg.type === "location" ? "📍 Location" : 
+           "Media"}
+        </div>
+      </div>
+      {(replyMsg.thumbnailUrl || (replyMsg.type === "image" && replyMsg.fileUrl)) && (
+        <img 
+          src={replyMsg.thumbnailUrl || replyMsg.fileUrl} 
+          className="w-12 h-12 object-cover shrink-0 ml-1 opacity-80" 
+          alt="Quote" 
+        />
+      )}
+    </div>
+  );
 };
 
 export const MessageBubble: React.FC<MessageBubbleProps> = ({
@@ -450,6 +498,7 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({
   settings,
   isFirstInGroup = true,
   onImageClick,
+  replyMsg,
 }) => {
   if (msg.type === "date") {
     return <DateBubbleCard msg={msg} />;
@@ -489,30 +538,31 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({
       {msg.type === "call" && <CallBubbleCard msg={msg} />}
       {msg.type === "contact" && <ContactBubbleCard msg={msg} />}
       {msg.type === "location" && <LocationBubbleCard msg={msg} />}
+      
+      {/* For non-text messages with replies, show the quote above the media */}
+      {msg.type !== "text" && replyMsg && (
+        <ReplyQuote replyMsg={replyMsg} settings={settings} />
+      )}
 
       {msg.type === "text" && msg.text && (
-        <div className="relative flex flex-wrap gap-x-2 gap-y-0.5">
-          <p
-            className={cn(
-              "whitespace-pre-line",
-              // msg.sender === "user" ? "mr-12" : "pr-8",
-            )}
-          >
-            {msg.text}
-          </p>
-          <span className="flex items-center justify-end gap-0.5 w-auto ml-auto self-end">
-            {msg.type === "text" && msg.text && (
+        <div className="relative flex flex-col gap-0.5">
+          {replyMsg && <ReplyQuote replyMsg={replyMsg} settings={settings} />}
+          <div className="flex flex-wrap gap-x-2 gap-y-0.5">
+            <p className="whitespace-pre-line flex-1 min-w-[60px]">
+              {msg.text}
+            </p>
+            <span className="flex items-center justify-end gap-0.5 w-auto ml-auto self-end">
               <span className="text-[9px] opacity-60">{msg.timestamp}</span>
-            )}
-            <MessageStatusIcon msg={msg} />
-          </span>
+              <MessageStatusIcon msg={msg} />
+            </span>
+          </div>
         </div>
       )}
 
       {msg.reaction && (
         <div
           className={cn(
-            "absolute -bottom-3.5 right-1 px-1 rounded-full text-[10px] shadow-sm border",
+            "absolute -bottom-3.5 right-1 px-1 rounded-full text-[14px] shadow-sm border",
             settings.isDarkMode
               ? "bg-bubble-receiver-dark border-gray-700"
               : "bg-white border-gray-100",

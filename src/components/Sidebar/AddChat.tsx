@@ -17,7 +17,7 @@ import {
 } from "lucide-react";
 import React, { useRef } from "react";
 import { cn } from "../../lib/utils";
-import { ChatSettings, MessageStatus, MessageType } from "../../types";
+import { ChatSettings, Message, MessageStatus, MessageType } from "../../types";
 import { CallMessageInput } from "./inputs/CallMessageInput";
 import { ContactMessageInput } from "./inputs/ContactMessageInput";
 import { DateMessageInput } from "./inputs/DateMessageInput";
@@ -54,6 +54,9 @@ interface AddChatProps {
   resetGroup?: () => void;
   editingMessageId?: string | null;
   cancelEdit?: () => void;
+  replyToId: string | null;
+  setReplyToId: (id: string | null) => void;
+  messages: Message[];
 }
 
 export const AddChat: React.FC<AddChatProps> = ({
@@ -83,9 +86,14 @@ export const AddChat: React.FC<AddChatProps> = ({
   resetGroup,
   editingMessageId,
   cancelEdit,
+  replyToId,
+  setReplyToId,
+  messages,
 }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const profileInputRef = useRef<HTMLInputElement>(null);
+  
+  const replyMsg = messages.find(m => m.id === replyToId);
   const [newParticipantName, setNewParticipantName] = React.useState("");
   const [newParticipantColor, setNewParticipantColor] =
     React.useState("#ffb300");
@@ -488,6 +496,26 @@ export const AddChat: React.FC<AddChatProps> = ({
           ),
         )}
       </div>
+
+      {/* Reply Preview */}
+      {replyMsg && (
+        <div className="p-3 bg-gray-50 border-l-4 border-primary rounded-r-lg flex items-center justify-between group animate-in slide-in-from-left-2 duration-200">
+          <div className="flex-1 min-w-0">
+            <span className="text-[10px] font-bold text-primary block">
+              Replying to {replyMsg.sender === "user" ? "You" : (replyMsg.senderName || settings.receiverName)}
+            </span>
+            <p className="text-xs text-gray-500 truncate">
+              {replyMsg.text || (replyMsg.type === "image" ? "Photo" : "Media")}
+            </p>
+          </div>
+          <button
+            onClick={() => setReplyToId(null)}
+            className="p-1.5 text-gray-400 hover:text-red-500 transition-colors"
+          >
+            <X size={16} />
+          </button>
+        </div>
+      )}
 
       {/* Message Input */}
       <div className="space-y-4">
