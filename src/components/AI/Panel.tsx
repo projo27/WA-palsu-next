@@ -79,100 +79,65 @@ The JSON must have this exact structure:
   },
   "messages": [
     {
-      "id": "1776318000000",
-      "text": "isi pesan",
+      "id": "1",
+      "text": "Halo! Sudah lihat video yang aku kirim?",
       "type": "text",
       "sender": "bot",
       "timestamp": "09:00",
       "status": "seen",
+      "senderId": "1",
       ${chatType === "group" ? `"senderName": "Member 1",\n      "senderColor": "#ffb300"` : ""}
     },
     {
-      "id": "1776390678241",
-      "text": "",
-      "type": "image",
-      "sender": "bot",
-      "timestamp": "07:49",
+      "id": "2",
+      "text": "Belum nih, yang mana ya?",
+      "type": "text",
+      "sender": "user",
+      "timestamp": "09:01",
       "status": "seen",
-      "reaction": "",
-      "fileUrl": "https://media.tenor.com/AHAi9SFQE9cAAAAm/quby-yeah.webp",
-      "senderName": "User A",
-      "senderId" : "1",
-      "senderColor": "#ffb300"
+      "replyToId": "1"
     },
     {
-      "id": "1776396337229",
-      "text": "{\"docName\":\"document name\",\"docExt\":\"JPG\",\"docSize\":\"12\",\"docSizeType\":\"KB\"}",
-      "type": "file",
-      "sender": "bot",
-      "timestamp": "07:49",
-      "status": "seen",
-      "reaction": "",
-      "senderName": "User A",
-      "senderId" : "1",
-      "senderColor": "#ffb300"
-    },
-    {
-      "id": "1776396341861",
-      "text": "{\"callMode\":\"video\",\"callType\":\"Call\",\"hh\":\"\",\"mm\":\"\",\"ss\":\"\"}",
-      "type": "call",
-      "sender": "bot",
-      "timestamp": "07:49",
-      "status": "seen",
-      "reaction": "",
-      "senderName": "User A",
-      "senderId" : "1",
-      "senderColor": "#ffb300"
-    },
-    {
-      "id": "1776396347401",
-      "text": "{\"contactName\":\"tes\",\"isMultiple\":false,\"contactCount\":\"1\"}",
-      "type": "contact",
-      "sender": "bot",
-      "timestamp": "07:49",
-      "status": "seen",
-      "reaction": "",
-      "senderName": "User A",
-      "senderId" : "1",
-      "senderColor": "#ffb300"
-    },
-    {
-      "id": "1776396359374",
-      "text": "{\"locType\":\"current\",\"notes\":\"tes\",\"liveTime\":\"\",\"pinName\":\"\",\"pinAvatar\":\"\"}",
-      "type": "location",
-      "sender": "bot",
-      "timestamp": "07:49",
-      "status": "seen",
-      "reaction": "👍",
-      "senderName": "User B",
-      "senderId" : "2",
-      "senderColor": "#ffb300"
-    },
-    {
-      "id": "1776397294464",
-      "text": "",
+      "id": "3",
       "type": "video",
       "sender": "bot",
-      "timestamp": "08:10",
+      "timestamp": "09:02",
       "status": "seen",
-      "reaction": "",
-      "fileUrl": "test-video.mp4",
+      "senderId": "1",
+      "fileUrl": "https://www.w3schools.com/html/mov_bbb.mp4",
       "thumbnailUrl": "https://placehold.co/400x225?text=Video+Thumbnail",
-      "senderName": "User B",
-      "senderId" : "2",
-      "senderColor": "#ffb300"
+      ${chatType === "group" ? `"senderName": "Member 1",\n      "senderColor": "#ffb300"` : ""}
+    },
+    {
+      "id": "4",
+      "text": "HARI INI",
+      "type": "date",
+      "sender": "system",
+      "timestamp": "09:00",
+      "status": "none"
     }
   ]
 }
 
-Make sure the "sender" for user's own message is "user", and for others is "bot".
-For group chat, provide "senderName" and "senderColor" for "bot" messages to differentiate members.
-Generate exactly ${chatLines} messages for a natural conversation flow.
-The chat must be realistic and natural, like a real WhatsApp chat.
-The chat can contain emojis, images, videos, audio messages, and stickers.
-The chat not always in the same time, it can be in different time, and the receiver can reply after a few minutes or hours.
-The "sender" or "bot" can be more active than others, and the "receiver" can be less active than others.
-Please reply with ONLY valid JSON and no extra text.`;
+Supported Message Types:
+- 'text': Standard text message.
+- 'video': Video message. MUST include "fileUrl" and "thumbnailUrl".
+- 'image': Image message. MUST include "fileUrl".
+- 'file': Document. "text" field MUST be a JSON string: {"docName":"report","docExt":"PDF","docSize":"1.2","docSizeType":"MB"}
+- 'call': Call log. "text" field MUST be a JSON string: {"callMode":"video","callType":"Call","hh":"","mm":"2","ss":"30"}
+- 'contact': Contact share. "text" field MUST be a JSON string: {"contactName":"John Doe","isMultiple":false,"contactCount":"1"}
+- 'location': Location share. "text" field MUST be a JSON string: {"locType":"current","notes":"Office","liveTime":"","pinName":"","pinAvatar":""}
+- 'date': System date separator. "sender" MUST be "system" and "text" is the date label.
+
+Additional Rules:
+1. "id": Provide a unique string for each message.
+2. "senderId": For "bot" messages, always provide a "senderId" (e.g., "1", "2") that matches a participant.
+3. "replyToId": To indicate a reply, set this to the "id" of the message being replied to.
+4. "sender": Use "user" for the app owner and "bot" for the contact/group members.
+5. "status": Use "sent", "delivered", or "seen" for "user" messages.
+6. Generate exactly ${chatLines} messages for a natural conversation flow.
+7. The chat must be realistic, including emojis and reactions ("reaction" field) where appropriate.
+8. Reply ONLY with valid JSON.`;
 
       const response = await ai.models.generateContent({
         model: "gemini-2.5-flash",
