@@ -73,7 +73,6 @@ export function useVideoRecorder(
       // 1. Capture current browser tab — near-zero overhead
       const displayStream = await navigator.mediaDevices.getDisplayMedia({
         video: {
-          // @ts-expect-error — displaySurface hint isn't in strict TS types yet
           displaySurface: "browser",
           frameRate: { ideal: 30, max: 60 },
           width: { ideal: 3840 },
@@ -82,7 +81,6 @@ export function useVideoRecorder(
         audio: false,
         // @ts-expect-error — Chrome-specific: auto-selects current tab
         preferCurrentTab: true,
-        // @ts-expect-error — Chrome 112+: include self in the picker
         selfBrowserSurface: "include",
       });
 

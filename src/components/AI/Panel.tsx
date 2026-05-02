@@ -148,6 +148,7 @@ Additional Rules:
       });
 
       if (response.text) {
+        console.log(response.text);
         parseJSONToChat(response.text);
       } else {
         throw new Error("Respon dari AI kosong");

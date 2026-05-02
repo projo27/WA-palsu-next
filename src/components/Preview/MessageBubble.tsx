@@ -1,3 +1,4 @@
+import { Emoji, EmojiStyle } from "emoji-picker-react";
 import { Check, CheckCheck } from "lucide-react";
 import React from "react";
 import { cn, getContrastColor } from "../../lib/utils";
@@ -77,6 +78,7 @@ export const MessageBubbleCard: React.FC<MessageBubbleCardProps> = ({
 
 export const FileUrlBubbleCard: React.FC<MessageBubbleProps> = ({
   msg,
+  settings,
   onImageClick,
 }) => {
   return (
@@ -94,7 +96,7 @@ export const FileUrlBubbleCard: React.FC<MessageBubbleProps> = ({
       <div className="absolute bottom-0 inset-x-0 bg-linear-to-t from-gray-500/40 to-transparent h-4 rounded-b-md"></div>
       <span className="absolute bottom-1 right-1 flex items-center justify-end gap-1">
         <span className="text-[9px] opacity-60">{msg.timestamp}</span>
-        <MessageStatusIcon msg={msg} />
+        <MessageStatusIcon msg={msg} settings={settings} />
       </span>
     </div>
   );
@@ -102,12 +104,19 @@ export const FileUrlBubbleCard: React.FC<MessageBubbleProps> = ({
 
 export const VideoBubbleCard: React.FC<MessageBubbleProps> = ({
   msg,
+  settings,
   onImageClick,
 }) => {
   return (
-    <div className="mb-1 relative cursor-pointer" onClick={() => onImageClick?.(msg.fileUrl!)}>
+    <div
+      className="mb-1 relative cursor-pointer"
+      onClick={() => onImageClick?.(msg.fileUrl!)}
+    >
       <img
-        src={msg.thumbnailUrl || "https://placehold.co/400x225?text=Video+Thumbnail"}
+        src={
+          msg.thumbnailUrl ||
+          "https://placehold.co/400x225?text=Video+Thumbnail"
+        }
         alt="Video Thumbnail"
         className="rounded-md max-w-full max-h-64 object-cover aspect-video bg-black/10"
       />
@@ -123,13 +132,16 @@ export const VideoBubbleCard: React.FC<MessageBubbleProps> = ({
         <span className="text-[10px] text-white font-medium drop-shadow-md">
           {msg.timestamp}
         </span>
-        <MessageStatusIcon msg={msg} />
+        <MessageStatusIcon msg={msg} settings={settings} />
       </span>
     </div>
   );
 };
 
-export const FileBubbleCard: React.FC<MessageBubbleProps> = ({ msg }) => {
+export const FileBubbleCard: React.FC<MessageBubbleProps> = ({
+  msg,
+  settings,
+}) => {
   let docName = "document",
     docExt = "JPG",
     docSize = "12",
@@ -169,7 +181,10 @@ export const FileBubbleCard: React.FC<MessageBubbleProps> = ({ msg }) => {
   );
 };
 
-export const CallBubbleCard: React.FC<MessageBubbleProps> = ({ msg }) => {
+export const CallBubbleCard: React.FC<MessageBubbleProps> = ({
+  msg,
+  settings,
+}) => {
   let callMode = "video",
     callType = "Call",
     hh = "",
@@ -234,7 +249,10 @@ export const CallBubbleCard: React.FC<MessageBubbleProps> = ({ msg }) => {
   );
 };
 
-export const ContactBubbleCard: React.FC<MessageBubbleProps> = ({ msg }) => {
+export const ContactBubbleCard: React.FC<MessageBubbleProps> = ({
+  msg,
+  settings,
+}) => {
   let isMultiple = false,
     contactName = "",
     contactCount = "1";
@@ -281,7 +299,7 @@ export const ContactBubbleCard: React.FC<MessageBubbleProps> = ({ msg }) => {
         </span>
         <span className="text-[10px] self-end ml-auto flex items-center justify-end gap-1">
           <span className="opacity-60">{msg.timestamp}</span>{" "}
-          <MessageStatusIcon msg={msg} />
+          <MessageStatusIcon msg={msg} settings={settings} />
         </span>
       </div>
       <div className="h-px bg-black/10 w-full" />
@@ -292,7 +310,10 @@ export const ContactBubbleCard: React.FC<MessageBubbleProps> = ({ msg }) => {
   );
 };
 
-export const LocationBubbleCard: React.FC<MessageBubbleProps> = ({ msg }) => {
+export const LocationBubbleCard: React.FC<MessageBubbleProps> = ({
+  msg,
+  settings,
+}) => {
   let locType = "current",
     notes = "",
     liveTime = "",
@@ -414,7 +435,10 @@ export const LocationBubbleCard: React.FC<MessageBubbleProps> = ({ msg }) => {
   );
 };
 
-export const DateBubbleCard: React.FC<MessageBubbleProps> = ({ msg }) => {
+export const DateBubbleCard: React.FC<MessageBubbleProps> = ({
+  msg,
+  settings,
+}) => {
   return (
     <div className="self-center my-2 px-3 py-1 rounded-lg bg-black/10 text-[10px] uppercase font-medium">
       {msg.text}
@@ -422,7 +446,10 @@ export const DateBubbleCard: React.FC<MessageBubbleProps> = ({ msg }) => {
   );
 };
 
-export const MessageStatusIcon: React.FC<MessageBubbleProps> = ({ msg }) => {
+export const MessageStatusIcon: React.FC<MessageBubbleProps> = ({
+  msg,
+  settings,
+}) => {
   if (msg.sender !== "user") return null;
   if (msg.status === "none") return null;
   if (!["text", "image", "contact", "video"].includes(msg.type)) return null;
@@ -456,37 +483,62 @@ export const ReplyQuote: React.FC<{
   settings: ChatSettings;
 }> = ({ replyMsg, settings }) => {
   if (!replyMsg) return null;
-  const mapMsg = typeof replyMsg.text === 'string' ? JSON.parse(replyMsg.text) : replyMsg.text;
+  let mapMsg: any = {};
+  if (typeof replyMsg.text === "string" && replyMsg.text.startsWith("{")) {
+    try {
+      mapMsg = JSON.parse(replyMsg.text);
+    } catch (e) {
+      mapMsg = {};
+    }
+  } else {
+    mapMsg = replyMsg.text || {};
+  }
 
   const truncateText = (text?: string) => {
     if (!text) return "";
-    return text.length > 80 ? text.substring(0, 80) + "..." : text;
+    const plainText = typeof text === "string" ? text : "";
+    return plainText.length > 80
+      ? plainText.substring(0, 80) + "..."
+      : plainText;
   };
 
-  const nameColor = replyMsg.sender === "user" ? "#00a884" : (replyMsg.senderColor || "#53bdeb");
+  const nameColor =
+    replyMsg.sender === "user" ? "#00a884" : replyMsg.senderColor || "#53bdeb";
 
   return (
-    <div className="mb-1 flex rounded-md overflow-hidden bg-black/5 border-l-4"
-    style={{ borderLeftColor: nameColor }}
+    <div
+      className="mb-1 flex rounded-md overflow-hidden bg-black/5 border-l-4"
+      style={{ borderLeftColor: nameColor }}
     >
       <div className="flex-1 p-1.5 flex flex-col min-w-0">
-        <span className="text-[11px] font-bold truncate" style={{ color: nameColor }}>
-          {replyMsg.sender === "user" ? "You" : (replyMsg.senderName || settings.receiverName)}
+        <span
+          className="text-[11px] font-bold truncate"
+          style={{ color: nameColor }}
+        >
+          {replyMsg.sender === "user"
+            ? "You"
+            : replyMsg.senderName || settings.receiverName}
         </span>
         <div className="text-[11px] opacity-70 truncate leading-tight">
-          {replyMsg.type === "text" ? truncateText(replyMsg.text) : 
-           replyMsg.type === "image" ? "📷 Photo" : 
-           replyMsg.type === "video" ? "🎥 Video" : 
-           replyMsg.type === "file" ? `📄 ${mapMsg.docName}.${mapMsg.docExt}` : 
-           replyMsg.type === "location" ? "📍 Location" : 
-           "Media"}
+          {replyMsg.type === "text"
+            ? truncateText(replyMsg.text)
+            : replyMsg.type === "image"
+              ? "📷 Photo"
+              : replyMsg.type === "video"
+                ? "🎥 Video"
+                : replyMsg.type === "file"
+                  ? `📄 ${mapMsg.docName || "document"}.${mapMsg.docExt || ""}`
+                  : replyMsg.type === "location"
+                    ? "📍 Location"
+                    : "Media"}
         </div>
       </div>
-      {(replyMsg.thumbnailUrl || (replyMsg.type === "image" && replyMsg.fileUrl)) && (
-        <img 
-          src={replyMsg.thumbnailUrl || replyMsg.fileUrl} 
-          className="w-12 h-12 object-cover shrink-0 ml-1 opacity-80" 
-          alt="Quote" 
+      {(replyMsg.thumbnailUrl ||
+        (replyMsg.type === "image" && replyMsg.fileUrl)) && (
+        <img
+          src={replyMsg.thumbnailUrl || replyMsg.fileUrl}
+          className="w-12 h-12 object-cover shrink-0 ml-1 opacity-80"
+          alt="Quote"
         />
       )}
     </div>
@@ -501,8 +553,15 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({
   replyMsg,
 }) => {
   if (msg.type === "date") {
-    return <DateBubbleCard msg={msg} />;
+    return <DateBubbleCard msg={msg} settings={settings} />;
   }
+
+  const emojiStyles: Record<string, EmojiStyle> = {
+    ios: EmojiStyle.APPLE,
+    android: EmojiStyle.GOOGLE,
+    desktop: EmojiStyle.TWITTER,
+    native: EmojiStyle.NATIVE,
+  };
 
   return (
     <MessageBubbleCard
@@ -527,34 +586,50 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({
       )}
 
       {msg.type === "image" && msg.fileUrl && (
-        <FileUrlBubbleCard msg={msg} onImageClick={onImageClick} />
+        <FileUrlBubbleCard
+          msg={msg}
+          settings={settings}
+          onImageClick={onImageClick}
+        />
       )}
 
       {msg.type === "video" && (
-        <VideoBubbleCard msg={msg} onImageClick={onImageClick} />
+        <VideoBubbleCard
+          msg={msg}
+          settings={settings}
+          onImageClick={onImageClick}
+        />
       )}
 
-      {msg.type === "file" && <FileBubbleCard msg={msg} />}
-      {msg.type === "call" && <CallBubbleCard msg={msg} />}
-      {msg.type === "contact" && <ContactBubbleCard msg={msg} />}
-      {msg.type === "location" && <LocationBubbleCard msg={msg} />}
-      
+      {msg.type === "file" && <FileBubbleCard msg={msg} settings={settings} />}
+      {msg.type === "call" && <CallBubbleCard msg={msg} settings={settings} />}
+      {msg.type === "contact" && (
+        <ContactBubbleCard msg={msg} settings={settings} />
+      )}
+      {msg.type === "location" && (
+        <LocationBubbleCard msg={msg} settings={settings} />
+      )}
+
       {/* For non-text messages with replies, show the quote above the media */}
       {msg.type !== "text" && replyMsg && (
         <ReplyQuote replyMsg={replyMsg} settings={settings} />
       )}
 
       {msg.type === "text" && msg.text && (
-        <div className="relative flex flex-col gap-0.5">
+        <div className="relative flex flex-col gap-1">
           {replyMsg && <ReplyQuote replyMsg={replyMsg} settings={settings} />}
-          <div className="flex flex-wrap gap-x-2 gap-y-0.5">
-            <p className="whitespace-pre-line flex-1 min-w-[60px]">
+          <div className="relative">
+            <p className="whitespace-pre-line break-words leading-[1.4]">
               {msg.text}
+              {/* Invisible spacer to reserve space for the timestamp on the last line */}
+              <span className="inline-block w-[25px] h-1" />
             </p>
-            <span className="flex items-center justify-end gap-0.5 w-auto ml-auto self-end">
-              <span className="text-[9px] opacity-60">{msg.timestamp}</span>
-              <MessageStatusIcon msg={msg} />
-            </span>
+            <div className="absolute bottom-0 right-0 flex items-center gap-1 select-none">
+              <span className="text-[10px] opacity-55 font-medium leading-none mb-0.5">
+                {msg.timestamp}
+              </span>
+              <MessageStatusIcon msg={msg} settings={settings} />
+            </div>
           </div>
         </div>
       )}
@@ -562,13 +637,19 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({
       {msg.reaction && (
         <div
           className={cn(
-            "absolute -bottom-3.5 right-1 px-1 rounded-full text-[14px] shadow-sm border",
+            "absolute -bottom-3.5 right-1 px-1 rounded-full shadow-sm border flex items-center justify-center min-w-[22px] min-h-[22px]",
             settings.isDarkMode
               ? "bg-bubble-receiver-dark border-gray-700"
               : "bg-white border-gray-100",
           )}
         >
-          {msg.reaction}
+          <Emoji
+            unified={Array.from(msg.reaction)
+              .map((c) => c.codePointAt(0)!.toString(16))
+              .join("-")}
+            size={14}
+            emojiStyle={emojiStyles[settings.layout || "android"]}
+          />
         </div>
       )}
     </MessageBubbleCard>

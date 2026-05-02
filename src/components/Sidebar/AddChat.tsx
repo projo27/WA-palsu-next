@@ -539,6 +539,7 @@ export const AddChat: React.FC<AddChatProps> = ({
             setMsgStatus={setMsgStatus}
             msgReaction={msgReaction}
             setMsgReaction={setMsgReaction}
+            settings={settings}
           />
         )}
 

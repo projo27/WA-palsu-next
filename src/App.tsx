@@ -11,6 +11,7 @@ import { DEFAULT_SETTINGS } from "./constants";
 import { cn } from "./lib/utils";
 import { ChatSettings, Message, MessageStatus, MessageType } from "./types";
 
+
 export default function App() {
   const [activeTab, setActiveTab] = useState<"display" | "chat" | "group">(
     "display",

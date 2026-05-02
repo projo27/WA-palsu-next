@@ -1,7 +1,7 @@
 import { Layout, User, Users } from "lucide-react";
 import React from "react";
 import { cn } from "../../lib/utils";
-import { ChatSettings, MessageStatus, MessageType } from "../../types";
+import { ChatSettings, Message, MessageStatus, MessageType } from "../../types";
 import { AddChat } from "./AddChat";
 import { DisplaySettings } from "./DisplaySettings";
 
@@ -33,6 +33,9 @@ interface SidebarProps {
   resetGroup: () => void;
   editingMessageId?: string | null;
   cancelEdit?: () => void;
+  replyToId: string | null;
+  setReplyToId: (id: string | null) => void;
+  messages: Message[];
   className?: string;
 }
 
