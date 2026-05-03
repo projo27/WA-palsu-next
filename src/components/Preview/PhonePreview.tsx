@@ -135,34 +135,37 @@ export const PhonePreview: React.FC<PhonePreviewProps> = ({
     if (!frame || !cursor || !wrapper) return;
 
     const onMouseMove = (e: MouseEvent) => {
-      // Position relative to the recording wrapper (= device frame position)
       const rect = wrapper.getBoundingClientRect();
-      cursor.style.left = `${e.clientX - rect.left}px`;
-      cursor.style.top = `${e.clientY - rect.top}px`;
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+
+      // Only update position if cursor is over the frame (plus small buffer)
+      // or if we want to keep it updated for smooth entry.
+      // But avoid large values that cause scrollbars.
+      cursor.style.left = `${x}px`;
+      cursor.style.top = `${y}px`;
     };
 
     const onMouseEnter = () => {
+      cursor.style.display = "block";
       cursor.style.opacity = "1";
       frame.style.cursor = "none";
     };
 
     const onMouseLeave = () => {
       cursor.style.opacity = "0";
+      cursor.style.display = "none"; // Completely remove from layout impact
       frame.style.cursor = "";
     };
 
     frame.addEventListener("mousemove", onMouseMove);
     frame.addEventListener("mouseenter", onMouseEnter);
     frame.addEventListener("mouseleave", onMouseLeave);
-    // Still listen on window so the cursor dot position stays updated
-    // even when moving fast across the frame edge
-    window.addEventListener("mousemove", onMouseMove);
 
     return () => {
       frame.removeEventListener("mousemove", onMouseMove);
       frame.removeEventListener("mouseenter", onMouseEnter);
       frame.removeEventListener("mouseleave", onMouseLeave);
-      window.removeEventListener("mousemove", onMouseMove);
     };
   }, []);
 
@@ -310,7 +313,11 @@ export const PhonePreview: React.FC<PhonePreviewProps> = ({
         {/* This is the element captured by useVideoRecorder                */}
         <div
           ref={recordingWrapperRef}
-          style={{ position: "relative", display: "inline-block" }}
+          style={{
+            position: "relative",
+            display: "inline-block",
+            overflow: "hidden",
+          }}
         >
           {/* Assistive-Touch Cursor — absolute inside wrapper so it's captured */}
           <CursorPreview ref={cursorRef} screenshotting={screenshotting} />

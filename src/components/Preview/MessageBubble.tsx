@@ -82,7 +82,7 @@ export const FileUrlBubbleCard: React.FC<MessageBubbleProps> = ({
   onImageClick,
 }) => {
   return (
-    <div className="mb-1 relative">
+    <div className="my-1 relative">
       <img
         src={msg.fileUrl}
         alt="Sent"
@@ -622,7 +622,7 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({
             <p className="whitespace-pre-line break-words leading-[1.4]">
               {msg.text}
               {/* Invisible spacer to reserve space for the timestamp on the last line */}
-              <span className="inline-block w-[25px] h-1" />
+              <span className="inline-block w-[55px] h-1" />
             </p>
             <div className="absolute bottom-0 right-0 flex items-center gap-1 select-none">
               <span className="text-[10px] opacity-55 font-medium leading-none mb-0.5">
@@ -637,7 +637,7 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({
       {msg.reaction && (
         <div
           className={cn(
-            "absolute -bottom-3.5 right-1 px-1 rounded-full shadow-sm border flex items-center justify-center min-w-[22px] min-h-[22px]",
+            "absolute -bottom-4.5 right-1 px-1 rounded-full shadow-sm border flex items-center justify-center min-w-[22px] min-h-[22px]",
             settings.isDarkMode
               ? "bg-bubble-receiver-dark border-gray-700"
               : "bg-white border-gray-100",
