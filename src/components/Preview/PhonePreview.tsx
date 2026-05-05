@@ -414,6 +414,37 @@ export const PhonePreview: React.FC<PhonePreviewProps> = ({
               <ChatFooter settings={settings} />
               <NavigationBar settings={settings} />
 
+              {/* Watermark (Global Overlay) */}
+              {settings.watermark.show && (
+                <div
+                  className={cn(
+                    "absolute pointer-events-none select-none font-bold whitespace-nowrap z-[150] transition-all duration-150",
+                    settings.watermark.position === "top-left" &&
+                      "top-20 left-4",
+                    settings.watermark.position === "top-right" &&
+                      "top-20 right-4",
+                    settings.watermark.position === "bottom-left" &&
+                      "bottom-24 left-4",
+                    settings.watermark.position === "bottom-right" &&
+                      "bottom-24 right-4",
+                    settings.watermark.position === "center" &&
+                      "top-1/2 left-1/2",
+                  )}
+                  style={{
+                    color: settings.watermark.color || "#000000",
+                    fontSize: `${settings.watermark.size || 18}px`,
+                    opacity: settings.watermark.opacity || 0.3,
+                    transform: `
+                      ${settings.watermark.position === "center" ? "translate(-50%, -50%)" : ""} 
+                      rotate(${settings.watermark.rotation || 0}deg)
+                      translate(${settings.watermark.x || 0}px, ${settings.watermark.y || 0}px)
+                    `,
+                  }}
+                >
+                  {settings.watermark.text}
+                </div>
+              )}
+
               {/* ── Media Viewer (Popup) ─────────────────────────────────── */}
               <MediaViewer
                 mediaUrl={viewerMedia}
@@ -716,10 +747,7 @@ export const PhonePreview: React.FC<PhonePreviewProps> = ({
 
           <button
             onClick={() =>
-              chatMainRef.current?.scrollTo({
-                top: 0,
-                behavior: "smooth",
-              })
+              chatMainRef.current?.scrollTo({ top: 0, behavior: "smooth" })
             }
             className={cn(
               "w-8 h-8 rounded-full bg-yellow-500 place-items-center flex justify-center items-center cursor-pointer",

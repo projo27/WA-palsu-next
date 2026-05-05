@@ -108,7 +108,7 @@ export const SharedMessageOptions: React.FC<SharedMessageOptionsProps> = ({
           {showEmojiPicker && (
             <div 
               ref={pickerRef}
-              className="absolute bottom-full right-0 mb-2 z-[9999] shadow-2xl rounded-xl overflow-hidden border border-gray-100 animate-in fade-in zoom-in-95 duration-100"
+              className="absolute bottom-full right-0 mb-2 z-99 shadow-2xl rounded-xl overflow-hidden border border-gray-100 animate-in fade-in zoom-in-95 duration-100"
             >
               <EmojiPicker 
                 onEmojiClick={(emojiData) => handleEmojiSelect(emojiData)}

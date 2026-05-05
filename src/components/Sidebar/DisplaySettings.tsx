@@ -430,6 +430,280 @@ export const DisplaySettings: React.FC<DisplaySettingsProps> = ({
           <option value="ios">iOS</option>
         </select>
       </div>
+
+      {/* Watermark Settings */}
+      <div className="space-y-4 pt-4 border-t border-gray-100">
+        <div className="flex items-center justify-between">
+          <label className="text-sm font-semibold text-gray-700">
+            Watermark
+          </label>
+          <button
+            onClick={() =>
+              setSettings({
+                ...settings,
+                watermark: {
+                  ...settings.watermark,
+                  show: !settings.watermark.show,
+                },
+              })
+            }
+            className={cn(
+              "relative inline-flex h-6 w-11 items-center rounded-full transition-colors",
+              settings.watermark.show ? "bg-primary" : "bg-gray-200",
+            )}
+          >
+            <span
+              className={cn(
+                "inline-block h-4 w-4 transform rounded-full bg-white transition-transform",
+                settings.watermark.show ? "translate-x-6" : "translate-x-1",
+              )}
+            />
+          </button>
+        </div>
+
+        {settings.watermark.show && (
+          <div className="space-y-3 animate-in fade-in slide-in-from-top-2 duration-200">
+            <div className="flex gap-3">
+              <div className="flex-1 space-y-1">
+                <label className="text-xs font-semibold text-gray-500">
+                  Text
+                </label>
+                <input
+                  type="text"
+                  value={settings.watermark.text}
+                  onChange={(e) =>
+                    setSettings({
+                      ...settings,
+                      watermark: { ...settings.watermark, text: e.target.value },
+                    })
+                  }
+                  className="w-full p-2 rounded-lg border border-gray-200 text-sm focus:ring-2 focus:ring-primary/20 outline-none"
+                  placeholder="Watermark text..."
+                />
+              </div>
+              <div className="space-y-1 w-12">
+                <label className="text-xs font-semibold text-gray-500">
+                  Color
+                </label>
+                <input
+                  type="color"
+                  value={settings.watermark.color}
+                  onChange={(e) =>
+                    setSettings({
+                      ...settings,
+                      watermark: {
+                        ...settings.watermark,
+                        color: e.target.value,
+                      },
+                    })
+                  }
+                  className="w-full h-[38px] p-0 border-0 rounded-lg cursor-pointer overflow-hidden shadow-sm"
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-3">
+              <div className="space-y-1">
+                <label className="text-xs font-semibold text-gray-500">
+                  Position
+                </label>
+                <select
+                  value={settings.watermark.position}
+                  onChange={(e) =>
+                    setSettings({
+                      ...settings,
+                      watermark: {
+                        ...settings.watermark,
+                        position: e.target.value as any,
+                      },
+                    })
+                  }
+                  className="w-full p-2 rounded-lg border border-gray-200 text-sm outline-none bg-white"
+                >
+                  <option value="top-left">Top Left</option>
+                  <option value="top-right">Top Right</option>
+                  <option value="bottom-left">Bottom Left</option>
+                  <option value="bottom-right">Bottom Right</option>
+                  <option value="center">Center</option>
+                </select>
+              </div>
+              <div className="space-y-1">
+                <label className="text-xs font-semibold text-gray-500">
+                  Opacity ({Math.round((settings.watermark.opacity || 0.3) * 100)}
+                  %)
+                </label>
+                <input
+                  type="range"
+                  min="0.1"
+                  max="1"
+                  step="0.1"
+                  value={settings.watermark.opacity}
+                  onChange={(e) =>
+                    setSettings({
+                      ...settings,
+                      watermark: {
+                        ...settings.watermark,
+                        opacity: parseFloat(e.target.value),
+                      },
+                    })
+                  }
+                  className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-primary mt-2"
+                />
+              </div>
+            </div>
+
+            {/* Size & Rotation */}
+            <div className="grid grid-cols-2 gap-3 pt-1">
+              <div className="space-y-1">
+                <label className="text-xs font-semibold text-gray-500">
+                  Size
+                </label>
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() =>
+                      setSettings({
+                        ...settings,
+                        watermark: {
+                          ...settings.watermark,
+                          size: (settings.watermark.size || 18) - 1,
+                        },
+                      })
+                    }
+                    className="p-1.5 rounded-md border border-gray-200 hover:bg-gray-50"
+                  >
+                    <Minus size={12} />
+                  </button>
+                  <input
+                    type="number"
+                    value={settings.watermark.size}
+                    onChange={(e) =>
+                      setSettings({
+                        ...settings,
+                        watermark: {
+                          ...settings.watermark,
+                          size: parseInt(e.target.value) || 0,
+                        },
+                      })
+                    }
+                    className="w-full p-1.5 rounded-md border border-gray-200 text-sm outline-none text-center"
+                  />
+                  <button
+                    onClick={() =>
+                      setSettings({
+                        ...settings,
+                        watermark: {
+                          ...settings.watermark,
+                          size: (settings.watermark.size || 18) + 1,
+                        },
+                      })
+                    }
+                    className="p-1.5 rounded-md border border-gray-200 hover:bg-gray-50"
+                  >
+                    <Plus size={12} />
+                  </button>
+                </div>
+              </div>
+
+              <div className="space-y-1">
+                <label className="text-xs font-semibold text-gray-500">
+                  Rotation
+                </label>
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() =>
+                      setSettings({
+                        ...settings,
+                        watermark: {
+                          ...settings.watermark,
+                          rotation: (settings.watermark.rotation || 0) - 15,
+                        },
+                      })
+                    }
+                    className="p-1.5 rounded-md border border-gray-200 hover:bg-gray-50"
+                  >
+                    <Minus size={12} />
+                  </button>
+                  <input
+                    type="number"
+                    value={settings.watermark.rotation}
+                    onChange={(e) =>
+                      setSettings({
+                        ...settings,
+                        watermark: {
+                          ...settings.watermark,
+                          rotation: parseInt(e.target.value) || 0,
+                        },
+                      })
+                    }
+                    className="w-full p-1.5 rounded-md border border-gray-200 text-sm outline-none text-center"
+                  />
+                  <button
+                    onClick={() =>
+                      setSettings({
+                        ...settings,
+                        watermark: {
+                          ...settings.watermark,
+                          rotation: (settings.watermark.rotation || 0) + 15,
+                        },
+                      })
+                    }
+                    className="p-1.5 rounded-md border border-gray-200 hover:bg-gray-50"
+                  >
+                    <Plus size={12} />
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {/* Coordinates */}
+            <div className="space-y-2 pt-1">
+              <label className="text-xs font-semibold text-gray-500">
+                Offset (X, Y)
+              </label>
+              <div className="grid grid-cols-2 gap-3">
+                <div className="relative">
+                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[10px] font-bold text-gray-400">
+                    X
+                  </span>
+                  <input
+                    type="number"
+                    value={settings.watermark.x}
+                    onChange={(e) =>
+                      setSettings({
+                        ...settings,
+                        watermark: {
+                          ...settings.watermark,
+                          x: parseInt(e.target.value) || 0,
+                        },
+                      })
+                    }
+                    className="w-full p-2 pl-7 rounded-lg border border-gray-200 text-sm outline-none"
+                  />
+                </div>
+                <div className="relative">
+                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[10px] font-bold text-gray-400">
+                    Y
+                  </span>
+                  <input
+                    type="number"
+                    value={settings.watermark.y}
+                    onChange={(e) =>
+                      setSettings({
+                        ...settings,
+                        watermark: {
+                          ...settings.watermark,
+                          y: parseInt(e.target.value) || 0,
+                        },
+                      })
+                    }
+                    className="w-full p-2 pl-7 rounded-lg border border-gray-200 text-sm outline-none"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 };

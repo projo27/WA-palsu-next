@@ -20,6 +20,18 @@ export interface Message {
   replyToId?: string;
 }
 
+export interface WatermarkSettings {
+  show: boolean;
+  text: string;
+  position: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right' | 'center';
+  opacity: number;
+  rotation: number;
+  size: number;
+  color: string;
+  x: number;
+  y: number;
+}
+
 export interface ChatSettings {
   // Display Settings
   layout: DeviceLayout;
@@ -45,6 +57,9 @@ export interface ChatSettings {
   is24Hour: boolean;
   showDynamicIsland: boolean;
   enableContextMenu: boolean;
+
+  // Watermark Settings
+  watermark: WatermarkSettings;
 
   // Profile Settings
   receiverName: string;
